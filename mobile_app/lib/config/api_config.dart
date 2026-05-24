@@ -5,7 +5,6 @@
 class ApiConfig {
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    //defaultValue: 'http://10.0.2.2:8000/api/v1',
-    defaultValue: 'https://solapur.fleetprowms.com/log/api/v1',
+    defaultValue: 'http://mrvisitstrack.net/api/v1',
   );
 }
