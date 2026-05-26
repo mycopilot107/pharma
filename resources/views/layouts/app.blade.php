@@ -12,7 +12,7 @@
     @endif
     @stack('head')
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased flex flex-col">
     <header class="relative z-50 border-b border-slate-200 bg-white">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
             <a href="{{ auth()->check() && auth()->user()->role === \App\Enums\UserRole::SuperAdmin ? route('super-admin.dashboard') : (auth()->check() && auth()->user()->role === \App\Enums\UserRole::CompanyAdmin ? route('dashboard') : route('home')) }}"
@@ -48,7 +48,7 @@
         @endauth
     </header>
 
-    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 flex-1">
         @if (session('success'))
             <div class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">{{ session('success') }}</div>
         @endif
@@ -58,6 +58,7 @@
 
         @yield('content')
     </main>
+    @include('partials.footer')
     @stack('scripts')
 </body>
 </html>

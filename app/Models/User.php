@@ -5,20 +5,24 @@ namespace App\Models;
 use App\Enums\UserRole;
 use App\Enums\VisitStatus;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'company_id', 'role', 'phone', 'is_active', 'last_latitude', 'last_longitude', 'last_location_at', 'tracking_active'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $fillable = [
+        'name', 'email', 'password', 'company_id', 'role',
+        'phone', 'is_active', 'last_latitude', 'last_longitude',
+        'last_location_at', 'tracking_active',
+    ];
+
+    protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {

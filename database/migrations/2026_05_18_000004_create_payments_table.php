@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('amount_inr');
             $table->string('currency', 3)->default('INR');
             $table->string('status')->default('created');
-            $table->json('meta')->nullable();
+            $table->jsonb('meta')->nullable();
             $table->timestamps();
         });
     }

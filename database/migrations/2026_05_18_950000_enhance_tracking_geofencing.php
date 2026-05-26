@@ -42,7 +42,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('visit_id')->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('risk_score')->default(0);
-            $table->json('flags')->nullable();
+            $table->jsonb('flags')->nullable();
             $table->decimal('distance_from_customer_m', 10, 2)->nullable();
             $table->boolean('gps_verified')->default(false);
             $table->timestamp('validated_at');

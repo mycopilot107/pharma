@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('type');
             $table->string('title');
             $table->date('report_date');
-            $table->json('context_snapshot')->nullable();
-            $table->json('detected_insights')->nullable();
+            $table->jsonb('context_snapshot')->nullable();
+            $table->jsonb('detected_insights')->nullable();
             $table->longText('content');
             $table->timestamps();
 

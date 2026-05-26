@@ -18,6 +18,7 @@ use App\Http\Controllers\CompanyRegistrationController;
 use App\Http\Controllers\CompanyUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\Mr\AiReportController as MrAiReportController;
 use App\Http\Controllers\Mr\CustomerController as MrCustomerController;
 use App\Http\Controllers\Mr\CustomerCrmController as MrCustomerCrmController;
@@ -37,6 +38,12 @@ use App\Http\Controllers\SuperAdmin\SettingsController as SuperAdminSettingsCont
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/about',   [PageController::class, 'about'])->name('about');
+Route::get('/faq',     [PageController::class, 'faq'])->name('faq');
+Route::get('/terms',   [PageController::class, 'terms'])->name('terms');
+Route::get('/policy',  [PageController::class, 'policy'])->name('policy');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 
 Route::get('/register-company', [CompanyRegistrationController::class, 'create'])->name('companies.register');
 Route::post('/register-company', [CompanyRegistrationController::class, 'store'])->name('companies.register.store');
