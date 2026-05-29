@@ -39,11 +39,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/about',   [PageController::class, 'about'])->name('about');
-Route::get('/faq',     [PageController::class, 'faq'])->name('faq');
-Route::get('/terms',   [PageController::class, 'terms'])->name('terms');
-Route::get('/policy',  [PageController::class, 'policy'])->name('policy');
-Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/about',    [PageController::class, 'about'])->name('about');
+Route::get('/features', [PageController::class, 'features'])->name('features');
+Route::get('/pricing',  [PageController::class, 'pricing'])->name('pricing');
+Route::get('/app',      [PageController::class, 'appDownload'])->name('app.download');
+Route::get('/faq',      [PageController::class, 'faq'])->name('faq');
+Route::get('/terms',    [PageController::class, 'terms'])->name('terms');
+Route::get('/policy',   [PageController::class, 'policy'])->name('policy');
+Route::get('/contact',  [PageController::class, 'contact'])->name('contact');
 
 Route::get('/register-company', [CompanyRegistrationController::class, 'create'])->name('companies.register');
 Route::post('/register-company', [CompanyRegistrationController::class, 'store'])->name('companies.register.store');

@@ -20,6 +20,15 @@
                 {{ config('pharma.app_name') }}
             </a>
 
+            @guest
+            <nav class="hidden md:flex items-center gap-1 text-sm">
+                <a href="{{ route('features') }}" class="px-3 py-1.5 text-slate-600 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors">Features</a>
+                <a href="{{ route('pricing') }}"  class="px-3 py-1.5 text-slate-600 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors">Pricing</a>
+                <a href="{{ route('app.download') }}" class="px-3 py-1.5 text-slate-600 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors">App</a>
+                <a href="{{ route('about') }}"    class="px-3 py-1.5 text-slate-600 hover:text-teal-700 hover:bg-slate-50 rounded-lg transition-colors">About</a>
+            </nav>
+            @endguest
+
             <div class="flex items-center gap-2 text-sm shrink-0">
                 @auth
                     @include('partials.notification-bell')

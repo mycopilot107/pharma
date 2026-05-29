@@ -1,7 +1,7 @@
 <footer class="mt-auto border-t border-slate-200 bg-white">
     <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
 
-        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
 
             {{-- Brand --}}
             <div>
@@ -16,10 +16,19 @@
             <div>
                 <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Product</p>
                 <ul class="mt-3 space-y-2 text-sm">
-                    <li><a href="{{ route('home') }}" class="text-slate-600 hover:text-teal-600 transition-colors">Home</a></li>
+                    <li><a href="{{ route('features') }}" class="text-slate-600 hover:text-teal-600 transition-colors">Features</a></li>
+                    <li><a href="{{ route('pricing') }}" class="text-slate-600 hover:text-teal-600 transition-colors">Pricing</a></li>
+                    <li><a href="{{ route('app.download') }}" class="text-slate-600 hover:text-teal-600 transition-colors">Mobile App</a></li>
+                    <li><a href="{{ route('faq') }}" class="text-slate-600 hover:text-teal-600 transition-colors">FAQ</a></li>
+                </ul>
+            </div>
+
+            {{-- Get Started --}}
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Get Started</p>
+                <ul class="mt-3 space-y-2 text-sm">
                     <li><a href="{{ route('companies.register') }}" class="text-slate-600 hover:text-teal-600 transition-colors">Register Company</a></li>
                     <li><a href="{{ route('login') }}" class="text-slate-600 hover:text-teal-600 transition-colors">Login</a></li>
-                    <li><a href="{{ route('faq') }}" class="text-slate-600 hover:text-teal-600 transition-colors">FAQ</a></li>
                 </ul>
             </div>
 

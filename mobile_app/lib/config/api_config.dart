@@ -5,6 +5,6 @@
 class ApiConfig {
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://mrvisitstrack.net/api/v1',
+    defaultValue: 'https://mrvisitstrack.net/api/v1',
   );
 }

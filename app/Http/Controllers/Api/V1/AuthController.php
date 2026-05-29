@@ -13,13 +13,15 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validated = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
             'device_name' => ['nullable', 'string', 'max:255'],
         ]);
 
-        if (! Auth::attempt($credentials)) {
+        // Auth::attempt must only receive email + password, not device_name —
+        // any extra key is used as a WHERE clause against the users table.
+        if (! Auth::attempt(['email' => $validated['email'], 'password' => $validated['password']])) {
             throw ValidationException::withMessages([
                 'email' => ['These credentials do not match our records.'],
             ]);
@@ -48,7 +50,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken($credentials['device_name'] ?? 'mobile')->plainTextToken;
+        $token = $user->createToken($validated['device_name'] ?? 'mobile')->plainTextToken;
 
         return response()->json([
             'token' => $token,
