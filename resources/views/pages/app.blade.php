@@ -18,7 +18,7 @@
     <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
 
         {{-- Android --}}
-        <a href="#android-download"
+        <a href="{{ asset('downloads/medrep-fleet.apk') }}" download="medrep-fleet.apk"
             class="flex w-full max-w-xs items-center gap-4 rounded-2xl border-2 border-teal-600 bg-teal-600 px-6 py-4 text-white shadow hover:bg-teal-700 hover:border-teal-700 transition-colors">
             <div class="text-3xl leading-none">🤖</div>
             <div>
@@ -45,7 +45,7 @@
         <ol class="mt-4 space-y-3 text-sm text-teal-900">
             <li class="flex gap-3">
                 <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-600 text-xs font-bold text-white">1</span>
-                <span>Tap the <strong>Download Android APK</strong> button above to download the APK file to your phone.</span>
+                <span>Tap the <strong>Download Android APK</strong> button above — the APK file will download directly to your phone.</span>
             </li>
             <li class="flex gap-3">
                 <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-600 text-xs font-bold text-white">2</span>
