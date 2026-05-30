@@ -22,8 +22,8 @@
                     <div>
                         <p class="font-semibold text-slate-800">Email Support</p>
                         <p class="mt-1 text-sm text-slate-500">For general enquiries, billing, or technical help</p>
-                        <a href="mailto:shobha.solanki107@gmail.com" class="mt-2 inline-block text-sm font-medium text-teal-600 hover:underline">
-                            shobha.solanki107@gmail.com
+                        <a href="mailto:support@webauditaitool.com" class="mt-2 inline-block text-sm font-medium text-teal-600 hover:underline">
+                            support@webauditaitool.com
                         </a>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ function sendMail() {
         message,
     ].filter(Boolean).join('\n');
 
-    const mailto = 'mailto:shobha.solanki107@gmail.com'
+    const mailto = 'mailto:support@webauditaitool.com'
         + '?subject=' + encodeURIComponent('[{{ config("pharma.app_name") }}] ' + subject)
         + '&body='    + encodeURIComponent(body);
 

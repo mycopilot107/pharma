@@ -95,7 +95,7 @@
 
         <section>
             <h2 class="text-lg font-semibold text-slate-900">12. Contact</h2>
-            <p class="mt-3">For questions about these Terms, contact us at <a href="mailto:shobha.solanki107@gmail.com" class="text-teal-600 hover:underline">shobha.solanki107@gmail.com</a>.</p>
+            <p class="mt-3">For questions about these Terms, contact us at <a href="mailto:support@webauditaitool.com" class="text-teal-600 hover:underline">support@webauditaitool.com</a>.</p>
         </section>
 
     </div>

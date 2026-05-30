@@ -19,7 +19,7 @@
 
         <section>
             <h2 class="text-lg font-semibold text-slate-900">1. Who We Are</h2>
-            <p class="mt-3">{{ config('pharma.app_name') }} is operated by the {{ config('pharma.app_name') }} team. For privacy-related queries, contact us at <a href="mailto:shobha.solanki107@gmail.com" class="text-teal-600 hover:underline">shobha.solanki107@gmail.com</a>.</p>
+            <p class="mt-3">{{ config('pharma.app_name') }} is operated by the {{ config('pharma.app_name') }} team. For privacy-related queries, contact us at <a href="mailto:support@webauditaitool.com" class="text-teal-600 hover:underline">support@webauditaitool.com</a>.</p>
         </section>
 
         <section>
@@ -113,7 +113,7 @@
                 <li><strong>Deletion</strong> — Request deletion of your account and all associated data by emailing us.</li>
                 <li><strong>Portability</strong> — Request an export of your data in a structured format.</li>
             </ul>
-            <p class="mt-3 text-sm">To exercise these rights, email <a href="mailto:shobha.solanki107@gmail.com" class="text-teal-600 hover:underline">shobha.solanki107@gmail.com</a>.</p>
+            <p class="mt-3 text-sm">To exercise these rights, email <a href="mailto:support@webauditaitool.com" class="text-teal-600 hover:underline">support@webauditaitool.com</a>.</p>
         </section>
 
         <section>
@@ -135,7 +135,7 @@
             <h2 class="text-lg font-semibold text-slate-900">11. Contact</h2>
             <p class="mt-3">For privacy concerns, data requests, or questions about this policy, contact us at:</p>
             <p class="mt-2 font-medium text-slate-800">
-                <a href="mailto:shobha.solanki107@gmail.com" class="text-teal-600 hover:underline">shobha.solanki107@gmail.com</a>
+                <a href="mailto:support@webauditaitool.com" class="text-teal-600 hover:underline">support@webauditaitool.com</a>
             </p>
         </section>
 
