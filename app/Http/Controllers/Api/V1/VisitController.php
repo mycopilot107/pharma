@@ -90,16 +90,14 @@ class VisitController extends Controller
                 ->update(['started_at' => now(), 'status' => 'in_progress']);
         }
 
-        return (new VisitResource($visit->load(['customer', 'photos'])))
-            ->response()
-            ->setStatusCode(201);
+        return response()->json(new VisitResource($visit->load(['customer', 'photos'])), 201);
     }
 
     public function show(Request $request, Visit $visit)
     {
         $this->authorizeVisit($visit, $request);
 
-        return new VisitResource($visit->load(['customer', 'photos', 'dailyRoute']));
+        return response()->json(new VisitResource($visit->load(['customer', 'photos', 'dailyRoute'])));
     }
 
     public function checkIn(Request $request, Visit $visit)
@@ -147,7 +145,7 @@ class VisitController extends Controller
             );
         }
 
-        return new VisitResource($visit->fresh()->load(['customer', 'photos']));
+        return response()->json(new VisitResource($visit->fresh()->load(['customer', 'photos'])));
     }
 
     public function checkOut(Request $request, Visit $visit)
@@ -193,7 +191,7 @@ class VisitController extends Controller
         app(VisitValidationService::class)->validateAndStore($visit);
         $this->aiReporting->tryAutoSummarizeVisit($visit);
 
-        return new VisitResource($visit->load(['customer', 'photos', 'validation']));
+        return response()->json(new VisitResource($visit->load(['customer', 'photos', 'validation'])));
     }
 
     public function updateNotes(Request $request, Visit $visit)
@@ -206,7 +204,7 @@ class VisitController extends Controller
 
         $visit->update(['notes' => $validated['notes']]);
 
-        return new VisitResource($visit);
+        return response()->json(new VisitResource($visit));
     }
 
     public function uploadPhotos(Request $request, Visit $visit)
@@ -230,7 +228,7 @@ class VisitController extends Controller
             ]);
         }
 
-        return new VisitResource($visit->fresh()->load(['customer', 'photos']));
+        return response()->json(new VisitResource($visit->fresh()->load(['customer', 'photos'])));
     }
 
     protected function authorizeVisit(Visit $visit, Request $request): void

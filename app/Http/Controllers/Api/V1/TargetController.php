@@ -26,6 +26,6 @@ class TargetController extends Controller
             abort(403);
         }
 
-        return new TargetResource($target);
+        return response()->json(new TargetResource($target));
     }
 }

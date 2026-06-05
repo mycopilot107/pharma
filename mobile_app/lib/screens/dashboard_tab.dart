@@ -141,15 +141,48 @@ class DashboardTab extends StatelessWidget {
   }
 }
 
-class _AttendanceCard extends StatelessWidget {
+class _AttendanceCard extends StatefulWidget {
   const _AttendanceCard({required this.state, required this.dash});
 
   final AppState state;
   final dynamic dash;
 
   @override
+  State<_AttendanceCard> createState() => _AttendanceCardState();
+}
+
+class _AttendanceCardState extends State<_AttendanceCard> {
+  bool _loading = false;
+
+  Future<void> _toggle() async {
+    if (_loading) return;
+    setState(() => _loading = true);
+    final onDuty = widget.dash.trackingActive as bool;
+    try {
+      if (onDuty) {
+        await widget.state.clockOut();
+      } else {
+        await widget.state.clockIn();
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(onDuty ? 'Clocked out' : 'Clocked in')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString().replaceFirst('ApiException: ', ''))),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final onDuty = dash.trackingActive;
+    final onDuty = widget.dash.trackingActive as bool;
 
     return Card(
       color: onDuty ? const Color(0xFFECFDF5) : null,
@@ -175,29 +208,10 @@ class _AttendanceCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             FilledButton.icon(
-              onPressed: () async {
-                try {
-                  if (onDuty) {
-                    await state.clockOut();
-                  } else {
-                    await state.clockIn();
-                  }
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(onDuty ? 'Clocked out' : 'Clocked in'),
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString())),
-                    );
-                  }
-                }
-              },
-              icon: Icon(onDuty ? Icons.logout : Icons.login),
+              onPressed: _loading ? null : _toggle,
+              icon: _loading
+                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : Icon(onDuty ? Icons.logout : Icons.login),
               label: Text(onDuty ? 'Clock out' : 'Clock in'),
               style: FilledButton.styleFrom(
                 backgroundColor: onDuty ? Colors.orange : AppTheme.primary,

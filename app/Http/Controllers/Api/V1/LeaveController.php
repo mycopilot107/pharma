@@ -80,9 +80,7 @@ class LeaveController extends Controller
             'status' => LeaveStatus::Pending,
         ]);
 
-        return (new LeaveRequestResource($leave))
-            ->response()
-            ->setStatusCode(201);
+        return response()->json(new LeaveRequestResource($leave), 201);
     }
 
     public function show(Request $request, LeaveRequest $leave)
@@ -91,7 +89,7 @@ class LeaveController extends Controller
             abort(403);
         }
 
-        return new LeaveRequestResource($leave);
+        return response()->json(new LeaveRequestResource($leave));
     }
 
     public function cancel(Request $request, LeaveRequest $leave)
@@ -106,6 +104,6 @@ class LeaveController extends Controller
 
         $leave->update(['status' => LeaveStatus::Cancelled]);
 
-        return new LeaveRequestResource($leave->fresh());
+        return response()->json(new LeaveRequestResource($leave->fresh()));
     }
 }

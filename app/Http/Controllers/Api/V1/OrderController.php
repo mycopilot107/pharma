@@ -61,9 +61,7 @@ class OrderController extends Controller
             $validated['visit_id'] ?? null,
         );
 
-        return (new OrderResource($order))
-            ->response()
-            ->setStatusCode(201);
+        return response()->json(new OrderResource($order), 201);
     }
 
     public function show(Request $request, Order $order)
@@ -71,7 +69,7 @@ class OrderController extends Controller
         $this->authorizeOrder($order, $request);
         $order->load(['customer', 'items']);
 
-        return new OrderResource($order);
+        return response()->json(new OrderResource($order));
     }
 
     public function cancel(Request $request, Order $order)

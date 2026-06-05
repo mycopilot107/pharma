@@ -44,7 +44,7 @@ class NotificationController extends Controller
         $this->authorizeNotification($notification, $request);
         $notification->markRead();
 
-        return new NotificationResource($notification->fresh());
+        return response()->json(new NotificationResource($notification->fresh()));
     }
 
     public function markAllRead(Request $request)

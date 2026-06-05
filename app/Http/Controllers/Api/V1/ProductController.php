@@ -31,6 +31,6 @@ class ProductController extends Controller
             abort(404);
         }
 
-        return new ProductResource($product);
+        return response()->json(new ProductResource($product));
     }
 }

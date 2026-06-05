@@ -17,6 +17,7 @@ class VisitsScreen extends StatefulWidget {
 class _VisitsScreenState extends State<VisitsScreen> {
   List<Visit> _visits = [];
   bool _loading = true;
+  bool _starting = false;
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _VisitsScreenState extends State<VisitsScreen> {
   }
 
   Future<void> _quickStart() async {
+    if (_starting) return;
     final state = context.read<AppState>();
     if (state.dashboardData?.activeVisit != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -42,6 +44,7 @@ class _VisitsScreenState extends State<VisitsScreen> {
       );
       return;
     }
+    setState(() => _starting = true);
     try {
       final pos = await LocationHelper.getCurrentPosition();
       final visit = await state.visits.create({
@@ -63,6 +66,8 @@ class _VisitsScreenState extends State<VisitsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
       }
+    } finally {
+      if (mounted) setState(() => _starting = false);
     }
   }
 
@@ -71,8 +76,10 @@ class _VisitsScreenState extends State<VisitsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Visits')),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _quickStart,
-        icon: const Icon(Icons.add),
+        onPressed: _starting ? null : _quickStart,
+        icon: _starting
+            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            : const Icon(Icons.add),
         label: const Text('Start visit'),
       ),
       body: _loading

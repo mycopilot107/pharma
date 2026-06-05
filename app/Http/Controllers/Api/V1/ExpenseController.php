@@ -57,16 +57,14 @@ class ExpenseController extends Controller
             'status' => ExpenseStatus::Pending,
         ]);
 
-        return (new ExpenseResource($expense))
-            ->response()
-            ->setStatusCode(201);
+        return response()->json(new ExpenseResource($expense), 201);
     }
 
     public function show(Request $request, Expense $expense)
     {
         $this->authorizeExpense($expense, $request);
 
-        return new ExpenseResource($expense);
+        return response()->json(new ExpenseResource($expense));
     }
 
     public function destroy(Request $request, Expense $expense)

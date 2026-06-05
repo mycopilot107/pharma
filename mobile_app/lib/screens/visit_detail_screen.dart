@@ -19,6 +19,7 @@ class VisitDetailScreen extends StatefulWidget {
 class _VisitDetailScreenState extends State<VisitDetailScreen> {
   Visit? _visit;
   bool _loading = true;
+  bool _actionLoading = false;
   final _notesController = TextEditingController();
 
   @override
@@ -43,23 +44,35 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
           _notesController.text = v.notes ?? '';
         });
       }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString().replaceFirst('ApiException: ', ''))),
+        );
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
   Future<void> _checkIn() async {
+    if (_actionLoading) return;
+    setState(() => _actionLoading = true);
     try {
       final pos = await LocationHelper.getCurrentPosition();
       await context.read<AppState>().visits.checkIn(widget.visitId, pos.latitude, pos.longitude);
       await context.read<AppState>().refreshDashboard();
       await _load();
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString().replaceFirst('ApiException: ', ''))));
+    } finally {
+      if (mounted) setState(() => _actionLoading = false);
     }
   }
 
   Future<void> _checkOut() async {
+    if (_actionLoading) return;
+    setState(() => _actionLoading = true);
     try {
       final pos = await LocationHelper.getCurrentPosition();
       await context.read<AppState>().visits.checkOut(
@@ -71,7 +84,9 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
       await context.read<AppState>().refreshDashboard();
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString().replaceFirst('ApiException: ', ''))));
+    } finally {
+      if (mounted) setState(() => _actionLoading = false);
     }
   }
 
@@ -114,21 +129,25 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
                       const SizedBox(height: 24),
                       if (v.isPlanned)
                         FilledButton.icon(
-                          onPressed: _checkIn,
-                          icon: const Icon(Icons.login),
+                          onPressed: _actionLoading ? null : _checkIn,
+                          icon: _actionLoading
+                              ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                              : const Icon(Icons.login),
                           label: const Text('Check in (GPS)'),
                           style: FilledButton.styleFrom(backgroundColor: AppTheme.primary),
                         ),
                       if (v.isInProgress) ...[
                         FilledButton.icon(
-                          onPressed: _checkOut,
-                          icon: const Icon(Icons.logout),
+                          onPressed: _actionLoading ? null : _checkOut,
+                          icon: _actionLoading
+                              ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                              : const Icon(Icons.logout),
                           label: const Text('Check out & complete'),
                           style: FilledButton.styleFrom(backgroundColor: Colors.green),
                         ),
                         const SizedBox(height: 12),
                         OutlinedButton.icon(
-                          onPressed: _addPhoto,
+                          onPressed: _actionLoading ? null : _addPhoto,
                           icon: const Icon(Icons.camera_alt),
                           label: const Text('Add photo'),
                         ),
