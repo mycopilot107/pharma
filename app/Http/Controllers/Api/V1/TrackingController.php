@@ -10,6 +10,7 @@ use App\Services\GeofenceService;
 use App\Services\LeaveService;
 use App\Services\TrackingService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class TrackingController extends Controller
@@ -201,11 +202,15 @@ class TrackingController extends Controller
             'longitude' => ['required', 'numeric', 'between:-180,180'],
         ]);
 
-        $attendance = $this->tracking->clockOut(
-            $request->user(),
-            $validated['latitude'],
-            $validated['longitude'],
-        );
+        try {
+            $attendance = $this->tracking->clockOut(
+                $request->user(),
+                $validated['latitude'],
+                $validated['longitude'],
+            );
+        } catch (ModelNotFoundException) {
+            return response()->json(['message' => 'You are not clocked in today.'], 422);
+        }
 
         return response()->json([
             'message' => 'Clocked out successfully.',

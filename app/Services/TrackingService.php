@@ -58,6 +58,12 @@ class TrackingService
     {
         $today = now()->toDateString();
 
+        // Close any attendance that was left active from a previous day (e.g. app crash, missed clock-out)
+        MrAttendance::where('user_id', $user->id)
+            ->where('work_date', '<', $today)
+            ->where('status', MrAttendance::STATUS_ACTIVE)
+            ->update(['status' => MrAttendance::STATUS_COMPLETED]);
+
         $existing = MrAttendance::where('user_id', $user->id)
             ->where('work_date', $today)
             ->first();
@@ -100,7 +106,11 @@ class TrackingService
         $attendance = MrAttendance::where('user_id', $user->id)
             ->where('work_date', now()->toDateString())
             ->where('status', MrAttendance::STATUS_ACTIVE)
-            ->firstOrFail();
+            ->first();
+
+        if (! $attendance) {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException('No active clock-in found for today.');
+        }
 
         $attendance->update([
             'clock_out_at' => now(),

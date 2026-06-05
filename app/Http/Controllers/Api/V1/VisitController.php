@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\VisitResource;
 use App\Models\Customer;
 use App\Models\DailyRoute;
+use App\Models\MrAttendance;
 use App\Models\Visit;
 use App\Models\VisitPhoto;
 use App\Services\AiReportingService;
@@ -106,11 +107,21 @@ class VisitController extends Controller
         $this->authorizeVisit($visit, $request);
         $user = $request->user();
 
+        $hasActiveAttendance = MrAttendance::where('user_id', $user->id)
+            ->where('work_date', today()->toDateString())
+            ->where('status', MrAttendance::STATUS_ACTIVE)
+            ->exists();
+
+        if (! $hasActiveAttendance) {
+            return response()->json(['message' => 'You must clock in before checking into a visit.'], 422);
+        }
+
         if ($visit->status !== VisitStatus::Planned) {
             return response()->json(['message' => 'This visit cannot be checked in.'], 422);
         }
 
-        if ($user->activeVisit() && $user->activeVisit()->id !== $visit->id) {
+        $activeVisit = $user->activeVisit();
+        if ($activeVisit && $activeVisit->id !== $visit->id) {
             return response()->json(['message' => 'Complete your current visit first.'], 422);
         }
 

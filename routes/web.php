@@ -209,3 +209,18 @@ Route::middleware(['auth', 'representative'])->prefix('mr')->name('mr.')->group(
     Route::post('/notifications/read-all', [MrNotificationController::class, 'markAllRead'])->name('notifications.read-all');
     Route::delete('/notifications/{notification}', [MrNotificationController::class, 'dismiss'])->name('notifications.dismiss');
 });
+
+// Scheduler trigger endpoint — called by external cron service (e.g. cron-job.org) via curl
+Route::get('/cron/run', function (\Illuminate\Http\Request $request) {
+    if ($request->query('secret') !== config('app.scheduler_secret')) {
+        abort(403);
+    }
+
+    \Illuminate\Support\Facades\Artisan::call('visits:auto-complete');
+
+    return response()->json([
+        'ok' => true,
+        'output' => trim(\Illuminate\Support\Facades\Artisan::output()),
+        'ran_at' => now()->toIso8601String(),
+    ]);
+});

@@ -67,6 +67,8 @@ return [
 
     'timezone' => 'UTC',
 
+    'scheduler_secret' => env('SCHEDULER_SECRET'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration

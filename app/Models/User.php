@@ -78,6 +78,11 @@ class User extends Authenticatable
         return $this->hasMany(Target::class, 'assigned_by');
     }
 
+    public function mrAttendances(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(MrAttendance::class);
+    }
+
     public function activeVisit(): ?Visit
     {
         return $this->visits()
