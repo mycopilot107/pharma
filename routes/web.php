@@ -210,6 +210,23 @@ Route::middleware(['auth', 'representative'])->prefix('mr')->name('mr.')->group(
     Route::delete('/notifications/{notification}', [MrNotificationController::class, 'dismiss'])->name('notifications.dismiss');
 });
 
+// Serve visit photos through PHP — no server symlink required
+Route::get('/visit-photos/{visitId}/{filename}', function (string $visitId, string $filename) {
+    $path = 'visit-photos/' . $visitId . '/' . $filename;
+
+    if (! \Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+
+    $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($path);
+    $mime = mime_content_type($fullPath) ?: 'image/jpeg';
+
+    return response()->file($fullPath, [
+        'Content-Type' => $mime,
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+})->where('filename', '.*');
+
 // Scheduler trigger endpoint — called by external cron service (e.g. cron-job.org) via curl
 Route::get('/cron/run', function (\Illuminate\Http\Request $request) {
     if ($request->query('secret') !== config('app.scheduler_secret')) {

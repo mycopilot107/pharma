@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class VisitPhoto extends Model
 {
@@ -22,6 +21,10 @@ class VisitPhoto extends Model
 
     public function url(): string
     {
-        return Storage::disk('public')->url($this->path);
+        // Serve through PHP route so no server symlink is required.
+        // Path format: visit-photos/{visitId}/{filename}
+        $segments = explode('/', ltrim($this->path, '/'));
+        // $segments[0] = 'visit-photos', $segments[1] = visitId, $segments[2] = filename
+        return rtrim(config('app.url'), '/') . '/visit-photos/' . implode('/', array_slice($segments, 1));
     }
 }

@@ -217,6 +217,8 @@ class VisitController extends Controller
             'caption' => ['nullable', 'string', 'max:255'],
         ]);
 
+        \Illuminate\Support\Facades\Storage::disk('public')->makeDirectory('visit-photos/'.$visit->id);
+
         foreach ($request->file('photos') as $photo) {
             $path = $photo->store('visit-photos/'.$visit->id, 'public');
 
