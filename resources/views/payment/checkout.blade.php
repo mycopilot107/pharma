@@ -7,15 +7,26 @@
     <h1 class="text-2xl font-bold text-slate-900">Complete your subscription</h1>
     <p class="mt-2 text-slate-600">{{ $company->name }}</p>
 
+    @php
+        $billingCycle = $payment->meta['billing_cycle'] ?? 'monthly';
+        $formattedAmount = $billingCycle === 'yearly'
+            ? $plan->formattedYearlyPrice($company->currency)
+            : $plan->formattedPrice($company->currency);
+        $cycleLabel = $billingCycle === 'yearly' ? 'Yearly (save '.((int) round(config('pharma.yearly_discount', 0.10) * 100)).'%)' : 'Monthly';
+    @endphp
     <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm">
         <dl class="space-y-3 text-sm">
             <div class="flex justify-between">
                 <dt class="text-slate-500">Plan</dt>
                 <dd class="font-medium">{{ $plan->user_limit }} medical representatives</dd>
             </div>
+            <div class="flex justify-between">
+                <dt class="text-slate-500">Billing cycle</dt>
+                <dd class="font-medium">{{ $cycleLabel }}</dd>
+            </div>
             <div class="flex justify-between border-t border-slate-100 pt-3">
                 <dt class="text-slate-500">Amount due</dt>
-                <dd class="text-xl font-bold text-teal-700">{{ $plan->formattedPrice() }}</dd>
+                <dd class="text-xl font-bold text-teal-700">{{ $formattedAmount }}</dd>
             </div>
         </dl>
     </div>
@@ -33,7 +44,7 @@
 document.getElementById('rzp-button').onclick = function () {
     const options = {
         key: @json($razorpayKey),
-        amount: {{ $plan->amountCents() }},
+        amount: {{ (int) round((float) $payment->amount_usd * 100) }},
         currency: @json($company->currency ?? config('currencies.default', 'USD')),
         name: @json(config('pharma.app_name')),
         description: @json($plan->name),

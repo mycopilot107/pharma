@@ -69,7 +69,8 @@ class PaymentController extends Controller
                 'status' => 'paid',
             ]);
 
-            $days = (int) config('pharma.subscription_days', 30);
+            $billingCycle = ($payment->meta['billing_cycle'] ?? 'monthly');
+            $days = $billingCycle === 'yearly' ? 365 : (int) config('pharma.subscription_days', 30);
 
             $company->update([
                 'status' => Company::STATUS_ACTIVE,

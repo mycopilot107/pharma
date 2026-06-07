@@ -59,7 +59,7 @@ class TrackingController extends Controller
 
         return response()->json([
             'ok' => true,
-            'at' => $ping->recorded_at->toIso8601String(),
+            'at' => ($ping?->recorded_at ?? now())->toIso8601String(),
             'ping_interval' => config('tracking.ping_interval_seconds'),
         ]);
     }

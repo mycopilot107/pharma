@@ -19,26 +19,38 @@ class RazorpayService
         );
     }
 
-    public function createOrder(Company $company, Plan $plan): Payment
+    public function createOrder(Company $company, Plan $plan, string $billingCycle = 'monthly'): Payment
     {
+        $amountCents = $billingCycle === 'yearly'
+            ? $plan->yearlyAmountCents()
+            : $plan->amountCents();
+
+        $amountUsd = $billingCycle === 'yearly'
+            ? $plan->yearlyPrice()
+            : (float) $plan->price_usd;
+
         $order = $this->api->order->create([
             'receipt' => 'company_'.$company->id.'_'.time(),
-            'amount' => $plan->amountCents(),
+            'amount' => $amountCents,
             'currency' => $company->currency ?? config('currencies.default', 'USD'),
             'notes' => [
                 'company_id' => (string) $company->id,
                 'plan_id' => (string) $plan->id,
+                'billing_cycle' => $billingCycle,
             ],
         ]);
+
+        $meta = is_array($order) ? $order : (array) $order;
+        $meta['billing_cycle'] = $billingCycle;
 
         $payment = Payment::create([
             'company_id' => $company->id,
             'plan_id' => $plan->id,
             'razorpay_order_id' => $order['id'],
-            'amount_usd' => $plan->price_usd,
+            'amount_usd' => $amountUsd,
             'currency' => $company->currency ?? config('currencies.default', 'USD'),
             'status' => 'created',
-            'meta' => is_array($order) ? $order : (array) $order,
+            'meta' => $meta,
         ]);
 
         $company->update(['razorpay_order_id' => $order['id']]);

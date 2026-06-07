@@ -39,10 +39,12 @@ class ExpenseController extends Controller
             'amount' => ['required', 'numeric', 'min:0.01', 'max:999999.99'],
             'expense_date' => ['required', 'date', 'before_or_equal:today'],
             'description' => ['nullable', 'string', 'max:500'],
-            'receipt' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'receipt' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
         ]);
 
-        $path = $request->file('receipt')->store('expense-receipts/'.$request->user()->id, 'public');
+        $path = $request->hasFile('receipt')
+            ? $request->file('receipt')->store('expense-receipts/'.$request->user()->id, 'public')
+            : null;
 
         $expense = Expense::create([
             'company_id' => $request->user()->company_id,
@@ -53,7 +55,7 @@ class ExpenseController extends Controller
             'expense_date' => $validated['expense_date'],
             'description' => $validated['description'] ?? null,
             'receipt_path' => $path,
-            'receipt_original_name' => $request->file('receipt')->getClientOriginalName(),
+            'receipt_original_name' => $request->hasFile('receipt') ? $request->file('receipt')->getClientOriginalName() : null,
             'status' => ExpenseStatus::Pending,
         ]);
 

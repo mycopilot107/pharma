@@ -12,8 +12,29 @@
         <p class="mt-3 text-slate-600">One price per user. All features included. Start free — no credit card required.</p>
     </div>
 
+    {{-- Billing cycle toggle --}}
+    @php $discountPct = (int) round(config('pharma.yearly_discount', 0.10) * 100); @endphp
+    <div class="mt-10 flex justify-center">
+        <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50 p-1 gap-1">
+            <button type="button" id="toggle-monthly"
+                class="rounded-lg px-6 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200"
+                onclick="setCycle('monthly')">
+                Monthly
+            </button>
+            <button type="button" id="toggle-yearly"
+                class="rounded-lg px-6 py-2 text-sm font-medium transition-colors text-slate-500"
+                onclick="setCycle('yearly')">
+                Yearly
+                <span class="ml-1.5 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">
+                    Save {{ $discountPct }}%
+                </span>
+            </button>
+        </div>
+    </div>
+    <p class="mt-2 text-center text-xs text-slate-500" id="cycle-note">Billed monthly. Switch to yearly to save {{ $discountPct }}%.</p>
+
     {{-- Plan Cards --}}
-    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         @foreach ($plans as $plan)
         <div class="relative flex flex-col rounded-2xl border bg-white p-7 shadow-sm transition hover:shadow-md
             {{ $plan->isFree() ? 'border-teal-400 ring-2 ring-teal-400' : 'border-slate-200' }}">
@@ -28,20 +49,41 @@
                 <p class="text-sm font-semibold uppercase tracking-wide text-teal-600">
                     {{ $plan->user_limit }} {{ $plan->user_limit === 1 ? 'User' : 'Users' }}
                 </p>
-                <p class="mt-3 text-4xl font-bold text-slate-900">{{ $plan->formattedPrice() }}</p>
+
                 @if ($plan->isFree())
+                    <p class="mt-3 text-4xl font-bold text-slate-900">Free</p>
                     <p class="mt-1 text-sm text-slate-500">forever &middot; no credit card</p>
                 @else
-                    <p class="mt-1 text-sm text-slate-500">per month &middot; ${{ config('pharma.price_per_user_usd', 3) }}/user</p>
+                    {{-- Monthly price (shown by default) --}}
+                    <p class="plan-price-monthly mt-3 text-4xl font-bold text-slate-900">
+                        {{ $plan->formattedPrice() }}
+                    </p>
+                    <p class="plan-sub-monthly mt-1 text-sm text-slate-500">
+                        per month &middot; ${{ config('pharma.price_per_user_usd', 3) }}/user
+                    </p>
+                    {{-- Yearly price (hidden by default) --}}
+                    <p class="plan-price-yearly mt-3 text-4xl font-bold text-slate-900 hidden">
+                        {{ $plan->formattedYearlyPrice() }}
+                    </p>
+                    <p class="plan-sub-yearly mt-1 text-sm text-slate-500 hidden">
+                        per year &middot; save {{ $discountPct }}%
+                        <span class="ml-1 text-xs line-through text-slate-400">
+                            {{ $plan->formattedPrice() }}/mo
+                        </span>
+                    </p>
                 @endif
+
                 <p class="mt-4 text-sm text-slate-600">{{ $plan->description }}</p>
             </div>
 
             <a href="{{ route('companies.register', ['plan' => $plan->id]) }}"
+                id="plan-cta-{{ $plan->id }}"
                 class="mt-7 inline-block w-full rounded-lg py-2.5 text-center text-sm font-semibold transition-colors
                     {{ $plan->isFree()
                         ? 'bg-teal-600 text-white hover:bg-teal-700'
-                        : 'bg-teal-50 text-teal-700 hover:bg-teal-100' }}">
+                        : 'bg-teal-50 text-teal-700 hover:bg-teal-100' }}"
+                data-plan="{{ $plan->id }}"
+                data-free="{{ $plan->isFree() ? '1' : '0' }}">
                 {{ $plan->isFree() ? 'Start for free' : 'Get started' }} &rarr;
             </a>
         </div>
@@ -52,6 +94,43 @@
         Need more than 50 users?
         <a href="{{ route('contact') }}" class="text-teal-600 hover:underline">Contact us</a> for a custom plan.
     </p>
+
+    @push('scripts')
+    <script>
+    let pricingCycle = 'monthly';
+
+    function setCycle(cycle) {
+        pricingCycle = cycle;
+
+        document.getElementById('toggle-monthly').className = cycle === 'monthly'
+            ? 'rounded-lg px-6 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200'
+            : 'rounded-lg px-6 py-2 text-sm font-medium transition-colors text-slate-500';
+        document.getElementById('toggle-yearly').className = cycle === 'yearly'
+            ? 'rounded-lg px-6 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200'
+            : 'rounded-lg px-6 py-2 text-sm font-medium transition-colors text-slate-500';
+
+        const cycleNote = document.getElementById('cycle-note');
+        cycleNote.textContent = cycle === 'yearly'
+            ? 'Billed once per year. Save {{ $discountPct }}% vs monthly.'
+            : 'Billed monthly. Switch to yearly to save {{ $discountPct }}%.';
+
+        document.querySelectorAll('.plan-price-monthly, .plan-sub-monthly').forEach(el => {
+            el.classList.toggle('hidden', cycle !== 'monthly');
+        });
+        document.querySelectorAll('.plan-price-yearly, .plan-sub-yearly').forEach(el => {
+            el.classList.toggle('hidden', cycle !== 'yearly');
+        });
+
+        // Update CTA links to pre-select billing cycle on register page
+        document.querySelectorAll('[data-plan]').forEach(link => {
+            if (link.dataset.free === '1') return;
+            const url = new URL(link.href);
+            url.searchParams.set('billing_cycle', cycle);
+            link.href = url.toString();
+        });
+    }
+    </script>
+    @endpush
 
     {{-- What's included --}}
     <div class="mt-16">
@@ -200,6 +279,18 @@
     <div class="mt-16">
         <h2 class="text-center text-2xl font-semibold text-slate-800">Billing questions</h2>
         <div class="mt-8 space-y-3 max-w-2xl mx-auto">
+
+            <details class="group rounded-xl border border-slate-200 bg-white">
+                <summary class="flex cursor-pointer items-center justify-between px-5 py-4 font-medium text-slate-800 hover:text-teal-700">
+                    What is the yearly discount?
+                    <span class="ml-4 shrink-0 text-slate-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                </summary>
+                <div class="border-t border-slate-100 px-5 py-4 text-sm text-slate-600 leading-relaxed">
+                    Choose <strong>Yearly billing</strong> at checkout and pay for 12 months upfront at a
+                    <strong>{{ $discountPct }}% discount</strong> — that's 1.2 months free. Your subscription will be active for 365 days from the payment date.
+                    Monthly billing is also available if you prefer shorter commitments.
+                </div>
+            </details>
 
             <details class="group rounded-xl border border-slate-200 bg-white">
                 <summary class="flex cursor-pointer items-center justify-between px-5 py-4 font-medium text-slate-800 hover:text-teal-700">

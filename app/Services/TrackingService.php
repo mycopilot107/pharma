@@ -28,30 +28,37 @@ class TrackingService
         ?float $altitude = null,
         ?int $batteryPercent = null,
         bool $isBackground = false,
-    ): LocationPing {
-        $ping = LocationPing::create([
-            'company_id' => $user->company_id,
-            'user_id' => $user->id,
-            'daily_route_id' => $dailyRouteId,
-            'latitude' => $latitude,
-            'longitude' => $longitude,
-            'accuracy' => $accuracy,
-            'speed' => $speed,
-            'heading' => $heading,
-            'altitude' => $altitude,
-            'battery_percent' => $batteryPercent,
-            'is_background' => $isBackground,
-            'source' => $source,
-            'recorded_at' => now(),
-        ]);
-
+    ): ?LocationPing {
+        // Update MySQL FIRST — keeps the live-map dot current even if MongoDB is down.
         $user->update([
             'last_latitude' => $latitude,
             'last_longitude' => $longitude,
             'last_location_at' => now(),
         ]);
 
-        return $ping;
+        try {
+            return LocationPing::create([
+                'company_id' => $user->company_id,
+                'user_id' => $user->id,
+                'daily_route_id' => $dailyRouteId,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'accuracy' => $accuracy,
+                'speed' => $speed,
+                'heading' => $heading,
+                'altitude' => $altitude,
+                'battery_percent' => $batteryPercent,
+                'is_background' => $isBackground,
+                'source' => $source,
+                'recorded_at' => now(),
+            ]);
+        } catch (\Throwable $e) {
+            \Log::warning('LocationPing write failed: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'source' => $source,
+            ]);
+            return null;
+        }
     }
 
     public function clockIn(User $user, float $latitude, float $longitude): MrAttendance
@@ -311,13 +318,21 @@ class TrackingService
             ];
         }
 
-        LocationPing::insert($documents);
-
+        // Update MySQL FIRST so the live-map dot is current even if MongoDB fails.
         if ($lastLat !== null) {
             $user->update([
                 'last_latitude' => $lastLat,
                 'last_longitude' => $lastLng,
                 'last_location_at' => $now,
+            ]);
+        }
+
+        try {
+            LocationPing::insert($documents);
+        } catch (\Throwable $e) {
+            \Log::warning('LocationPing batch insert failed: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'count' => count($documents),
             ]);
         }
 

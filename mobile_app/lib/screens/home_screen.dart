@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/app_state.dart';
-import 'customers_screen.dart';
 import 'dashboard_tab.dart';
-import 'expenses_screen.dart';
-import 'notifications_screen.dart';
+import 'leaves_screen.dart';
+import 'more_screen.dart';
+import 'orders_screen.dart';
 import 'visits_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,7 +15,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class _HomeScreenState extends State<HomeScreen>
+    with WidgetsBindingObserver {
   int _index = 0;
 
   @override
@@ -38,7 +39,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final app = context.read<AppState>();
     if (app.user?.trackingActive != true) return;
     app.setTrackingBackground(
-      state == AppLifecycleState.paused || state == AppLifecycleState.hidden,
+      state == AppLifecycleState.paused ||
+          state == AppLifecycleState.hidden,
     );
   }
 
@@ -50,9 +52,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final pages = [
       const DashboardTab(),
       const VisitsScreen(),
-      const CustomersScreen(),
-      const ExpensesScreen(),
-      const NotificationsScreen(),
+      const OrdersScreen(),
+      const LeavesScreen(),
+      const MoreScreen(),
     ];
 
     return Scaffold(
@@ -72,27 +74,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             label: 'Visits',
           ),
           const NavigationDestination(
-            icon: Icon(Icons.people_outline),
-            selectedIcon: Icon(Icons.people),
-            label: 'Customers',
-          ),
-          const NavigationDestination(
             icon: Icon(Icons.receipt_long_outlined),
             selectedIcon: Icon(Icons.receipt_long),
-            label: 'Expenses',
+            label: 'Orders',
+          ),
+          const NavigationDestination(
+            icon: Icon(Icons.event_available_outlined),
+            selectedIcon: Icon(Icons.event_available),
+            label: 'Leaves',
           ),
           NavigationDestination(
             icon: Badge(
               isLabelVisible: unread > 0,
               label: Text(unread > 9 ? '9+' : '$unread'),
-              child: const Icon(Icons.notifications_outlined),
+              child: const Icon(Icons.apps_outlined),
             ),
             selectedIcon: Badge(
               isLabelVisible: unread > 0,
               label: Text(unread > 9 ? '9+' : '$unread'),
-              child: const Icon(Icons.notifications),
+              child: const Icon(Icons.apps),
             ),
-            label: 'Alerts',
+            label: 'More',
           ),
         ],
       ),

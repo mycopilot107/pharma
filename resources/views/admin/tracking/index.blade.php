@@ -65,7 +65,7 @@
                 <h2 class="font-semibold text-slate-800">Route history</h2>
                 <p class="text-xs text-slate-500">Replay GPS trail for any rep</p>
             </div>
-            <div class="p-4 flex flex-wrap gap-3">
+            <div class="p-4 flex flex-wrap gap-3 items-center">
                 <select id="history-rep" class="rounded-lg border px-3 py-2 text-sm">
                     @foreach ($representatives as $rep)
                         <option value="{{ $rep->id }}">{{ $rep->name }}</option>
@@ -73,8 +73,9 @@
                 </select>
                 <input type="date" id="history-date" value="{{ today()->toDateString() }}" class="rounded-lg border px-3 py-2 text-sm">
                 <button type="button" id="load-route-btn" class="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700">Load route</button>
+                <span id="route-status" class="text-xs text-slate-500"></span>
             </div>
-            <div id="history-map" class="h-64 w-full bg-slate-50 border-t hidden"></div>
+            <div id="history-map" class="h-80 w-full bg-slate-50 border-t"></div>
         </div>
     </div>
 
@@ -167,7 +168,7 @@ const INITIAL_REPS = @json($liveReps);
 let map = L.map('tracking-map').setView([20.5937, 78.9629], 5);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
 let markers = {};
-let historyMap = null;
+let historyMap = null;   // initialised on first loadRoute() call
 let historyLayer = null;
 
 function repCardHtml(rep) {
@@ -246,41 +247,79 @@ updateMap(INITIAL_REPS);
 setInterval(refreshLive, 15000);
 refreshLive();
 
-document.getElementById('load-route-btn')?.addEventListener('click', () => {
+function loadRoute() {
     const userId = document.getElementById('history-rep').value;
     const date = document.getElementById('history-date').value;
+    if (!userId) return;
     const url = ROUTE_URL_TEMPLATE.replace('__ID__', userId) + '?date=' + date;
+    const statusEl = document.getElementById('route-status');
+    statusEl.textContent = 'Loading…';
+
     fetch(url).then(r => r.json()).then(data => {
-        const el = document.getElementById('history-map');
-        el.classList.remove('hidden');
         if (!historyMap) {
-            historyMap = L.map('history-map');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(historyMap);
+            historyMap = L.map('history-map').setView([20.5937, 78.9629], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(historyMap);
             historyLayer = L.layerGroup().addTo(historyMap);
         }
         historyLayer.clearLayers();
+
         const latlngs = data.pings.map(p => [p.lat, p.lng]);
+        const visitLatlngs = (data.visits || [])
+            .filter(v => v.check_in)
+            .map(v => [v.check_in.lat, v.check_in.lng]);
+        const allPoints = latlngs.length ? latlngs : visitLatlngs;
+
         let info = '';
-        if (data.analytics) {
+        if (data.analytics && latlngs.length) {
             info = `Distance: ${data.analytics.distance_km} km · Stops: ${data.analytics.stops?.length || 0} · Moving: ${data.analytics.moving_minutes} min`;
         }
+
         if (latlngs.length) {
-            L.polyline(latlngs, { color: '#0d9488', weight: 4 }).addTo(historyLayer);
-            L.marker(latlngs[0]).addTo(historyLayer).bindPopup('Start');
-            L.marker(latlngs[latlngs.length - 1]).addTo(historyLayer).bindPopup('End' + (info ? '<br>' + info : ''));
-            historyMap.fitBounds(latlngs, { padding: [20, 20] });
+            // Full GPS track
+            L.polyline(latlngs, { color: '#0d9488', weight: 4, opacity: 0.85 }).addTo(historyLayer);
+            L.circleMarker(latlngs[0], { radius: 7, color: '#059669', fillColor: '#6ee7b7', fillOpacity: 1 })
+                .addTo(historyLayer).bindPopup('Start');
+            L.circleMarker(latlngs[latlngs.length - 1], { radius: 7, color: '#dc2626', fillColor: '#fca5a5', fillOpacity: 1 })
+                .addTo(historyLayer).bindPopup('End' + (info ? '<br>' + info : ''));
+            statusEl.textContent = `${latlngs.length} GPS pings` + (info ? ' · ' + info : '');
+        } else if (visitLatlngs.length) {
+            // Fallback: connect visit check-in locations when no GPS pings exist
+            L.polyline(visitLatlngs, { color: '#6366f1', weight: 3, dashArray: '8 6', opacity: 0.7 }).addTo(historyLayer);
+            statusEl.textContent = `No GPS pings — showing ${visitLatlngs.length} visit locations`;
+        } else {
+            statusEl.textContent = 'No data found for this date';
         }
+
+        // Stop markers
         (data.analytics?.stops || []).forEach(s => {
-            L.circleMarker([s.lat, s.lng], { radius: 8, color: '#d97706', fillColor: '#fbbf24', fillOpacity: 0.8 })
-                .addTo(historyLayer).bindPopup(`Stop ${s.duration_minutes} min (${s.from}-${s.to})`);
+            L.circleMarker([s.lat, s.lng], { radius: 8, color: '#d97706', fillColor: '#fbbf24', fillOpacity: 0.85 })
+                .addTo(historyLayer).bindPopup(`Stop ${s.duration_minutes} min (${s.from}–${s.to})`);
         });
-        data.visits.forEach(v => {
+
+        // Visit check-in markers
+        (data.visits || []).forEach(v => {
             if (v.check_in) {
-                const risk = v.validation?.risk_score >= 50 ? ' ⚠' : '';
-                L.marker([v.check_in.lat, v.check_in.lng]).addTo(historyLayer).bindPopup('Visit: ' + v.place + risk);
+                const risk = (v.validation?.risk_score ?? 0) >= 50 ? ' ⚠' : '';
+                const customer = v.customer ? ` (${v.customer})` : '';
+                L.marker([v.check_in.lat, v.check_in.lng])
+                    .addTo(historyLayer)
+                    .bindPopup(`<strong>${v.place}${customer}</strong>${risk}<br>Status: ${v.status}${v.duration_minutes ? '<br>' + v.duration_minutes + ' min' : ''}`);
             }
         });
+
+        if (allPoints.length) {
+            historyMap.fitBounds(allPoints, { padding: [30, 30], maxZoom: 15 });
+        }
+    }).catch(() => {
+        statusEl.textContent = 'Failed to load route data';
     });
-});
+}
+
+document.getElementById('load-route-btn')?.addEventListener('click', loadRoute);
+
+// Auto-load today's route for the first rep on page load
+if (document.getElementById('history-rep')?.value) {
+    loadRoute();
+}
 </script>
 @endpush

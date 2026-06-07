@@ -9,7 +9,10 @@ import '../services/auth_service.dart';
 import '../services/customer_service.dart';
 import '../services/dashboard_service.dart';
 import '../services/expense_service.dart';
+import '../services/leave_service.dart';
 import '../services/notification_service.dart';
+import '../services/order_service.dart';
+import '../services/product_service.dart';
 import '../core/tracking/background_location_tracker.dart';
 import '../services/tracking_service.dart';
 import '../services/visit_service.dart';
@@ -25,6 +28,9 @@ class AppState extends ChangeNotifier {
     expenses = ExpenseService(api);
     notifications = NotificationService(api);
     tracking = TrackingService(api);
+    orders = OrderService(api);
+    products = ProductService(api);
+    leaves = LeaveService(api);
   }
 
   late final AuthService auth;
@@ -34,6 +40,9 @@ class AppState extends ChangeNotifier {
   late final ExpenseService expenses;
   late final NotificationService notifications;
   late final TrackingService tracking;
+  late final OrderService orders;
+  late final ProductService products;
+  late final LeaveService leaves;
   BackgroundLocationTracker? locationTracker;
 
   User? user;
@@ -140,7 +149,8 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> ensureTrackingIfOnDuty() async {
-    if (user?.trackingActive == true && locationTracker?.isRunning != true) {
+    if (user?.trackingActive == true &&
+        locationTracker?.isRunning != true) {
       await startLocationTracking();
     }
   }

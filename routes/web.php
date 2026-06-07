@@ -227,6 +227,23 @@ Route::get('/visit-photos/{visitId}/{filename}', function (string $visitId, stri
     ]);
 })->where('filename', '.*');
 
+// Serve expense receipts through PHP — no server symlink required
+Route::get('/expense-receipts/{userId}/{filename}', function (string $userId, string $filename) {
+    $path = 'expense-receipts/' . $userId . '/' . $filename;
+
+    if (! \Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+
+    $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($path);
+    $mime = mime_content_type($fullPath) ?: 'application/octet-stream';
+
+    return response()->file($fullPath, [
+        'Content-Type' => $mime,
+        'Cache-Control' => 'private, max-age=86400',
+    ]);
+})->where('filename', '.*');
+
 // Scheduler trigger endpoint — called by external cron service (e.g. cron-job.org) via curl
 Route::get('/cron/run', function (\Illuminate\Http\Request $request) {
     if ($request->query('secret') !== config('app.scheduler_secret')) {

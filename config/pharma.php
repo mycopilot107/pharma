@@ -5,6 +5,7 @@ return [
     'currency' => env('PHARMA_CURRENCY', 'USD'),
     'price_per_user_usd' => (float) env('PHARMA_PRICE_PER_USER', 3),
     'subscription_days' => (int) env('PHARMA_SUBSCRIPTION_DAYS', 30),
+    'yearly_discount' => (float) env('PHARMA_YEARLY_DISCOUNT', 0.10),
 
     'leave_allowances' => [
         'casual' => (int) env('LEAVE_CASUAL_DAYS', 12),

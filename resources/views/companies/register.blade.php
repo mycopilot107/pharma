@@ -25,10 +25,41 @@
             </select>
             @error('currency')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
 
+            {{-- Billing cycle toggle --}}
+            <p class="mt-4 block text-sm font-medium text-slate-700">Billing cycle *</p>
+            <div class="mt-2 inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 gap-1">
+                <label class="cycle-label relative cursor-pointer">
+                    <input type="radio" name="billing_cycle" id="cycle_monthly" value="monthly"
+                        class="sr-only" @checked(old('billing_cycle', request('billing_cycle', 'monthly')) === 'monthly')>
+                    <span id="cycle-monthly-btn"
+                        class="block rounded-lg px-5 py-2 text-sm font-medium transition-colors
+                            bg-white text-slate-800 shadow-sm border border-slate-200">
+                        Monthly
+                    </span>
+                </label>
+                <label class="cycle-label relative cursor-pointer">
+                    <input type="radio" name="billing_cycle" id="cycle_yearly" value="yearly"
+                        class="sr-only" @checked(old('billing_cycle', request('billing_cycle')) === 'yearly')>
+                    <span id="cycle-yearly-btn"
+                        class="block rounded-lg px-5 py-2 text-sm font-medium transition-colors
+                            text-slate-500">
+                        Yearly
+                        <span class="ml-1.5 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">
+                            Save {{ (int) round(config('pharma.yearly_discount', 0.10) * 100) }}%
+                        </span>
+                    </span>
+                </label>
+            </div>
+            @error('billing_cycle')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+
             <label class="mt-4 block text-sm font-medium text-slate-700" for="plan_id">Number of medical representatives *</label>
             <select name="plan_id" id="plan_id" required class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 focus:border-teal-500 focus:ring-teal-500">
                 @foreach ($plans as $plan)
-                    <option value="{{ $plan->id }}" data-price="{{ $plan->price_usd }}" data-limit="{{ $plan->user_limit }}" data-free="{{ $plan->isFree() ? '1' : '0' }}"
+                    <option value="{{ $plan->id }}"
+                        data-price="{{ $plan->price_usd }}"
+                        data-yearly="{{ $plan->yearlyPrice() }}"
+                        data-limit="{{ $plan->user_limit }}"
+                        data-free="{{ $plan->isFree() ? '1' : '0' }}"
                         @selected(old('plan_id', request('plan')) == $plan->id)>
                         {{ $plan->user_limit }} users — {{ $plan->formattedPrice(old('currency', config('currencies.default', 'USD'))) }}/month
                     </option>
@@ -37,9 +68,10 @@
             @error('plan_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
 
             <div id="price-summary" class="mt-4 rounded-xl bg-teal-50 p-4 text-teal-900">
-                <p class="text-sm">Monthly subscription</p>
+                <p class="text-sm" id="price-label">Monthly subscription</p>
                 <p class="text-2xl font-bold" id="price-display">—</p>
                 <p class="text-sm text-teal-700" id="price-breakdown"></p>
+                <p class="mt-1 text-xs text-teal-600 hidden" id="yearly-saving-note"></p>
             </div>
         </section>
 
@@ -116,12 +148,19 @@
 @push('head')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const planSelect = document.getElementById('plan_id');
+    const planSelect    = document.getElementById('plan_id');
     const currencySelect = document.getElementById('currency');
-    const priceDisplay = document.getElementById('price-display');
+    const priceDisplay  = document.getElementById('price-display');
     const priceBreakdown = document.getElementById('price-breakdown');
-    const pricePerUser = {{ config('pharma.price_per_user_usd', 3) }};
-    const submitBtn = document.getElementById('submit-btn');
+    const priceLabel    = document.getElementById('price-label');
+    const savingNote    = document.getElementById('yearly-saving-note');
+    const submitBtn     = document.getElementById('submit-btn');
+    const monthlyRadio  = document.getElementById('cycle_monthly');
+    const yearlyRadio   = document.getElementById('cycle_yearly');
+    const monthlyBtn    = document.getElementById('cycle-monthly-btn');
+    const yearlyBtn     = document.getElementById('cycle-yearly-btn');
+    const pricePerUser  = {{ config('pharma.price_per_user_usd', 3) }};
+    const discountPct   = {{ (int) round(config('pharma.yearly_discount', 0.10) * 100) }};
 
     function symbol() {
         return currencySelect.options[currencySelect.selectedIndex].dataset.symbol || '$';
@@ -131,25 +170,61 @@ document.addEventListener('DOMContentLoaded', () => {
         return symbol() + ' ' + Number(amount).toFixed(2);
     }
 
+    function isYearly() {
+        return yearlyRadio.checked;
+    }
+
+    function updateCycleButtons() {
+        const yearly = isYearly();
+        monthlyBtn.className = yearly
+            ? 'block rounded-lg px-5 py-2 text-sm font-medium transition-colors text-slate-500'
+            : 'block rounded-lg px-5 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200';
+        yearlyBtn.className = yearly
+            ? 'block rounded-lg px-5 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200'
+            : 'block rounded-lg px-5 py-2 text-sm font-medium transition-colors text-slate-500';
+    }
+
     function updatePrice() {
-        const opt = planSelect.options[planSelect.selectedIndex];
-        const limit = opt.dataset.limit;
-        const price = parseFloat(opt.dataset.price);
-        const isFree = opt.dataset.free === '1' || price <= 0;
+        const opt    = planSelect.options[planSelect.selectedIndex];
+        const limit  = opt.dataset.limit;
+        const monthly = parseFloat(opt.dataset.price);
+        const yearly  = parseFloat(opt.dataset.yearly);
+        const isFree  = opt.dataset.free === '1' || monthly <= 0;
+        const cycle   = isYearly();
 
         if (isFree) {
+            priceLabel.textContent = 'Free plan';
             priceDisplay.textContent = 'Free';
             priceBreakdown.textContent = '1 medical representative — no payment required';
+            savingNote.classList.add('hidden');
             submitBtn.textContent = 'Create free account';
+        } else if (cycle) {
+            const monthlyEquiv = yearly / 12;
+            const saved = (monthly * 12) - yearly;
+            priceLabel.textContent = 'Yearly subscription';
+            priceDisplay.textContent = formatMoney(yearly) + '/year';
+            priceBreakdown.textContent =
+                limit + ' users × ' + formatMoney(pricePerUser) +
+                ' × 12 months − ' + discountPct + '% = ' + formatMoney(yearly);
+            savingNote.textContent = 'You save ' + formatMoney(saved) + ' vs monthly billing';
+            savingNote.classList.remove('hidden');
+            submitBtn.textContent = 'Continue to Razorpay payment (yearly)';
         } else {
-            priceDisplay.textContent = formatMoney(price);
-            priceBreakdown.textContent = limit + ' users × ' + formatMoney(pricePerUser) + ' = ' + formatMoney(price) + '/month';
+            priceLabel.textContent = 'Monthly subscription';
+            priceDisplay.textContent = formatMoney(monthly) + '/month';
+            priceBreakdown.textContent =
+                limit + ' users × ' + formatMoney(pricePerUser) + ' = ' + formatMoney(monthly) + '/month';
+            savingNote.classList.add('hidden');
             submitBtn.textContent = 'Continue to Razorpay payment';
         }
     }
 
     planSelect.addEventListener('change', updatePrice);
     currencySelect.addEventListener('change', updatePrice);
+    monthlyRadio.addEventListener('change', () => { updateCycleButtons(); updatePrice(); });
+    yearlyRadio.addEventListener('change',  () => { updateCycleButtons(); updatePrice(); });
+
+    updateCycleButtons();
     updatePrice();
 
     const phoneInput = document.getElementById('company_phone');

@@ -68,7 +68,10 @@ class Expense extends Model
             return null;
         }
 
-        return Storage::disk('public')->url($this->receipt_path);
+        // Serve through PHP route — no server symlink required.
+        // Path format stored: expense-receipts/{userId}/{filename}
+        $segments = explode('/', ltrim($this->receipt_path, '/'));
+        return rtrim(config('app.url'), '/') . '/expense-receipts/' . implode('/', array_slice($segments, 1));
     }
 
     public function isImageReceipt(): bool

@@ -19,20 +19,32 @@ class ExpenseService {
     required double amount,
     required String expenseDate,
     String? description,
-    required String receiptPath,
+    String? receiptPath,
   }) async {
-    final file = await http.MultipartFile.fromPath('receipt', receiptPath);
-    final data = await _api.postMultipart(
-      '/expenses',
-      fields: {
+    late Map<String, dynamic> data;
+
+    if (receiptPath != null) {
+      final file = await http.MultipartFile.fromPath('receipt', receiptPath);
+      data = (await _api.postMultipart(
+        '/expenses',
+        fields: {
+          'type': type,
+          'amount': amount.toString(),
+          'expense_date': expenseDate,
+          if (description != null) 'description': description,
+        },
+        files: [file],
+      )) as Map<String, dynamic>;
+    } else {
+      data = (await _api.post('/expenses', body: {
         'type': type,
-        'amount': amount.toString(),
+        'amount': amount,
         'expense_date': expenseDate,
         if (description != null) 'description': description,
-      },
-      files: [file],
-    );
-    return Expense.fromJson(data as Map<String, dynamic>);
+      })) as Map<String, dynamic>;
+    }
+
+    return Expense.fromJson(data);
   }
 
   Future<void> delete(int id) async {

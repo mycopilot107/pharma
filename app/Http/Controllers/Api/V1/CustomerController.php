@@ -50,9 +50,7 @@ class CustomerController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
-        return (new CustomerResource($customer))
-            ->response()
-            ->setStatusCode(201);
+        return response()->json(new CustomerResource($customer), 201);
     }
 
     public function show(Request $request, Customer $customer)

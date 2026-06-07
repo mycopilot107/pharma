@@ -26,6 +26,7 @@ class StorageSetup extends Command
     {
         $dirs = [
             storage_path('app/public/visit-photos'),
+            storage_path('app/public/expense-receipts'),
             storage_path('app/private'),
             storage_path('logs'),
             storage_path('framework/cache'),

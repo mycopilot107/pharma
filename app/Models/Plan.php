@@ -48,4 +48,25 @@ class Plan extends Model
     {
         return (int) round((float) $this->price_usd * 100);
     }
+
+    /** Yearly price = monthly × 12 × (1 - discount). */
+    public function yearlyPrice(): float
+    {
+        $discount = (float) config('pharma.yearly_discount', 0.10);
+        return round((float) $this->price_usd * 12 * (1 - $discount), 2);
+    }
+
+    public function yearlyAmountCents(): int
+    {
+        return (int) round($this->yearlyPrice() * 100);
+    }
+
+    public function formattedYearlyPrice(?string $currencyCode = null): string
+    {
+        if ($this->isFree()) {
+            return 'Free';
+        }
+
+        return \App\Support\Currency::format($this->yearlyPrice(), $currencyCode);
+    }
 }

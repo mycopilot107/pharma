@@ -56,6 +56,7 @@
             <tr>
                 <th class="px-4 py-3 text-left">MR</th>
                 <th class="px-4 py-3 text-left">Visit</th>
+                <th class="px-4 py-3 text-left">Date</th>
                 <th class="px-4 py-3 text-left">Type</th>
                 <th class="px-4 py-3 text-left">Status</th>
                 <th class="px-4 py-3 text-left">Time</th>
@@ -68,12 +69,15 @@
                 <tr>
                     <td class="px-4 py-3">{{ $visit->user->name }}</td>
                     <td class="px-4 py-3 font-medium">{{ $visit->place_name }}</td>
+                    <td class="px-4 py-3 text-slate-500 whitespace-nowrap">
+                        {{ ($visit->planned_at ?? $visit->created_at)->format('d M Y') }}
+                    </td>
                     <td class="px-4 py-3">{{ $visit->visit_type->label() }}</td>
                     <td class="px-4 py-3"><span class="rounded-full px-2 py-0.5 text-xs {{ $visit->status->color() }}">{{ $visit->status->label() }}</span></td>
-                    <td class="px-4 py-3 text-slate-500">
+                    <td class="px-4 py-3 text-slate-500 whitespace-nowrap">
                         @if ($visit->checked_in_at)
-                            {{ $visit->checked_in_at->format('h:i') }}
-                            @if ($visit->checked_out_at) – {{ $visit->checked_out_at->format('h:i') }}@endif
+                            {{ $visit->checked_in_at->format('h:i A') }}
+                            @if ($visit->checked_out_at) – {{ $visit->checked_out_at->format('h:i A') }}@endif
                             @if ($visit->formattedDuration()) ({{ $visit->formattedDuration() }})@endif
                         @else
                             —
@@ -85,7 +89,7 @@
                     <td class="px-4 py-3"><a href="{{ route('admin.visits.show', $visit) }}" class="text-teal-700 hover:underline">View</a></td>
                 </tr>
             @empty
-                <tr><td colspan="7" class="px-4 py-8 text-center text-slate-500">No visits recorded yet.</td></tr>
+                <tr><td colspan="8" class="px-4 py-8 text-center text-slate-500">No visits recorded yet.</td></tr>
             @endforelse
         </tbody>
     </table>

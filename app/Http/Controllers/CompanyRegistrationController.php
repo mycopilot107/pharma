@@ -46,6 +46,7 @@ class CompanyRegistrationController extends Controller
             'company_phone' => ['required', 'digits:10', 'regex:/^[6-9][0-9]{9}$/'],
             'address' => ['nullable', 'string', 'max:1000'],
             'plan_id' => ['required', Rule::exists('plans', 'id')->where('is_active', true)],
+            'billing_cycle' => ['nullable', 'string', 'in:monthly,yearly'],
             'currency' => ['required', 'string', 'size:3', Currency::validationRule()],
             'admin_name' => ['required', 'string', 'min:2', 'max:255'],
             'admin_email' => [
@@ -75,6 +76,7 @@ class CompanyRegistrationController extends Controller
 
         $plan = Plan::findOrFail($validated['plan_id']);
         $currency = strtoupper($validated['currency']);
+        $billingCycle = $validated['billing_cycle'] ?? 'monthly';
 
         if ($plan->isFree()) {
             $admin = DB::transaction(function () use ($validated, $plan, $currency) {
@@ -114,7 +116,9 @@ class CompanyRegistrationController extends Controller
                 ->with('error', 'Payment gateway is not configured. Add RAZORPAY_KEY and RAZORPAY_SECRET to .env, or choose the Free plan.');
         }
 
-        $company = DB::transaction(function () use ($validated, $plan, $currency) {
+        $amountUsd = $billingCycle === 'yearly' ? $plan->yearlyPrice() : (float) $plan->price_usd;
+
+        $company = DB::transaction(function () use ($validated, $plan, $currency, $amountUsd) {
             $company = Company::create([
                 'name' => $validated['company_name'],
                 'email' => $validated['company_email'],
@@ -123,7 +127,7 @@ class CompanyRegistrationController extends Controller
                 'plan_id' => $plan->id,
                 'user_limit' => $plan->user_limit,
                 'currency' => $currency,
-                'amount_paid_usd' => $plan->price_usd,
+                'amount_paid_usd' => $amountUsd,
                 'status' => Company::STATUS_PENDING,
             ]);
 
@@ -139,7 +143,7 @@ class CompanyRegistrationController extends Controller
             return $company;
         });
 
-        $this->razorpay->createOrder($company, $plan);
+        $this->razorpay->createOrder($company, $plan, $billingCycle);
 
         return redirect()->route('payment.checkout', $company)
             ->with('success', 'Company created. Complete payment to activate your account.');
@@ -152,10 +156,15 @@ class CompanyRegistrationController extends Controller
             $currency = config('currencies.default', 'USD');
         }
 
+        $discount = (float) config('pharma.yearly_discount', 0.10);
+
         return response()->json([
             'user_limit' => $plan->user_limit,
             'price' => (float) $plan->price_usd,
             'formatted_price' => $plan->formattedPrice($currency),
+            'yearly_price' => $plan->yearlyPrice(),
+            'formatted_yearly_price' => $plan->formattedYearlyPrice($currency),
+            'yearly_discount_pct' => (int) round($discount * 100),
             'price_per_user' => (float) config('pharma.price_per_user_usd', 3),
             'currency' => strtoupper($currency),
             'currency_symbol' => Currency::symbol($currency),

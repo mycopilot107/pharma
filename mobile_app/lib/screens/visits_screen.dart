@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../core/location/location_helper.dart';
 import '../core/theme/app_theme.dart';
+import '../models/customer.dart';
 import '../models/visit.dart';
 import '../providers/app_state.dart';
+import '../services/customer_service.dart';
 import 'visit_detail_screen.dart';
 
 class VisitsScreen extends StatefulWidget {
@@ -19,6 +22,16 @@ class _VisitsScreenState extends State<VisitsScreen> {
   bool _loading = true;
   bool _starting = false;
 
+  DateTime? _selectedDate;
+  String? _selectedStatus;
+
+  static const _statuses = [
+    _StatusOption(label: 'All',         value: null,          color: Colors.grey),
+    _StatusOption(label: 'Planned',     value: 'planned',     color: Colors.blue),
+    _StatusOption(label: 'In Progress', value: 'in_progress', color: Colors.orange),
+    _StatusOption(label: 'Completed',   value: 'completed',   color: Colors.green),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -28,43 +41,98 @@ class _VisitsScreenState extends State<VisitsScreen> {
   Future<void> _load() async {
     setState(() => _loading = true);
     try {
-      final list = await context.read<AppState>().visits.list();
+      final dateStr = _selectedDate != null
+          ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+          : null;
+      final list = await context
+          .read<AppState>()
+          .visits
+          .list(date: dateStr, status: _selectedStatus);
       if (mounted) setState(() => _visits = list);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+      _load();
+    }
+  }
+
+  void _clearDate() {
+    setState(() => _selectedDate = null);
+    _load();
+  }
+
+  void _setStatus(String? status) {
+    if (_selectedStatus == status) return;
+    setState(() => _selectedStatus = status);
+    _load();
+  }
+
   Future<void> _quickStart() async {
     if (_starting) return;
+
     final state = context.read<AppState>();
+
+    // Refresh dashboard first so the activeVisit check is current
+    await state.refreshDashboard();
+
+    if (!mounted) return;
+
     if (state.dashboardData?.activeVisit != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Complete your active visit first')),
       );
       return;
     }
+
+    // Show customer selection sheet — instant UI, no GPS wait yet
+    final result = await showModalBottomSheet<_StartVisitResult>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _StartVisitSheet(customers: state.customers),
+    );
+
+    if (result == null || !mounted) return; // user cancelled
+
+    // GPS + visit creation — show spinner on FAB
     setState(() => _starting = true);
     try {
       final pos = await LocationHelper.getCurrentPosition();
       final visit = await state.visits.create({
-        'visit_type': 'doctor',
-        'place_name': 'Field visit',
+        'visit_type': result.visitType,
+        if (result.customerId != null) 'customer_id': result.customerId,
+        if (result.customerId == null) 'place_name': 'Field visit',
         'start_now': true,
         'latitude': pos.latitude,
         'longitude': pos.longitude,
       });
       await state.refreshDashboard();
       if (mounted) {
-        Navigator.push(
+        // Await the push so we can refresh when the user returns
+        await Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => VisitDetailScreen(visitId: visit.id)),
+          MaterialPageRoute(
+              builder: (_) => VisitDetailScreen(visitId: visit.id)),
         );
+        // Refresh after returning from visit detail
+        await state.refreshDashboard();
         _load();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('$e')));
       }
     } finally {
       if (mounted) setState(() => _starting = false);
@@ -78,47 +146,531 @@ class _VisitsScreenState extends State<VisitsScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _starting ? null : _quickStart,
         icon: _starting
-            ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            ? const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                    strokeWidth: 2, color: Colors.white),
+              )
             : const Icon(Icons.add),
         label: const Text('Start visit'),
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: _load,
-              child: _visits.isEmpty
-                  ? const ListTile(title: Text('No visits yet'))
-                  : ListView.builder(
-                      itemCount: _visits.length,
-                      itemBuilder: (context, i) {
-                        final v = _visits[i];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
-                              child: Icon(
-                                v.isCompleted ? Icons.check : Icons.place,
-                                color: AppTheme.primary,
+      body: Column(
+        children: [
+          _FilterBar(
+            selectedDate: _selectedDate,
+            selectedStatus: _selectedStatus,
+            statuses: _statuses,
+            onPickDate: _pickDate,
+            onClearDate: _clearDate,
+            onStatusChanged: _setStatus,
+          ),
+          const Divider(height: 1),
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : RefreshIndicator(
+                    onRefresh: _load,
+                    child: _visits.isEmpty
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(32),
+                              child: Text(
+                                'No visits found',
+                                style: TextStyle(color: Color(0xFF94A3B8)),
                               ),
                             ),
-                            title: Text(v.placeName),
-                            subtitle: Text(v.status.replaceAll('_', ' ')),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => VisitDetailScreen(visitId: v.id),
-                                ),
-                              );
-                              _load();
-                            },
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 90),
+                            itemCount: _visits.length,
+                            itemBuilder: (context, i) => _VisitTile(
+                              visit: _visits[i],
+                              onTap: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => VisitDetailScreen(
+                                        visitId: _visits[i].id),
+                                  ),
+                                );
+                                _load();
+                              },
+                            ),
                           ),
-                        );
-                      },
-                    ),
-            ),
+                  ),
+          ),
+        ],
+      ),
     );
+  }
+}
+
+// ── Start visit result ────────────────────────────────────────────────────────
+
+class _StartVisitResult {
+  const _StartVisitResult({this.customerId, this.visitType = 'doctor'});
+  final int? customerId;
+  final String visitType;
+}
+
+// ── Customer selection bottom sheet ──────────────────────────────────────────
+
+class _StartVisitSheet extends StatefulWidget {
+  const _StartVisitSheet({required this.customers});
+  final CustomerService customers;
+
+  @override
+  State<_StartVisitSheet> createState() => _StartVisitSheetState();
+}
+
+class _StartVisitSheetState extends State<_StartVisitSheet> {
+  final _searchCtrl = TextEditingController();
+  List<Customer> _all = [];
+  List<Customer> _filtered = [];
+  bool _loading = true;
+  String _visitType = 'doctor';
+
+  static const _types = [
+    ('doctor',   'Doctor',   Icons.person),
+    ('chemist',  'Chemist',  Icons.medication),
+    ('hospital', 'Hospital', Icons.local_hospital),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _searchCtrl.addListener(_filter);
+    _loadCustomers();
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadCustomers() async {
+    try {
+      final list = await widget.customers.list();
+      if (mounted) {
+        setState(() {
+          _all = list;
+          _filtered = list;
+          _loading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  void _filter() {
+    final q = _searchCtrl.text.trim().toLowerCase();
+    setState(() {
+      _filtered = q.isEmpty
+          ? _all
+          : _all.where((c) {
+              return c.name.toLowerCase().contains(q) ||
+                  (c.specialty?.toLowerCase().contains(q) ?? false) ||
+                  (c.phone?.contains(q) ?? false);
+            }).toList();
+    });
+  }
+
+  void _pick(int? customerId) {
+    Navigator.pop(
+        context, _StartVisitResult(customerId: customerId, visitType: _visitType));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final maxH = MediaQuery.of(context).size.height * 0.82;
+    return Container(
+      height: maxH,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Handle
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 4),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Row(
+              children: [
+                const Text(
+                  'Start visit',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
+            ),
+          ),
+          // Visit type selector
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: _types.map((t) {
+                final (value, label, icon) = t;
+                final selected = _visitType == value;
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: GestureDetector(
+                      onTap: () => setState(() => _visitType = value),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? AppTheme.primary.withValues(alpha: 0.12)
+                              : Colors.grey[100],
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: selected
+                                ? AppTheme.primary
+                                : Colors.transparent,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(icon,
+                                size: 20,
+                                color: selected
+                                    ? AppTheme.primary
+                                    : Colors.grey[600]),
+                            const SizedBox(height: 3),
+                            Text(
+                              label,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: selected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                                color: selected
+                                    ? AppTheme.primary
+                                    : Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Search
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              controller: _searchCtrl,
+              autofocus: false,
+              decoration: InputDecoration(
+                hintText: 'Search customers...',
+                prefixIcon: const Icon(Icons.search, size: 20),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 10),
+                isDense: true,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // "Skip customer" option
+          ListTile(
+            dense: true,
+            leading: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey[100],
+              child: const Icon(Icons.person_off_outlined,
+                  size: 18, color: Colors.grey),
+            ),
+            title: const Text('Start without customer'),
+            subtitle: const Text('Free / unlinked visit',
+                style: TextStyle(fontSize: 12)),
+            trailing:
+                const Icon(Icons.arrow_forward_ios, size: 13, color: Colors.grey),
+            onTap: () => _pick(null),
+          ),
+          const Divider(height: 1),
+          // Customer list
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : _filtered.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Text(
+                            _all.isEmpty
+                                ? 'No customers added yet'
+                                : 'No results for "${_searchCtrl.text}"',
+                            style: const TextStyle(color: Colors.grey),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    : ListView.separated(
+                        itemCount: _filtered.length,
+                        separatorBuilder: (_, __) =>
+                            const Divider(height: 1, indent: 60),
+                        itemBuilder: (_, i) {
+                          final c = _filtered[i];
+                          final subtitle = [
+                            c.type[0].toUpperCase() + c.type.substring(1),
+                            if (c.specialty != null) c.specialty!,
+                            if (c.phone != null) c.phone!,
+                          ].join(' · ');
+                          return ListTile(
+                            dense: true,
+                            leading: CircleAvatar(
+                              radius: 20,
+                              backgroundColor:
+                                  AppTheme.primary.withValues(alpha: 0.1),
+                              child: Text(
+                                c.name[0].toUpperCase(),
+                                style: const TextStyle(
+                                  color: AppTheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            title: Text(c.name,
+                                style: const TextStyle(fontSize: 14)),
+                            subtitle: Text(subtitle,
+                                style: const TextStyle(fontSize: 12)),
+                            trailing: const Icon(Icons.arrow_forward_ios,
+                                size: 13, color: Colors.grey),
+                            onTap: () => _pick(c.id),
+                          );
+                        },
+                      ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Filter bar ────────────────────────────────────────────────────────────────
+
+class _StatusOption {
+  const _StatusOption({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+  final String label;
+  final String? value;
+  final Color color;
+}
+
+class _FilterBar extends StatelessWidget {
+  const _FilterBar({
+    required this.selectedDate,
+    required this.selectedStatus,
+    required this.statuses,
+    required this.onPickDate,
+    required this.onClearDate,
+    required this.onStatusChanged,
+  });
+
+  final DateTime? selectedDate;
+  final String? selectedStatus;
+  final List<_StatusOption> statuses;
+  final VoidCallback onPickDate;
+  final VoidCallback onClearDate;
+  final ValueChanged<String?> onStatusChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final dateLabel = selectedDate == null
+        ? 'All dates'
+        : selectedDate!.isAtSameMomentAs(DateTime(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day))
+            ? 'Today'
+            : DateFormat('dd MMM yyyy').format(selectedDate!);
+
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.calendar_today,
+                  size: 16, color: Color(0xFF64748B)),
+              const SizedBox(width: 6),
+              GestureDetector(
+                onTap: onPickDate,
+                child: Text(
+                  dateLabel,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: selectedDate != null
+                        ? AppTheme.primary
+                        : const Color(0xFF64748B),
+                  ),
+                ),
+              ),
+              if (selectedDate != null) ...[
+                const SizedBox(width: 4),
+                GestureDetector(
+                  onTap: onClearDate,
+                  child: const Icon(Icons.close,
+                      size: 16, color: Color(0xFF94A3B8)),
+                ),
+              ],
+            ],
+          ),
+          const SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: statuses.map((s) {
+                final selected = selectedStatus == s.value;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: FilterChip(
+                    label: Text(s.label),
+                    selected: selected,
+                    onSelected: (_) => onStatusChanged(s.value),
+                    selectedColor: s.color.withValues(alpha: 0.15),
+                    checkmarkColor: s.color,
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      color: selected ? s.color : const Color(0xFF475569),
+                      fontWeight:
+                          selected ? FontWeight.w600 : FontWeight.normal,
+                    ),
+                    side: BorderSide(
+                      color: selected ? s.color : const Color(0xFFCBD5E1),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Visit list tile ───────────────────────────────────────────────────────────
+
+class _VisitTile extends StatelessWidget {
+  const _VisitTile({required this.visit, required this.onTap});
+
+  final Visit visit;
+  final VoidCallback onTap;
+
+  static const _statusColors = {
+    'planned': Colors.blue,
+    'in_progress': Colors.orange,
+    'completed': Colors.green,
+    'cancelled': Colors.grey,
+  };
+
+  static const _statusIcons = {
+    'planned': Icons.schedule,
+    'in_progress': Icons.play_circle,
+    'completed': Icons.check_circle,
+    'cancelled': Icons.cancel,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _statusColors[visit.status] ?? Colors.grey;
+    final icon = _statusIcons[visit.status] ?? Icons.place;
+    final label = visit.status.replaceAll('_', ' ').toUpperCase();
+
+    String? subtitle;
+    if (visit.customerName != null) subtitle = visit.customerName;
+    if (visit.checkedInAt != null) {
+      final time = _formatTime(visit.checkedInAt!);
+      subtitle = subtitle != null ? '$subtitle  ·  $time' : time;
+    }
+    if (visit.durationMinutes != null && visit.isCompleted) {
+      subtitle = (subtitle ?? '') + '  ·  ${visit.durationMinutes} min';
+    }
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: color.withValues(alpha: 0.12),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        title: Text(visit.placeName,
+            maxLines: 1, overflow: TextOverflow.ellipsis),
+        subtitle: subtitle != null
+            ? Text(subtitle,
+                style: const TextStyle(
+                    fontSize: 12, color: Color(0xFF64748B)))
+            : null,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                label,
+                style: TextStyle(
+                    fontSize: 10,
+                    color: color,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right, color: Color(0xFFCBD5E1)),
+          ],
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+
+  String _formatTime(String iso) {
+    try {
+      final dt = DateTime.parse(iso).toLocal();
+      return DateFormat('dd MMM, hh:mm a').format(dt);
+    } catch (_) {
+      return iso;
+    }
   }
 }
