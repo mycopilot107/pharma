@@ -22,8 +22,11 @@ class _VisitsScreenState extends State<VisitsScreen> {
   bool _loading = true;
   bool _starting = false;
 
-  DateTime? _selectedDate;
+  late DateTime _selectedDate;
   String? _selectedStatus;
+
+  static DateTime get _today =>
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   static const _statuses = [
     _StatusOption(label: 'All',         value: null,          color: Colors.grey),
@@ -35,15 +38,14 @@ class _VisitsScreenState extends State<VisitsScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedDate = _today;
     _load();
   }
 
   Future<void> _load() async {
     setState(() => _loading = true);
     try {
-      final dateStr = _selectedDate != null
-          ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
-          : null;
+      final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
       final list = await context
           .read<AppState>()
           .visits
@@ -57,9 +59,9 @@ class _VisitsScreenState extends State<VisitsScreen> {
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: _selectedDate,
       firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
+      lastDate: _today,
     );
     if (picked != null) {
       setState(() => _selectedDate = picked);
@@ -67,9 +69,23 @@ class _VisitsScreenState extends State<VisitsScreen> {
     }
   }
 
-  void _clearDate() {
-    setState(() => _selectedDate = null);
+  void _prevDay() {
+    setState(() => _selectedDate = _selectedDate.subtract(const Duration(days: 1)));
     _load();
+  }
+
+  void _nextDay() {
+    if (_selectedDate.isBefore(_today)) {
+      setState(() => _selectedDate = _selectedDate.add(const Duration(days: 1)));
+      _load();
+    }
+  }
+
+  void _goToday() {
+    if (_selectedDate != _today) {
+      setState(() => _selectedDate = _today);
+      _load();
+    }
   }
 
   void _setStatus(String? status) {
@@ -159,10 +175,13 @@ class _VisitsScreenState extends State<VisitsScreen> {
         children: [
           _FilterBar(
             selectedDate: _selectedDate,
+            today: _today,
             selectedStatus: _selectedStatus,
             statuses: _statuses,
             onPickDate: _pickDate,
-            onClearDate: _clearDate,
+            onPrevDay: _prevDay,
+            onNextDay: _nextDay,
+            onGoToday: _goToday,
             onStatusChanged: _setStatus,
           ),
           const Divider(height: 1),
@@ -493,64 +512,117 @@ class _StatusOption {
 class _FilterBar extends StatelessWidget {
   const _FilterBar({
     required this.selectedDate,
+    required this.today,
     required this.selectedStatus,
     required this.statuses,
     required this.onPickDate,
-    required this.onClearDate,
+    required this.onPrevDay,
+    required this.onNextDay,
+    required this.onGoToday,
     required this.onStatusChanged,
   });
 
-  final DateTime? selectedDate;
+  final DateTime selectedDate;
+  final DateTime today;
   final String? selectedStatus;
   final List<_StatusOption> statuses;
   final VoidCallback onPickDate;
-  final VoidCallback onClearDate;
+  final VoidCallback onPrevDay;
+  final VoidCallback onNextDay;
+  final VoidCallback onGoToday;
   final ValueChanged<String?> onStatusChanged;
+
+  bool get _isToday => selectedDate.year == today.year &&
+      selectedDate.month == today.month &&
+      selectedDate.day == today.day;
+
+  String get _dateLabel {
+    if (_isToday) return 'Today';
+    final yesterday = today.subtract(const Duration(days: 1));
+    if (selectedDate.year == yesterday.year &&
+        selectedDate.month == yesterday.month &&
+        selectedDate.day == yesterday.day) return 'Yesterday';
+    return DateFormat('dd MMM yyyy').format(selectedDate);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final dateLabel = selectedDate == null
-        ? 'All dates'
-        : selectedDate!.isAtSameMomentAs(DateTime(
-                DateTime.now().year, DateTime.now().month, DateTime.now().day))
-            ? 'Today'
-            : DateFormat('dd MMM yyyy').format(selectedDate!);
-
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Date navigation row
           Row(
             children: [
-              const Icon(Icons.calendar_today,
-                  size: 16, color: Color(0xFF64748B)),
-              const SizedBox(width: 6),
-              GestureDetector(
-                onTap: onPickDate,
-                child: Text(
-                  dateLabel,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: selectedDate != null
-                        ? AppTheme.primary
-                        : const Color(0xFF64748B),
+              // Prev day arrow
+              _NavArrow(
+                icon: Icons.chevron_left,
+                onTap: onPrevDay,
+                enabled: true,
+              ),
+              const SizedBox(width: 4),
+              // Date label — tap to open calendar
+              Expanded(
+                child: GestureDetector(
+                  onTap: onPickDate,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.calendar_today,
+                          size: 14, color: Color(0xFF64748B)),
+                      const SizedBox(width: 6),
+                      Text(
+                        _dateLabel,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: _isToday
+                              ? AppTheme.primary
+                              : const Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.arrow_drop_down,
+                          size: 18, color: Color(0xFF94A3B8)),
+                    ],
                   ),
                 ),
               ),
-              if (selectedDate != null) ...[
-                const SizedBox(width: 4),
+              const SizedBox(width: 4),
+              // Next day arrow (disabled on today)
+              _NavArrow(
+                icon: Icons.chevron_right,
+                onTap: _isToday ? null : onNextDay,
+                enabled: !_isToday,
+              ),
+              // "Today" shortcut — only shown when not on today
+              if (!_isToday) ...[
+                const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: onClearDate,
-                  child: const Icon(Icons.close,
-                      size: 16, color: Color(0xFF94A3B8)),
+                  onTap: onGoToday,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'Today',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primary,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ],
           ),
           const SizedBox(height: 8),
+          // Status filter chips
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -581,6 +653,43 @@ class _FilterBar extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _NavArrow extends StatelessWidget {
+  const _NavArrow({
+    required this.icon,
+    required this.onTap,
+    required this.enabled,
+  });
+
+  final IconData icon;
+  final VoidCallback? onTap;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: enabled
+              ? const Color(0xFFF1F5F9)
+              : const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFE2E8F0)),
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: enabled
+              ? const Color(0xFF475569)
+              : const Color(0xFFCBD5E1),
+        ),
       ),
     );
   }

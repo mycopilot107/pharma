@@ -53,7 +53,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          title: const Text('Submit expense'),
+          title: const Text('Add Expense'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -151,7 +151,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Submit'),
+              child: const Text('Add'),
             ),
           ],
         ),
@@ -194,7 +194,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       await _load();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Expense submitted')),
+          const SnackBar(content: Text('Expense added successfully')),
         );
       }
     } catch (e) {
@@ -232,7 +232,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     strokeWidth: 2, color: Colors.white),
               )
             : const Icon(Icons.add),
-        label: const Text('Submit'),
+        label: const Text('Add Expense'),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())

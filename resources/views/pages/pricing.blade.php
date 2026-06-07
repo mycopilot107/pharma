@@ -14,39 +14,52 @@
 
     {{-- Billing cycle toggle --}}
     @php $discountPct = (int) round(config('pharma.yearly_discount', 0.10) * 100); @endphp
-    <div class="mt-10 flex justify-center">
-        <div class="inline-flex items-center rounded-xl border border-slate-200 bg-slate-50 p-1 gap-1">
+    <div class="mt-10 flex flex-col items-center gap-3">
+        <div class="inline-flex rounded-full bg-slate-100 p-1 shadow-inner" role="group" aria-label="Billing cycle">
             <button type="button" id="toggle-monthly"
-                class="rounded-lg px-6 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200"
+                class="rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200 bg-teal-600 text-white shadow-sm"
                 onclick="setCycle('monthly')">
                 Monthly
             </button>
             <button type="button" id="toggle-yearly"
-                class="rounded-lg px-6 py-2 text-sm font-medium transition-colors text-slate-500"
+                class="rounded-full px-6 py-2.5 text-sm font-semibold transition-all duration-200 text-slate-500"
                 onclick="setCycle('yearly')">
                 Yearly
-                <span class="ml-1.5 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">
+                <span id="pricing-yearly-badge"
+                    class="ml-1.5 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-xs font-bold text-teal-700">
                     Save {{ $discountPct }}%
                 </span>
             </button>
         </div>
+        <p class="text-xs text-slate-500" id="cycle-note">Billed monthly. Switch to yearly to save {{ $discountPct }}%.</p>
     </div>
-    <p class="mt-2 text-center text-xs text-slate-500" id="cycle-note">Billed monthly. Switch to yearly to save {{ $discountPct }}%.</p>
 
     {{-- Plan Cards --}}
+    @php
+        $paidPlans   = $plans->where(fn($p) => ! $p->isFree())->values();
+        $popularIndex = $paidPlans->count() >= 2 ? 1 : 0; // highlight second paid plan
+    @endphp
     <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         @foreach ($plans as $plan)
-        <div class="relative flex flex-col rounded-2xl border bg-white p-7 shadow-sm transition hover:shadow-md
-            {{ $plan->isFree() ? 'border-teal-400 ring-2 ring-teal-400' : 'border-slate-200' }}">
+        @php
+            $paidIdx  = $paidPlans->search(fn($p) => $p->id === $plan->id);
+            $isPopular = ! $plan->isFree() && $paidIdx === $popularIndex && $paidPlans->count() >= 2;
+        @endphp
+        <div class="relative flex flex-col rounded-2xl border bg-white p-7 shadow-sm transition-shadow hover:shadow-md
+            {{ $isPopular ? 'border-teal-500 ring-2 ring-teal-500' : ($plan->isFree() ? 'border-slate-200' : 'border-slate-200') }}">
 
-            @if ($plan->isFree())
-                <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-teal-500 px-3 py-0.5 text-xs font-semibold text-white">
+            @if ($isPopular)
+                <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-teal-600 px-3 py-1 text-xs font-bold text-white shadow-sm">
+                    ★ Most popular
+                </span>
+            @elseif ($plan->isFree())
+                <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-slate-700 px-3 py-1 text-xs font-bold text-white">
                     Free forever
                 </span>
             @endif
 
-            <div>
-                <p class="text-sm font-semibold uppercase tracking-wide text-teal-600">
+            <div class="flex-1">
+                <p class="text-xs font-bold uppercase tracking-widest text-teal-600">
                     {{ $plan->user_limit }} {{ $plan->user_limit === 1 ? 'User' : 'Users' }}
                 </p>
 
@@ -59,7 +72,7 @@
                         {{ $plan->formattedPrice() }}
                     </p>
                     <p class="plan-sub-monthly mt-1 text-sm text-slate-500">
-                        per month &middot; ${{ config('pharma.price_per_user_usd', 3) }}/user
+                        per month &middot; ₹{{ config('pharma.price_per_user_usd', 3) }}/user
                     </p>
                     {{-- Yearly price (hidden by default) --}}
                     <p class="plan-price-yearly mt-3 text-4xl font-bold text-slate-900 hidden">
@@ -73,15 +86,17 @@
                     </p>
                 @endif
 
-                <p class="mt-4 text-sm text-slate-600">{{ $plan->description }}</p>
+                <p class="mt-4 text-sm leading-relaxed text-slate-600">{{ $plan->description }}</p>
             </div>
 
             <a href="{{ route('companies.register', ['plan' => $plan->id]) }}"
                 id="plan-cta-{{ $plan->id }}"
-                class="mt-7 inline-block w-full rounded-lg py-2.5 text-center text-sm font-semibold transition-colors
-                    {{ $plan->isFree()
+                class="mt-7 inline-block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors
+                    {{ $isPopular
                         ? 'bg-teal-600 text-white hover:bg-teal-700'
-                        : 'bg-teal-50 text-teal-700 hover:bg-teal-100' }}"
+                        : ($plan->isFree()
+                            ? 'bg-slate-900 text-white hover:bg-slate-800'
+                            : 'bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200') }}"
                 data-plan="{{ $plan->id }}"
                 data-free="{{ $plan->isFree() ? '1' : '0' }}">
                 {{ $plan->isFree() ? 'Start for free' : 'Get started' }} &rarr;
@@ -99,19 +114,33 @@
     <script>
     let pricingCycle = 'monthly';
 
+    const PRICING_ACTIVE   = ['bg-teal-600', 'text-white', 'shadow-sm'];
+    const PRICING_INACTIVE = ['text-slate-500'];
+    const BASE_CLASSES     = ['rounded-full', 'px-6', 'py-2.5', 'text-sm', 'font-semibold', 'transition-all', 'duration-200'];
+
     function setCycle(cycle) {
         pricingCycle = cycle;
 
-        document.getElementById('toggle-monthly').className = cycle === 'monthly'
-            ? 'rounded-lg px-6 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200'
-            : 'rounded-lg px-6 py-2 text-sm font-medium transition-colors text-slate-500';
-        document.getElementById('toggle-yearly').className = cycle === 'yearly'
-            ? 'rounded-lg px-6 py-2 text-sm font-medium transition-colors bg-white text-slate-800 shadow-sm border border-slate-200'
-            : 'rounded-lg px-6 py-2 text-sm font-medium transition-colors text-slate-500';
+        const btnMonthly = document.getElementById('toggle-monthly');
+        const btnYearly  = document.getElementById('toggle-yearly');
+        const badge      = document.getElementById('pricing-yearly-badge');
 
-        const cycleNote = document.getElementById('cycle-note');
-        cycleNote.textContent = cycle === 'yearly'
-            ? 'Billed once per year. Save {{ $discountPct }}% vs monthly.'
+        [btnMonthly, btnYearly].forEach(btn => {
+            btn.className = BASE_CLASSES.join(' ');
+        });
+
+        if (cycle === 'monthly') {
+            btnMonthly.classList.add(...PRICING_ACTIVE);
+            btnYearly.classList.add(...PRICING_INACTIVE);
+            badge.className = 'ml-1.5 inline-block rounded-full bg-teal-100 px-2 py-0.5 text-xs font-bold text-teal-700';
+        } else {
+            btnYearly.classList.add(...PRICING_ACTIVE);
+            btnMonthly.classList.add(...PRICING_INACTIVE);
+            badge.className = 'ml-1.5 inline-block rounded-full bg-white/25 px-2 py-0.5 text-xs font-bold';
+        }
+
+        document.getElementById('cycle-note').textContent = cycle === 'yearly'
+            ? 'Billed once per year. Save {{ $discountPct }}% vs monthly billing.'
             : 'Billed monthly. Switch to yearly to save {{ $discountPct }}%.';
 
         document.querySelectorAll('.plan-price-monthly, .plan-sub-monthly').forEach(el => {
@@ -121,7 +150,6 @@
             el.classList.toggle('hidden', cycle !== 'yearly');
         });
 
-        // Update CTA links to pre-select billing cycle on register page
         document.querySelectorAll('[data-plan]').forEach(link => {
             if (link.dataset.free === '1') return;
             const url = new URL(link.href);
