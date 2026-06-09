@@ -52,6 +52,42 @@ class DashboardTab extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   _AttendanceCard(state: state, dash: dash),
+                  if (state.mockLocationDetected) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.red.shade300),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.gps_off, color: Colors.red.shade700, size: 20),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Fake GPS detected!',
+                                  style: TextStyle(
+                                    color: Colors.red.shade800,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                Text(
+                                  'Mock location app detected. Your manager has been notified. Visits may be flagged.',
+                                  style: TextStyle(color: Colors.red.shade700, fontSize: 11),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   if (state.lastGeofenceMessage != null) ...[
                     const SizedBox(height: 8),
                     Card(

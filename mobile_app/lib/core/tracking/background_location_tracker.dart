@@ -12,10 +12,12 @@ class BackgroundLocationTracker {
   BackgroundLocationTracker({
     required this.trackingService,
     required this.onGeofenceAction,
+    this.onMockLocationDetected,
   });
 
   final TrackingService trackingService;
   final void Function(String message) onGeofenceAction;
+  final void Function()? onMockLocationDetected;
 
   StreamSubscription<Position>? _positionSub;
   Timer? _fallbackTimer;
@@ -30,6 +32,9 @@ class BackgroundLocationTracker {
   // Rate-limit: never ping the server faster than once every 5 s
   static const int _minPingGapSec = 5;
   DateTime? _lastPingTime;
+
+  // Mock location detection
+  bool mockLocationDetected = false;
 
   bool get isRunning => _positionSub != null;
 
@@ -122,6 +127,12 @@ class BackgroundLocationTracker {
 
   void _onPosition(Position pos) {
     _geofenceMonitor?.evaluate(pos.latitude, pos.longitude);
+
+    // Detect mock location (Android isMocked flag)
+    if (pos.isMocked && !mockLocationDetected) {
+      mockLocationDetected = true;
+      onMockLocationDetected?.call();
+    }
 
     // Rate-limit: skip if we pinged less than _minPingGapSec ago
     final now = DateTime.now();

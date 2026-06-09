@@ -14,6 +14,15 @@
     <meta property="og:title"       content="@yield('og_title', config('pharma.app_name'))">
     <meta property="og:description" content="@yield('meta_description', 'Track every MR visit with GPS, photo proof, DCR and WhatsApp reports.')">
     <meta property="og:site_name"   content="{{ config('pharma.app_name') }}">
+    <meta property="og:image"       content="{{ url('assets/images/icon-512.png') }}">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    {{-- Favicons --}}
+    <link rel="icon"             type="image/x-icon"  href="{{ url('favicon.ico') }}">
+    <link rel="icon"             type="image/png"     sizes="32x32" href="{{ url('favicon-32x32.png') }}">
+    <link rel="icon"             type="image/png"     sizes="16x16" href="{{ url('favicon-16x16.png') }}">
+    <link rel="apple-touch-icon"                      sizes="180x180" href="{{ url('apple-touch-icon.png') }}">
+    <link rel="icon"             type="image/png"     sizes="192x192" href="{{ url('assets/images/icon-192.png') }}">
     @stack('schema')
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -26,8 +35,11 @@
     <header class="relative z-50 border-b border-slate-200 bg-white">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
             <a href="{{ auth()->check() && auth()->user()->role === \App\Enums\UserRole::SuperAdmin ? route('super-admin.dashboard') : (auth()->check() && auth()->user()->role === \App\Enums\UserRole::CompanyAdmin ? route('dashboard') : route('home')) }}"
-                class="text-lg font-bold text-teal-700 shrink-0">
-                {{ config('pharma.app_name') }}
+                class="shrink-0 flex items-center">
+                <img src="{{ url('assets/images/logo-nav.png') }}"
+                     alt="{{ config('pharma.app_name') }}"
+                     height="36"
+                     class="h-9 w-auto">
             </a>
 
             @guest

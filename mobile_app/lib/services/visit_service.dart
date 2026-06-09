@@ -35,11 +35,25 @@ class VisitService {
     return Visit.fromJson(data as Map<String, dynamic>);
   }
 
-  Future<Visit> checkOut(int id, double lat, double lng, {String? notes}) async {
+  Future<Visit> checkOut(
+    int id,
+    double lat,
+    double lng, {
+    String? notes,
+    List<String>? productsPromoted,
+    int? samplesGiven,
+    String? followUpDate,
+    String? signatureBase64,
+  }) async {
     final data = await _api.post('/visits/$id/check-out', body: {
       'latitude': lat,
       'longitude': lng,
       if (notes != null) 'notes': notes,
+      if (productsPromoted != null && productsPromoted.isNotEmpty)
+        'products_promoted': productsPromoted,
+      if (samplesGiven != null) 'samples_given': samplesGiven,
+      if (followUpDate != null) 'follow_up_date': followUpDate,
+      if (signatureBase64 != null) 'signature_base64': signatureBase64,
     });
     return Visit.fromJson(data as Map<String, dynamic>);
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/theme/app_theme.dart';
 import '../providers/app_state.dart';
 import 'customers_screen.dart';
 import 'expenses_screen.dart';
 import 'notifications_screen.dart';
 import 'products_screen.dart';
+import 'tour_plan_screen.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
@@ -19,6 +21,16 @@ class MoreScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          _NavTile(
+            icon: Icons.map_outlined,
+            title: 'Tour Plan',
+            subtitle: 'Plan weekly doctor visits',
+            color: AppTheme.primary,
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(
+                    builder: (_) => const TourPlanScreen())),
+          ),
+          const SizedBox(height: 8),
           _NavTile(
             icon: Icons.people,
             title: 'Customers',

@@ -52,6 +52,7 @@ class AppState extends ChangeNotifier {
   bool initialized = false;
   String? error;
   int unreadCount = 0;
+  bool mockLocationDetected = false;
 
   Future<void> bootstrap() async {
     if (!await auth.hasToken()) {
@@ -124,6 +125,7 @@ class AppState extends ChangeNotifier {
     final pos = await LocationHelper.getCurrentPosition();
     await stopLocationTracking();
     user = await tracking.clockOut(pos.latitude, pos.longitude);
+    mockLocationDetected = false;
     await refreshDashboard();
   }
 
@@ -132,6 +134,10 @@ class AppState extends ChangeNotifier {
       trackingService: tracking,
       onGeofenceAction: (msg) {
         lastGeofenceMessage = msg;
+        notifyListeners();
+      },
+      onMockLocationDetected: () {
+        mockLocationDetected = true;
         notifyListeners();
       },
     );
