@@ -5,9 +5,11 @@
 
     RewriteEngine On
 
-    # Serve static files that live in /public from the root URL
+    # Serve static assets that live in /public from the root URL
     # e.g. /pharma/assets/... → htdocs/pharma/public/assets/...
+    # Exclude .php files so index.php routing is never intercepted
     RewriteCond %{DOCUMENT_ROOT}/pharma/public/$1 -f
+    RewriteCond $1 !\.php$
     RewriteRule ^(.+)$ public/$1 [L]
 
     # Handle Authorization Header
