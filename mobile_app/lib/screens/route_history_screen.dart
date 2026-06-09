@@ -48,9 +48,7 @@ class _RouteHistoryScreenState extends State<RouteHistoryScreen> {
         .toList();
 
     LatLng center = const LatLng(20.5937, 78.9629);
-    if (points.isNotEmpty) {
-      center = points.first;
-    }
+    if (points.isNotEmpty) center = points.first;
 
     return Scaffold(
       appBar: AppBar(
@@ -83,10 +81,10 @@ class _RouteHistoryScreenState extends State<RouteHistoryScreen> {
                       spacing: 16,
                       runSpacing: 8,
                       children: [
-                        _chip('${analytics['distance_km']} km', Icons.route),
+                        _chip('${_fmtKm(analytics['distance_km'])}', Icons.route),
                         _chip('${analytics['ping_count']} pings', Icons.gps_fixed),
                         _chip('${stops.length} stops', Icons.pause_circle),
-                        _chip('${analytics['moving_minutes']} min moving', Icons.directions_walk),
+                        _chip('${_fmtMinutes(analytics['moving_minutes'])} moving', Icons.directions_walk),
                       ],
                     ),
                   ),
@@ -95,8 +93,14 @@ class _RouteHistoryScreenState extends State<RouteHistoryScreen> {
                       ? const Center(child: Text('No GPS trail for this date'))
                       : FlutterMap(
                           options: MapOptions(
+                            initialCameraFit: points.length > 1
+                                ? CameraFit.coordinates(
+                                    coordinates: points,
+                                    padding: const EdgeInsets.all(48),
+                                  )
+                                : null,
                             initialCenter: center,
-                            initialZoom: 14,
+                            initialZoom: 15,
                           ),
                           children: [
                             TileLayer(
@@ -160,6 +164,20 @@ class _RouteHistoryScreenState extends State<RouteHistoryScreen> {
               ],
             ),
     );
+  }
+
+  String _fmtKm(dynamic raw) {
+    if (raw == null) return '0.00 km';
+    return '${(raw as num).toStringAsFixed(2)} km';
+  }
+
+  String _fmtMinutes(dynamic raw) {
+    if (raw == null) return '0 min';
+    final total = (raw as num).round();
+    if (total < 60) return '$total min';
+    final h = total ~/ 60;
+    final m = total % 60;
+    return '${h}h ${m.toString().padLeft(2, '0')}m';
   }
 
   Widget _chip(String label, IconData icon) {

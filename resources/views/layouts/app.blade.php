@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('pharma.app_name'))</title>
+    <meta name="description" content="@yield('meta_description', 'MedRep Fleet — Medical Representative tracking app with GPS, visit proof, daily call reports and fake GPS detection for pharma companies in India.')">
+    <meta name="robots" content="@yield('robots', 'index, follow')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    {{-- Open Graph --}}
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="@yield('canonical', url()->current())">
+    <meta property="og:title"       content="@yield('og_title', config('pharma.app_name'))">
+    <meta property="og:description" content="@yield('meta_description', 'Track every MR visit with GPS, photo proof, DCR and WhatsApp reports.')">
+    <meta property="og:site_name"   content="{{ config('pharma.app_name') }}">
+    @stack('schema')
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else

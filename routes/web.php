@@ -19,6 +19,7 @@ use App\Http\Controllers\CompanyUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\Mr\AiReportController as MrAiReportController;
 use App\Http\Controllers\Mr\CustomerController as MrCustomerController;
 use App\Http\Controllers\Mr\CustomerCrmController as MrCustomerCrmController;
@@ -38,6 +39,12 @@ use App\Http\Controllers\SuperAdmin\SettingsController as SuperAdminSettingsCont
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// SEO landing pages
+Route::get('/medical-representative-tracking-app',    [SeoController::class, 'mrTrackingApp'])->name('seo.mr-tracking');
+Route::get('/mr-reporting-software-india',            [SeoController::class, 'mrReportingSoftware'])->name('seo.mr-reporting');
+Route::get('/pharma-crm-for-medical-representatives', [SeoController::class, 'pharmaCrm'])->name('seo.pharma-crm');
+Route::get('/doctor-visit-tracking-app',              [SeoController::class, 'doctorVisitTracking'])->name('seo.doctor-visit');
 
 Route::get('/about',    [PageController::class, 'about'])->name('about');
 Route::get('/features', [PageController::class, 'features'])->name('features');
