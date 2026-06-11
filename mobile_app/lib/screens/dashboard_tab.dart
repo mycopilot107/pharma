@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../core/theme/app_theme.dart';
 import '../providers/app_state.dart';
-import 'movement_log_screen.dart';
 import 'route_history_screen.dart';
 import 'visit_detail_screen.dart';
 
@@ -99,30 +98,13 @@ class DashboardTab extends StatelessWidget {
                     ),
                   ],
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const RouteHistoryScreen()),
-                          ),
-                          icon: const Icon(Icons.map),
-                          label: const Text('Route map'),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => const MovementLogScreen()),
-                          ),
-                          icon: const Icon(Icons.list_alt),
-                          label: const Text('GPS log'),
-                        ),
-                      ),
-                    ],
+                  OutlinedButton.icon(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RouteHistoryScreen()),
+                    ),
+                    icon: const Icon(Icons.map),
+                    label: const Text('Route map'),
                   ),
                   const SizedBox(height: 16),
                   if (dash.activeVisit != null) ...[

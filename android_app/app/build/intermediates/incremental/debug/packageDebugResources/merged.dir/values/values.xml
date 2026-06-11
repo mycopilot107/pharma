@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="expense_categories">
+        <item>Travel</item>
+        <item>Food</item>
+        <item>Accommodation</item>
+        <item>Medical</item>
+        <item>Communication</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="leave_types">
+        <item>Sick</item>
+        <item>Casual</item>
+        <item>Earned</item>
+        <item>Maternity</item>
+        <item>Paternity</item>
+        <item>Other</item>
+    </string-array>
+    <color name="accent">#03DAC6</color>
+    <color name="background">#F5F5F5</color>
+    <color name="error">#D32F2F</color>
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="primary_light">#BBDEFB</color>
+    <color name="seed">#1976D2</color>
+    <color name="success">#388E3C</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="warning">#F57C00</color>
+    <color name="white">#FFFFFF</color>
+    <string name="app_name">MedRep Fleet</string>
+    <style name="Theme.MedRepFleet" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorError">@color/error</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+</resources>

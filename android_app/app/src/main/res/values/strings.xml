@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MedRep Fleet</string>
+
+    <string-array name="expense_categories">
+        <item>Travel</item>
+        <item>Food</item>
+        <item>Accommodation</item>
+        <item>Medical</item>
+        <item>Communication</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="leave_types">
+        <item>Sick</item>
+        <item>Casual</item>
+        <item>Earned</item>
+        <item>Maternity</item>
+        <item>Paternity</item>
+        <item>Other</item>
+    </string-array>
+</resources>
