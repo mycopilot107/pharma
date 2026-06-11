@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\DailyRoute;
 use App\Models\MrAttendance;
+use App\Models\User;
 use App\Services\GeofenceService;
 use App\Services\LeaveService;
 use App\Services\TrackingService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class TrackingController extends Controller
 {
@@ -219,6 +221,22 @@ class TrackingController extends Controller
             ],
             'user' => new UserResource($request->user()->fresh()),
         ]);
+    }
+
+    public function liveTrack(Request $request)
+    {
+        $user  = $request->user();
+        $today = now()->toDateString();
+        $key   = "track:{$user->company_id}:{$user->id}:{$today}";
+
+        $raw = Redis::zrange($key, 0, -1);
+
+        $data = collect($raw)->map(function ($item) {
+            [$lat, $lng] = explode(',', $item, 2);
+            return ['latitude' => (float) $lat, 'longitude' => (float) $lng];
+        })->values();
+
+        return response()->json(['data' => $data]);
     }
 
     public function status(Request $request)

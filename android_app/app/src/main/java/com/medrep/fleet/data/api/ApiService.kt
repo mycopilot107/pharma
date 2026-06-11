@@ -149,4 +149,10 @@ interface ApiService {
     suspend fun getRouteHistory(
         @Query("date") date: String
     ): Response<ListResponse<TrackingPoint>>
+
+    // Live track from Redis — returns points for today streamed from Redis sorted set
+    @GET("tracking/live")
+    suspend fun getLiveTrack(
+        @Query("user_id") userId: Int? = null
+    ): Response<ListResponse<TrackingPoint>>
 }

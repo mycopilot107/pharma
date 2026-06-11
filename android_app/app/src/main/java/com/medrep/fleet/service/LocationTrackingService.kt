@@ -33,11 +33,11 @@ class LocationTrackingService : Service() {
         const val NOTIF_CHANNEL_ID = "medrep_tracking"
         const val NOTIF_ID = 1001
 
-        private const val PING_INTERVAL_MS    = 10_000L   // ping server every 10 s
-        private const val LOCATION_INTERVAL_MS = 5_000L   // request GPS every 5 s
-        private const val LOCATION_FASTEST_MS  = 3_000L   // fastest GPS update
-        private const val MIN_DISTANCE_M       = 10f       // min 10 m movement before update
-        private const val MIN_PING_GAP_MS      = 5_000L   // rate-limit: never ping faster than 5 s
+        private const val PING_INTERVAL_MS    = 1_000L    // ping server every 1 s
+        private const val LOCATION_INTERVAL_MS = 1_000L   // request GPS every 1 s
+        private const val LOCATION_FASTEST_MS  = 1_000L   // fastest GPS update
+        private const val MIN_DISTANCE_M       = 0f        // send every update regardless of distance
+        private const val MIN_PING_GAP_MS      = 1_000L   // rate-limit: never ping faster than 1 s
 
         // Impossible speed check: 300 km/h = ~83 m/s
         private const val MAX_PLAUSIBLE_SPEED_MPS = 83f

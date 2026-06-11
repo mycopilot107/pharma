@@ -13,6 +13,7 @@ use App\Models\Visit;
 use App\Services\RouteAnalyticsService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Redis;
 
 class TrackingService
 {
@@ -35,6 +36,15 @@ class TrackingService
             'last_longitude' => $longitude,
             'last_location_at' => now(),
         ]);
+
+        // Write to Redis sorted set for live map (score = unix ms, value = "lat,lng")
+        try {
+            $redisKey = "track:{$user->company_id}:{$user->id}:" . now()->toDateString();
+            Redis::zadd($redisKey, now()->valueOf(), "{$latitude},{$longitude}");
+            Redis::expire($redisKey, 172800); // 48 hours TTL
+        } catch (\Throwable $e) {
+            \Log::warning('Redis ping write failed: ' . $e->getMessage());
+        }
 
         try {
             return LocationPing::create([
@@ -316,6 +326,24 @@ class TrackingService
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
+        }
+
+        // Write batch to Redis sorted set
+        try {
+            $redisKey = "track:{$user->company_id}:{$user->id}:" . $now->toDateString();
+            $zaddArgs = [];
+            foreach ($documents as $doc) {
+                $zaddArgs[(string) ($doc['recorded_at'] instanceof Carbon
+                    ? $doc['recorded_at']->valueOf()
+                    : Carbon::parse($doc['recorded_at'])->valueOf()
+                )] = "{$doc['latitude']},{$doc['longitude']}";
+            }
+            if ($zaddArgs) {
+                Redis::zadd($redisKey, $zaddArgs);
+                Redis::expire($redisKey, 172800);
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Redis batch write failed: ' . $e->getMessage());
         }
 
         // Update MySQL FIRST so the live-map dot is current even if MongoDB fails.

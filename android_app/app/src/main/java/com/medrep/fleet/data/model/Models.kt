@@ -41,15 +41,15 @@ data class User(
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
 data class DashboardData(
-    @SerializedName("today_visits") val todayVisits: Int,
-    @SerializedName("today_distance_km") val todayDistanceKm: Double,
-    @SerializedName("month_visits") val monthVisits: Int,
-    @SerializedName("pending_expenses") val pendingExpenses: Int,
-    @SerializedName("pending_orders") val pendingOrders: Int,
-    @SerializedName("unread_notifications") val unreadNotifications: Int,
-    @SerializedName("clocked_in") val clockedIn: Boolean,
-    @SerializedName("clock_in_time") val clockInTime: String?,
-    @SerializedName("recent_visits") val recentVisits: List<Visit>
+    @SerializedName("today_visits") val todayVisits: Int = 0,
+    @SerializedName("today_distance_km") val todayDistanceKm: Double = 0.0,
+    @SerializedName("month_visits") val monthVisits: Int = 0,
+    @SerializedName("pending_expenses") val pendingExpenses: Int = 0,
+    @SerializedName("pending_orders") val pendingOrders: Int = 0,
+    @SerializedName("unread_notifications") val unreadNotifications: Int = 0,
+    @SerializedName("clocked_in") val clockedIn: Boolean = false,
+    @SerializedName("clock_in_time") val clockInTime: String? = null,
+    @SerializedName("recent_visits") val recentVisits: List<Visit> = emptyList()
 )
 
 // ── Attendance ────────────────────────────────────────────────────────────────
@@ -176,12 +176,12 @@ data class TourPlanEntry(
 // ── Route/Tracking ────────────────────────────────────────────────────────────
 
 data class TrackingPoint(
-    val id: Int,
+    val id: Int? = null,
     val latitude: Double,
     val longitude: Double,
-    val accuracy: Float?,
-    val speed: Float?,
-    val heading: Float?,
-    @SerializedName("is_mock") val isMock: Boolean,
-    @SerializedName("created_at") val createdAt: String
+    val accuracy: Float? = null,
+    val speed: Float? = null,
+    val heading: Float? = null,
+    @SerializedName("is_mock") val isMock: Boolean = false,
+    @SerializedName("created_at") val createdAt: String? = null
 )

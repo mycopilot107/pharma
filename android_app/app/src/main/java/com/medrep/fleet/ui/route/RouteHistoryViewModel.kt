@@ -31,4 +31,19 @@ class RouteHistoryViewModel : ViewModel() {
             }
         }
     }
+
+    // Polls Redis live track — silently updates points without showing loader
+    fun loadLive(context: Context) {
+        val token = TokenPrefs.getToken(context) ?: return
+        viewModelScope.launch {
+            try {
+                val r = ApiClient.create(token).getLiveTrack()
+                if (r.isSuccessful) {
+                    val pts = r.body()?.data ?: emptyList()
+                    if (pts.isNotEmpty()) _points.value = pts
+                }
+            } catch (_: Exception) {
+            }
+        }
+    }
 }

@@ -44,6 +44,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/tracking/geofences', [TrackingController::class, 'geofences']);
         Route::post('/tracking/geofence-event', [TrackingController::class, 'geofenceEvent']);
         Route::get('/tracking/route-history', [TrackingController::class, 'routeHistory']);
+        Route::get('/tracking/live', [TrackingController::class, 'liveTrack']);
         Route::get('/tracking/movement-log', [TrackingController::class, 'movementLog']);
         Route::post('/attendance/clock-in', [TrackingController::class, 'clockIn']);
         Route::post('/attendance/clock-out', [TrackingController::class, 'clockOut']);
