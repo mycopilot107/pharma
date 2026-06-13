@@ -118,6 +118,9 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
   public final TextView tvFollowUp;
 
   @NonNull
+  public final TextView tvNoCustomers;
+
+  @NonNull
   public final TextView tvProducts;
 
   @NonNull
@@ -138,8 +141,8 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
       @NonNull TextInputLayout tilCheckInFollowUp, @NonNull TextInputLayout tilCustomer,
       @NonNull TextInputLayout tilFollowUp, @NonNull Toolbar toolbar,
       @NonNull TextView tvCheckInTime, @NonNull TextView tvCheckOutTime,
-      @NonNull TextView tvCustomerName, @NonNull TextView tvFollowUp, @NonNull TextView tvProducts,
-      @NonNull TextView tvSamples) {
+      @NonNull TextView tvCustomerName, @NonNull TextView tvFollowUp,
+      @NonNull TextView tvNoCustomers, @NonNull TextView tvProducts, @NonNull TextView tvSamples) {
     this.rootView = rootView;
     this.actvCustomer = actvCustomer;
     this.bannerMockGps = bannerMockGps;
@@ -171,6 +174,7 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
     this.tvCheckOutTime = tvCheckOutTime;
     this.tvCustomerName = tvCustomerName;
     this.tvFollowUp = tvFollowUp;
+    this.tvNoCustomers = tvNoCustomers;
     this.tvProducts = tvProducts;
     this.tvSamples = tvSamples;
   }
@@ -382,6 +386,12 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvNoCustomers;
+      TextView tvNoCustomers = ViewBindings.findChildViewById(rootView, id);
+      if (tvNoCustomers == null) {
+        break missingId;
+      }
+
       id = R.id.tvProducts;
       TextView tvProducts = ViewBindings.findChildViewById(rootView, id);
       if (tvProducts == null) {
@@ -399,8 +409,8 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
           chipTypeClinic, chipTypeDistributor, chipTypeDoctor, chipTypeHospital, etCheckInFollowUp,
           etCheckInNotes, etFollowUp, etNotes, etProducts, etSamples, groupCheckIn, groupCheckOut,
           groupDcr, groupDcrSummary, progressBar, tilCheckInFollowUp, tilCustomer, tilFollowUp,
-          toolbar, tvCheckInTime, tvCheckOutTime, tvCustomerName, tvFollowUp, tvProducts,
-          tvSamples);
+          toolbar, tvCheckInTime, tvCheckOutTime, tvCustomerName, tvFollowUp, tvNoCustomers,
+          tvProducts, tvSamples);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

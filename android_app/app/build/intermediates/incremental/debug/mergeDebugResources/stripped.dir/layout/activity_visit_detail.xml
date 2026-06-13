@@ -51,13 +51,15 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="4dp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvCheckInTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_secondary"
+                android:visibility="gone" />
 
             <!-- Check-out section (for completed visits) -->
             <LinearLayout
@@ -170,8 +172,7 @@
                         android:focusableInTouchMode="false"
                         android:cursorVisible="false"
                         android:inputType="none"
-                        android:textColor="@color/text_primary"
-                        android:hint="Tap to pick a date" />
+                        android:textColor="@color/text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -268,9 +269,8 @@
                     android:id="@+id/tilCustomer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:hint="Select Customer">
+                    android:hint="Search customer name">
 
                     <AutoCompleteTextView
                         android:id="@+id/actvCustomer"
@@ -284,6 +284,20 @@
                         android:padding="16dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Empty state when no customers for selected type -->
+                <TextView
+                    android:id="@+id/tvNoCustomers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:padding="10dp"
+                    android:drawablePadding="6dp"
+                    android:gravity="center"
+                    android:text="No customers found for this type"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
                 <!-- Customer Feedback -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -321,8 +335,7 @@
                         android:focusableInTouchMode="false"
                         android:cursorVisible="false"
                         android:inputType="none"
-                        android:textColor="@color/text_primary"
-                        android:hint="Tap to pick a date" />
+                        android:textColor="@color/text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Take Photo -->

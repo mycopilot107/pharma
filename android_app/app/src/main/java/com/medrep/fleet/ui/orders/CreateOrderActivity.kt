@@ -92,6 +92,13 @@ class CreateOrderActivity : AppCompatActivity() {
                 customers.map { it.name }
             )
             binding.actvCustomer.setAdapter(adapter)
+            if (customers.isEmpty()) {
+                val typeName = selectedCustomerType.replaceFirstChar { it.uppercase() } + "s"
+                binding.tvNoCustomers.text = "No $typeName found"
+                binding.tvNoCustomers.visibility = View.VISIBLE
+            } else {
+                binding.tvNoCustomers.visibility = View.GONE
+            }
         }
 
         binding.actvCustomer.setOnFocusChangeListener { _, hasFocus ->

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -74,6 +75,9 @@ public final class ActivityCreateOrderBinding implements ViewBinding {
   @NonNull
   public final Toolbar toolbar;
 
+  @NonNull
+  public final TextView tvNoCustomers;
+
   private ActivityCreateOrderBinding(@NonNull LinearLayout rootView,
       @NonNull AutoCompleteTextView actvCustomer, @NonNull MaterialButton btnAddProduct,
       @NonNull MaterialButton btnSubmit, @NonNull ChipGroup chipGroupCustomerType,
@@ -82,7 +86,8 @@ public final class ActivityCreateOrderBinding implements ViewBinding {
       @NonNull Chip chipTypeHospital, @NonNull TextInputEditText etNotes,
       @NonNull TextInputEditText etOrderDate, @NonNull LinearLayout llProductRows,
       @NonNull ProgressBar progressBar, @NonNull TextInputLayout tilCustomer,
-      @NonNull TextInputLayout tilOrderDate, @NonNull Toolbar toolbar) {
+      @NonNull TextInputLayout tilOrderDate, @NonNull Toolbar toolbar,
+      @NonNull TextView tvNoCustomers) {
     this.rootView = rootView;
     this.actvCustomer = actvCustomer;
     this.btnAddProduct = btnAddProduct;
@@ -100,6 +105,7 @@ public final class ActivityCreateOrderBinding implements ViewBinding {
     this.tilCustomer = tilCustomer;
     this.tilOrderDate = tilOrderDate;
     this.toolbar = toolbar;
+    this.tvNoCustomers = tvNoCustomers;
   }
 
   @Override
@@ -225,10 +231,16 @@ public final class ActivityCreateOrderBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvNoCustomers;
+      TextView tvNoCustomers = ViewBindings.findChildViewById(rootView, id);
+      if (tvNoCustomers == null) {
+        break missingId;
+      }
+
       return new ActivityCreateOrderBinding((LinearLayout) rootView, actvCustomer, btnAddProduct,
           btnSubmit, chipGroupCustomerType, chipTypeChemist, chipTypeClinic, chipTypeDistributor,
           chipTypeDoctor, chipTypeHospital, etNotes, etOrderDate, llProductRows, progressBar,
-          tilCustomer, tilOrderDate, toolbar);
+          tilCustomer, tilOrderDate, toolbar, tvNoCustomers);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

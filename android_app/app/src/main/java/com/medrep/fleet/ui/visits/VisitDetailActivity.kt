@@ -117,6 +117,14 @@ class VisitDetailActivity : AppCompatActivity() {
                 customers.map { it.name }
             )
             binding.actvCustomer.setAdapter(adapter)
+            // Show empty-state hint when the type has no customers
+            if (customers.isEmpty()) {
+                val typeName = selectedCustomerType.replaceFirstChar { it.uppercase() } + "s"
+                binding.tvNoCustomers.text = "No $typeName found"
+                binding.tvNoCustomers.visibility = View.VISIBLE
+            } else {
+                binding.tvNoCustomers.visibility = View.GONE
+            }
         }
 
         binding.actvCustomer.setOnFocusChangeListener { _, hasFocus ->
@@ -200,8 +208,10 @@ class VisitDetailActivity : AppCompatActivity() {
             if (visit == null) return@observe
 
             val name = visit.customer?.name ?: visit.placeName ?: "Visit #${visit.id}"
-            binding.tvCustomerName.text = name
-            binding.tvCheckInTime.text  = "Check-in: ${visit.checkInTime ?: "—"}"
+            binding.tvCustomerName.text       = name
+            binding.tvCustomerName.visibility = View.VISIBLE
+            binding.tvCheckInTime.text        = "Check-in: ${visit.checkInTime ?: "—"}"
+            binding.tvCheckInTime.visibility  = View.VISIBLE
 
             if (visit.status == "completed") {
                 binding.tvCheckOutTime.text        = "Check-out: ${visit.checkOutTime ?: "—"}"

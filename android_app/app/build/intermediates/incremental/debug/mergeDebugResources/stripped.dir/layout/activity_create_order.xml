@@ -100,7 +100,6 @@
                 android:id="@+id/tilCustomer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:hint="Search &amp; select customer">
 
@@ -116,6 +115,19 @@
                     android:padding="16dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Empty state when no customers for selected type -->
+            <TextView
+                android:id="@+id/tvNoCustomers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:text="No customers found for this type"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
             <!-- ── Order Date ─────────────────────────────────────── -->
             <com.google.android.material.textfield.TextInputLayout

@@ -3876,6 +3876,7 @@ int id tvLegendStart 0x7f090241
 int id tvMockWarning 0x7f090242
 int id tvMonthVisits 0x7f090243
 int id tvName 0x7f090244
+int id tvNoCustomers 0x7f09029a
 int id tvNoRoute 0x7f090245
 int id tvPageInfo 0x7f09027b
 int id tvPendingExpenses 0x7f090246
