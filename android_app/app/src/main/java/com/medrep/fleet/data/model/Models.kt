@@ -41,15 +41,32 @@ data class User(
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 
 data class DashboardData(
-    @SerializedName("today_visits") val todayVisits: Int = 0,
+    // Array of visits from server — use .size for count
+    @SerializedName("today_visits") val todayVisitsList: List<Visit> = emptyList(),
+    @SerializedName("stats") val stats: DashboardStats = DashboardStats(),
+    @SerializedName("attendance") val attendance: DashboardAttendance = DashboardAttendance(),
+    @SerializedName("unread_notifications") val unreadNotifications: Int = 0,
+    @SerializedName("tracking_active") val trackingActive: Boolean = false,
+    // Fields added after server deploy — default 0 until server is updated
     @SerializedName("today_distance_km") val todayDistanceKm: Double = 0.0,
     @SerializedName("month_visits") val monthVisits: Int = 0,
     @SerializedName("pending_expenses") val pendingExpenses: Int = 0,
-    @SerializedName("pending_orders") val pendingOrders: Int = 0,
-    @SerializedName("unread_notifications") val unreadNotifications: Int = 0,
-    @SerializedName("clocked_in") val clockedIn: Boolean = false,
-    @SerializedName("clock_in_time") val clockInTime: String? = null,
-    @SerializedName("recent_visits") val recentVisits: List<Visit> = emptyList()
+) {
+    val todayVisits: Int get() = todayVisitsList.size
+    val clockedIn: Boolean get() = attendance.active
+    val clockInTime: String? get() = attendance.clockIn
+}
+
+data class DashboardStats(
+    val planned: Int = 0,
+    @SerializedName("in_progress") val inProgress: Int = 0,
+    val completed: Int = 0
+)
+
+data class DashboardAttendance(
+    val active: Boolean = false,
+    @SerializedName("clock_in") val clockIn: String? = null,
+    @SerializedName("clock_out") val clockOut: String? = null
 )
 
 // ── Attendance ────────────────────────────────────────────────────────────────
