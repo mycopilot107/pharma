@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -32,10 +31,10 @@ public final class ActivityRouteHistoryBinding implements ViewBinding {
   public final Toolbar toolbar;
 
   @NonNull
-  public final TextView tvNoRoute;
+  public final LinearLayout tvNoRoute;
 
   private ActivityRouteHistoryBinding(@NonNull LinearLayout rootView, @NonNull MapView mapView,
-      @NonNull ProgressBar progressBar, @NonNull Toolbar toolbar, @NonNull TextView tvNoRoute) {
+      @NonNull ProgressBar progressBar, @NonNull Toolbar toolbar, @NonNull LinearLayout tvNoRoute) {
     this.rootView = rootView;
     this.mapView = mapView;
     this.progressBar = progressBar;
@@ -89,7 +88,7 @@ public final class ActivityRouteHistoryBinding implements ViewBinding {
       }
 
       id = R.id.tvNoRoute;
-      TextView tvNoRoute = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout tvNoRoute = ViewBindings.findChildViewById(rootView, id);
       if (tvNoRoute == null) {
         break missingId;
       }

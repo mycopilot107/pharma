@@ -4,8 +4,8 @@ package com.medrep.fleet.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +20,7 @@ import java.lang.String;
 
 public final class ActivityLoginBinding implements ViewBinding {
   @NonNull
-  private final ScrollView rootView;
+  private final FrameLayout rootView;
 
   @NonNull
   public final MaterialButton btnLogin;
@@ -37,7 +37,7 @@ public final class ActivityLoginBinding implements ViewBinding {
   @NonNull
   public final TextView tvError;
 
-  private ActivityLoginBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnLogin,
+  private ActivityLoginBinding(@NonNull FrameLayout rootView, @NonNull MaterialButton btnLogin,
       @NonNull TextInputEditText etEmail, @NonNull TextInputEditText etPassword,
       @NonNull ProgressBar progressBar, @NonNull TextView tvError) {
     this.rootView = rootView;
@@ -50,7 +50,7 @@ public final class ActivityLoginBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public ScrollView getRoot() {
+  public FrameLayout getRoot() {
     return rootView;
   }
 
@@ -105,7 +105,7 @@ public final class ActivityLoginBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityLoginBinding((ScrollView) rootView, btnLogin, etEmail, etPassword,
+      return new ActivityLoginBinding((FrameLayout) rootView, btnLogin, etEmail, etPassword,
           progressBar, tvError);
     }
     String missingId = rootView.getResources().getResourceName(id);

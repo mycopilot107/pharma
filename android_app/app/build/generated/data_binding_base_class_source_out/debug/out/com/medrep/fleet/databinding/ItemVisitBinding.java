@@ -34,15 +34,19 @@ public final class ItemVisitBinding implements ViewBinding {
   @NonNull
   public final TextView tvStatus;
 
+  @NonNull
+  public final View viewStatusBar;
+
   private ItemVisitBinding(@NonNull MaterialCardView rootView, @NonNull TextView tvCheckIn,
       @NonNull TextView tvCheckOut, @NonNull TextView tvCustomerName,
-      @NonNull TextView tvMockWarning, @NonNull TextView tvStatus) {
+      @NonNull TextView tvMockWarning, @NonNull TextView tvStatus, @NonNull View viewStatusBar) {
     this.rootView = rootView;
     this.tvCheckIn = tvCheckIn;
     this.tvCheckOut = tvCheckOut;
     this.tvCustomerName = tvCustomerName;
     this.tvMockWarning = tvMockWarning;
     this.tvStatus = tvStatus;
+    this.viewStatusBar = viewStatusBar;
   }
 
   @Override
@@ -102,8 +106,14 @@ public final class ItemVisitBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.viewStatusBar;
+      View viewStatusBar = ViewBindings.findChildViewById(rootView, id);
+      if (viewStatusBar == null) {
+        break missingId;
+      }
+
       return new ItemVisitBinding((MaterialCardView) rootView, tvCheckIn, tvCheckOut,
-          tvCustomerName, tvMockWarning, tvStatus);
+          tvCustomerName, tvMockWarning, tvStatus, viewStatusBar);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

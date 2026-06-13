@@ -1,18 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#1976D2</color>
-    <color name="primary_dark">#1565C0</color>
-    <color name="primary_light">#BBDEFB</color>
-    <color name="accent">#03DAC6</color>
-    <color name="error">#D32F2F</color>
-    <color name="warning">#F57C00</color>
-    <color name="success">#388E3C</color>
+    <!-- ── Brand ─────────────────────────────────────────────────────────── -->
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#003C8F</color>
+    <color name="primary_light">#E3F2FD</color>
+    <color name="primary_medium">#1976D2</color>
 
-    <color name="background">#F5F5F5</color>
+    <color name="accent">#0097A7</color>
+    <color name="accent_light">#E0F7FA</color>
+
+    <!-- ── Status ─────────────────────────────────────────────────────────── -->
+    <color name="success">#2E7D32</color>
+    <color name="success_light">#E8F5E9</color>
+    <color name="warning">#E65100</color>
+    <color name="warning_light">#FFF3E0</color>
+    <color name="error">#C62828</color>
+    <color name="error_light">#FFEBEE</color>
+
+    <!-- ── Surfaces ───────────────────────────────────────────────────────── -->
+    <color name="background">#F4F7FC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#EEF2FF</color>
     <color name="white">#FFFFFF</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
 
-    <!-- Material You seed -->
-    <color name="seed">#1976D2</color>
+    <!-- ── Text ───────────────────────────────────────────────────────────── -->
+    <color name="text_primary">#1A1F36</color>
+    <color name="text_secondary">#6B7C93</color>
+    <color name="text_hint">#9EAAB8</color>
+
+    <!-- ── UI Chrome ──────────────────────────────────────────────────────── -->
+    <color name="divider">#E2E8F4</color>
+    <color name="card_stroke">#E8EDF8</color>
+
+    <!-- ── Icon tinted circles ────────────────────────────────────────────── -->
+    <color name="icon_bg_blue">#1A1565C0</color>
+    <color name="icon_bg_teal">#1A0097A7</color>
+    <color name="icon_bg_orange">#1AE65100</color>
+    <color name="icon_bg_green">#1A2E7D32</color>
+
+    <!-- ── Material You seed ──────────────────────────────────────────────── -->
+    <color name="seed">#1565C0</color>
 </resources>

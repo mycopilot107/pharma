@@ -24,6 +24,9 @@ public final class FragmentMoreBinding implements ViewBinding {
   public final MaterialButton btnLogout;
 
   @NonNull
+  public final TextView tvAvatarInitial;
+
+  @NonNull
   public final TextView tvUserEmail;
 
   @NonNull
@@ -33,9 +36,11 @@ public final class FragmentMoreBinding implements ViewBinding {
   public final TextView tvUserRole;
 
   private FragmentMoreBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnLogout,
-      @NonNull TextView tvUserEmail, @NonNull TextView tvUserName, @NonNull TextView tvUserRole) {
+      @NonNull TextView tvAvatarInitial, @NonNull TextView tvUserEmail,
+      @NonNull TextView tvUserName, @NonNull TextView tvUserRole) {
     this.rootView = rootView;
     this.btnLogout = btnLogout;
+    this.tvAvatarInitial = tvAvatarInitial;
     this.tvUserEmail = tvUserEmail;
     this.tvUserName = tvUserName;
     this.tvUserRole = tvUserRole;
@@ -74,6 +79,12 @@ public final class FragmentMoreBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvAvatarInitial;
+      TextView tvAvatarInitial = ViewBindings.findChildViewById(rootView, id);
+      if (tvAvatarInitial == null) {
+        break missingId;
+      }
+
       id = R.id.tvUserEmail;
       TextView tvUserEmail = ViewBindings.findChildViewById(rootView, id);
       if (tvUserEmail == null) {
@@ -92,8 +103,8 @@ public final class FragmentMoreBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentMoreBinding((ScrollView) rootView, btnLogout, tvUserEmail, tvUserName,
-          tvUserRole);
+      return new FragmentMoreBinding((ScrollView) rootView, btnLogout, tvAvatarInitial, tvUserEmail,
+          tvUserName, tvUserRole);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

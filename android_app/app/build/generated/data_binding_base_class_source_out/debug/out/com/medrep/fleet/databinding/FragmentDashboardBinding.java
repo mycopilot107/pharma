@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
@@ -19,13 +19,13 @@ import java.lang.String;
 
 public final class FragmentDashboardBinding implements ViewBinding {
   @NonNull
-  private final ScrollView rootView;
+  private final NestedScrollView rootView;
 
   @NonNull
-  public final MaterialButton btnClockIn;
+  public final TextView btnClockIn;
 
   @NonNull
-  public final MaterialButton btnClockOut;
+  public final TextView btnClockOut;
 
   @NonNull
   public final MaterialButton btnViewRoute;
@@ -40,7 +40,13 @@ public final class FragmentDashboardBinding implements ViewBinding {
   public final TextView tvClockedStatus;
 
   @NonNull
+  public final TextView tvDate;
+
+  @NonNull
   public final TextView tvError;
+
+  @NonNull
+  public final TextView tvGreeting;
 
   @NonNull
   public final TextView tvMonthVisits;
@@ -54,12 +60,16 @@ public final class FragmentDashboardBinding implements ViewBinding {
   @NonNull
   public final TextView tvTodayVisits;
 
-  private FragmentDashboardBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnClockIn,
-      @NonNull MaterialButton btnClockOut, @NonNull MaterialButton btnViewRoute,
+  @NonNull
+  public final View viewStatusDot;
+
+  private FragmentDashboardBinding(@NonNull NestedScrollView rootView, @NonNull TextView btnClockIn,
+      @NonNull TextView btnClockOut, @NonNull MaterialButton btnViewRoute,
       @NonNull ProgressBar progressBar, @NonNull TextView tvClockTime,
-      @NonNull TextView tvClockedStatus, @NonNull TextView tvError, @NonNull TextView tvMonthVisits,
+      @NonNull TextView tvClockedStatus, @NonNull TextView tvDate, @NonNull TextView tvError,
+      @NonNull TextView tvGreeting, @NonNull TextView tvMonthVisits,
       @NonNull TextView tvPendingExpenses, @NonNull TextView tvTodayKm,
-      @NonNull TextView tvTodayVisits) {
+      @NonNull TextView tvTodayVisits, @NonNull View viewStatusDot) {
     this.rootView = rootView;
     this.btnClockIn = btnClockIn;
     this.btnClockOut = btnClockOut;
@@ -67,16 +77,19 @@ public final class FragmentDashboardBinding implements ViewBinding {
     this.progressBar = progressBar;
     this.tvClockTime = tvClockTime;
     this.tvClockedStatus = tvClockedStatus;
+    this.tvDate = tvDate;
     this.tvError = tvError;
+    this.tvGreeting = tvGreeting;
     this.tvMonthVisits = tvMonthVisits;
     this.tvPendingExpenses = tvPendingExpenses;
     this.tvTodayKm = tvTodayKm;
     this.tvTodayVisits = tvTodayVisits;
+    this.viewStatusDot = viewStatusDot;
   }
 
   @Override
   @NonNull
-  public ScrollView getRoot() {
+  public NestedScrollView getRoot() {
     return rootView;
   }
 
@@ -102,13 +115,13 @@ public final class FragmentDashboardBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.btnClockIn;
-      MaterialButton btnClockIn = ViewBindings.findChildViewById(rootView, id);
+      TextView btnClockIn = ViewBindings.findChildViewById(rootView, id);
       if (btnClockIn == null) {
         break missingId;
       }
 
       id = R.id.btnClockOut;
-      MaterialButton btnClockOut = ViewBindings.findChildViewById(rootView, id);
+      TextView btnClockOut = ViewBindings.findChildViewById(rootView, id);
       if (btnClockOut == null) {
         break missingId;
       }
@@ -137,9 +150,21 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvDate;
+      TextView tvDate = ViewBindings.findChildViewById(rootView, id);
+      if (tvDate == null) {
+        break missingId;
+      }
+
       id = R.id.tvError;
       TextView tvError = ViewBindings.findChildViewById(rootView, id);
       if (tvError == null) {
+        break missingId;
+      }
+
+      id = R.id.tvGreeting;
+      TextView tvGreeting = ViewBindings.findChildViewById(rootView, id);
+      if (tvGreeting == null) {
         break missingId;
       }
 
@@ -167,9 +192,15 @@ public final class FragmentDashboardBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentDashboardBinding((ScrollView) rootView, btnClockIn, btnClockOut,
-          btnViewRoute, progressBar, tvClockTime, tvClockedStatus, tvError, tvMonthVisits,
-          tvPendingExpenses, tvTodayKm, tvTodayVisits);
+      id = R.id.viewStatusDot;
+      View viewStatusDot = ViewBindings.findChildViewById(rootView, id);
+      if (viewStatusDot == null) {
+        break missingId;
+      }
+
+      return new FragmentDashboardBinding((NestedScrollView) rootView, btnClockIn, btnClockOut,
+          btnViewRoute, progressBar, tvClockTime, tvClockedStatus, tvDate, tvError, tvGreeting,
+          tvMonthVisits, tvPendingExpenses, tvTodayKm, tvTodayVisits, viewStatusDot);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

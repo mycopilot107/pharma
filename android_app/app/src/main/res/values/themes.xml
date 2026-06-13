@@ -1,12 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.MedRepFleet" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorError">@color/error</item>
         <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="android:windowBackground">@color/background</item>
+        <!-- Cards -->
+        <item name="materialCardViewStyle">@style/Widget.MedRep.Card</item>
+        <!-- Bottom nav -->
+        <item name="bottomNavigationStyle">@style/Widget.MedRep.BottomNav</item>
+        <!-- Buttons -->
+        <item name="materialButtonStyle">@style/Widget.MedRep.Button</item>
     </style>
+
+    <!-- ── Cards ──────────────────────────────────────────────────────────── -->
+    <style name="Widget.MedRep.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">14dp</item>
+        <item name="strokeColor">@color/card_stroke</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+    </style>
+
+    <!-- ── Buttons ────────────────────────────────────────────────────────── -->
+    <style name="Widget.MedRep.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">50dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:letterSpacing">0.03</item>
+    </style>
+
+    <style name="Widget.MedRep.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">50dp</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <style name="Widget.MedRep.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">50dp</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- ── Bottom Navigation ─────────────────────────────────────────────── -->
+    <style name="Widget.MedRep.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/surface</item>
+        <item name="itemIconTint">@color/bottom_nav_tint</item>
+        <item name="itemTextColor">@color/bottom_nav_tint</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="elevation">8dp</item>
+    </style>
+
+    <!-- ── Input Fields ───────────────────────────────────────────────────── -->
+    <style name="Widget.MedRep.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/card_stroke</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+    </style>
+
+    <!-- ── Login Theme (dark status bar) ─────────────────────────────────── -->
+    <style name="Theme.MedRepFleet.Login" parent="Theme.MedRepFleet">
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
 </resources>

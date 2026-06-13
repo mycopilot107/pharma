@@ -21,6 +21,12 @@ class DashboardViewModel : ViewModel() {
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
+    /** null = no event; true = clocked in; false = clocked out */
+    private val _clockInResult = MutableLiveData<Boolean?>(null)
+    val clockInResult: LiveData<Boolean?> = _clockInResult
+
+    fun clearClockInResult() { _clockInResult.value = null }
+
     fun load(context: Context) {
         val token = TokenPrefs.getToken(context) ?: return
         viewModelScope.launch {
@@ -38,23 +44,49 @@ class DashboardViewModel : ViewModel() {
         }
     }
 
-    fun clockIn(context: Context) {
+    fun clockIn(context: Context, lat: Double, lng: Double) {
         val token = TokenPrefs.getToken(context) ?: return
         viewModelScope.launch {
+            _loading.value = true
+            _error.value = null
             try {
-                ApiClient.create(token).clockIn(emptyMap())
-                load(context)
-            } catch (_: Exception) {}
+                val r = ApiClient.create(token).clockIn(
+                    mapOf("latitude" to lat, "longitude" to lng)
+                )
+                if (r.isSuccessful) {
+                    _clockInResult.value = true
+                    load(context)
+                } else {
+                    _error.value = "Clock-in failed (${r.code()})"
+                }
+            } catch (e: Exception) {
+                _error.value = "Network error: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
         }
     }
 
-    fun clockOut(context: Context) {
+    fun clockOut(context: Context, lat: Double, lng: Double) {
         val token = TokenPrefs.getToken(context) ?: return
         viewModelScope.launch {
+            _loading.value = true
+            _error.value = null
             try {
-                ApiClient.create(token).clockOut(emptyMap())
-                load(context)
-            } catch (_: Exception) {}
+                val r = ApiClient.create(token).clockOut(
+                    mapOf("latitude" to lat, "longitude" to lng)
+                )
+                if (r.isSuccessful) {
+                    _clockInResult.value = false
+                    load(context)
+                } else {
+                    _error.value = "Clock-out failed (${r.code()})"
+                }
+            } catch (e: Exception) {
+                _error.value = "Network error: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
         }
     }
 }

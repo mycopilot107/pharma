@@ -23,6 +23,9 @@ public final class ItemCustomerBinding implements ViewBinding {
   public final TextView tvCity;
 
   @NonNull
+  public final TextView tvInitial;
+
+  @NonNull
   public final TextView tvName;
 
   @NonNull
@@ -35,10 +38,11 @@ public final class ItemCustomerBinding implements ViewBinding {
   public final TextView tvVisitCount;
 
   private ItemCustomerBinding(@NonNull MaterialCardView rootView, @NonNull TextView tvCity,
-      @NonNull TextView tvName, @NonNull TextView tvPhone, @NonNull TextView tvType,
-      @NonNull TextView tvVisitCount) {
+      @NonNull TextView tvInitial, @NonNull TextView tvName, @NonNull TextView tvPhone,
+      @NonNull TextView tvType, @NonNull TextView tvVisitCount) {
     this.rootView = rootView;
     this.tvCity = tvCity;
+    this.tvInitial = tvInitial;
     this.tvName = tvName;
     this.tvPhone = tvPhone;
     this.tvType = tvType;
@@ -78,6 +82,12 @@ public final class ItemCustomerBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvInitial;
+      TextView tvInitial = ViewBindings.findChildViewById(rootView, id);
+      if (tvInitial == null) {
+        break missingId;
+      }
+
       id = R.id.tvName;
       TextView tvName = ViewBindings.findChildViewById(rootView, id);
       if (tvName == null) {
@@ -102,8 +112,8 @@ public final class ItemCustomerBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemCustomerBinding((MaterialCardView) rootView, tvCity, tvName, tvPhone, tvType,
-          tvVisitCount);
+      return new ItemCustomerBinding((MaterialCardView) rootView, tvCity, tvInitial, tvName,
+          tvPhone, tvType, tvVisitCount);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

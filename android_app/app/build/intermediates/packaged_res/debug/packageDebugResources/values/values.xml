@@ -16,17 +16,31 @@
         <item>Paternity</item>
         <item>Other</item>
     </string-array>
-    <color name="accent">#03DAC6</color>
-    <color name="background">#F5F5F5</color>
-    <color name="error">#D32F2F</color>
-    <color name="primary">#1976D2</color>
-    <color name="primary_dark">#1565C0</color>
-    <color name="primary_light">#BBDEFB</color>
-    <color name="seed">#1976D2</color>
-    <color name="success">#388E3C</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="warning">#F57C00</color>
+    <color name="accent">#0097A7</color>
+    <color name="accent_light">#E0F7FA</color>
+    <color name="background">#F4F7FC</color>
+    <color name="card_stroke">#E8EDF8</color>
+    <color name="divider">#E2E8F4</color>
+    <color name="error">#C62828</color>
+    <color name="error_light">#FFEBEE</color>
+    <color name="icon_bg_blue">#1A1565C0</color>
+    <color name="icon_bg_green">#1A2E7D32</color>
+    <color name="icon_bg_orange">#1AE65100</color>
+    <color name="icon_bg_teal">#1A0097A7</color>
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#003C8F</color>
+    <color name="primary_light">#E3F2FD</color>
+    <color name="primary_medium">#1976D2</color>
+    <color name="seed">#1565C0</color>
+    <color name="success">#2E7D32</color>
+    <color name="success_light">#E8F5E9</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#EEF2FF</color>
+    <color name="text_hint">#9EAAB8</color>
+    <color name="text_primary">#1A1F36</color>
+    <color name="text_secondary">#6B7C93</color>
+    <color name="warning">#E65100</color>
+    <color name="warning_light">#FFF3E0</color>
     <color name="white">#FFFFFF</color>
     <string name="app_name">MedRep Fleet</string>
     <style name="Theme.MedRepFleet" parent="Theme.Material3.DayNight.NoActionBar">
@@ -34,8 +48,56 @@
         <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorError">@color/error</item>
         <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="android:windowBackground">@color/background</item>
+        
+        <item name="materialCardViewStyle">@style/Widget.MedRep.Card</item>
+        
+        <item name="bottomNavigationStyle">@style/Widget.MedRep.BottomNav</item>
+        
+        <item name="materialButtonStyle">@style/Widget.MedRep.Button</item>
+    </style>
+    <style name="Theme.MedRepFleet.Login" parent="Theme.MedRepFleet">
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+    <style name="Widget.MedRep.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/surface</item>
+        <item name="itemIconTint">@color/bottom_nav_tint</item>
+        <item name="itemTextColor">@color/bottom_nav_tint</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="elevation">8dp</item>
+    </style>
+    <style name="Widget.MedRep.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">50dp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:letterSpacing">0.03</item>
+    </style>
+    <style name="Widget.MedRep.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">50dp</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+    <style name="Widget.MedRep.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">50dp</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+    <style name="Widget.MedRep.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">14dp</item>
+        <item name="strokeColor">@color/card_stroke</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+    </style>
+    <style name="Widget.MedRep.TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/card_stroke</item>
+        <item name="hintTextColor">@color/text_secondary</item>
     </style>
 </resources>

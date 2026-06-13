@@ -123,7 +123,12 @@ class LocationTrackingService : Service() {
 
     private fun onLocation(location: Location) {
         // ── Mock location detection ───────────────────────────────────────
-        val isMocked = location.isMock
+        @Suppress("DEPRECATION")
+        val isMocked = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            location.isMock
+        } else {
+            location.isFromMockProvider
+        }
         if (isMocked && !isMockLocationDetected) {
             isMockLocationDetected = true
             sendBroadcast(Intent(BROADCAST_MOCK_DETECTED))

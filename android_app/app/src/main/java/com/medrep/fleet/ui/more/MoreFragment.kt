@@ -25,10 +25,12 @@ class MoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvUserName.text  = TokenPrefs.getUserName(requireContext())
+        val name = TokenPrefs.getUserName(requireContext())
+        binding.tvUserName.text  = name
         binding.tvUserEmail.text = TokenPrefs.getUserEmail(requireContext())
         binding.tvUserRole.text  = TokenPrefs.getUserRole(requireContext())
             .replaceFirstChar { it.uppercase() }
+        binding.tvAvatarInitial.text = name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
 
         binding.btnLogout.setOnClickListener {
             TokenPrefs.clear(requireContext())

@@ -1,6 +1,7 @@
 package com.medrep.fleet.ui.dashboard
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,14 +12,22 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.medrep.fleet.MainActivity
+import com.medrep.fleet.R
 import com.medrep.fleet.databinding.FragmentDashboardBinding
+import com.medrep.fleet.ui.route.RouteHistoryActivity
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
     private val vm: DashboardViewModel by viewModels()
+    private lateinit var fusedClient: FusedLocationProviderClient
 
     private val locationPermRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -33,27 +42,35 @@ class DashboardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        fusedClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tvDate.text = SimpleDateFormat("EEE, d MMM", Locale.getDefault()).format(Date())
+
         vm.dashboard.observe(viewLifecycleOwner) { data ->
-            binding.tvTodayVisits.text  = data.todayVisits.toString()
-            binding.tvMonthVisits.text  = data.monthVisits.toString()
-            binding.tvTodayKm.text      = "%.1f km".format(data.todayDistanceKm)
+            binding.tvTodayVisits.text     = data.todayVisits.toString()
+            binding.tvMonthVisits.text     = data.monthVisits.toString()
+            binding.tvTodayKm.text         = "%.1f km".format(data.todayDistanceKm)
             binding.tvPendingExpenses.text = data.pendingExpenses.toString()
-            binding.tvClockedStatus.text   = if (data.clockedIn) "Clocked In" else "Clocked Out"
+
+            // tvClockedStatus is always hidden — state conveyed visually
+            binding.tvClockedStatus.visibility = View.GONE
 
             if (data.clockedIn) {
-                binding.btnClockIn.visibility  = View.GONE
-                binding.btnClockOut.visibility = View.VISIBLE
-                binding.tvClockTime.text = "Since: ${data.clockInTime ?: ""}"
+                binding.viewStatusDot.visibility = View.VISIBLE
+                binding.tvClockTime.text         = data.clockInTime ?: ""
+                binding.tvClockTime.visibility   = View.VISIBLE
+                binding.btnClockIn.visibility    = View.GONE
+                binding.btnClockOut.visibility   = View.VISIBLE
             } else {
-                binding.btnClockIn.visibility  = View.VISIBLE
-                binding.btnClockOut.visibility = View.GONE
-                binding.tvClockTime.text = ""
+                binding.viewStatusDot.visibility = View.GONE
+                binding.tvClockTime.visibility   = View.GONE
+                binding.btnClockIn.visibility    = View.VISIBLE
+                binding.btnClockOut.visibility   = View.GONE
             }
         }
 
@@ -70,10 +87,18 @@ class DashboardFragment : Fragment() {
             }
         }
 
+        vm.clockInResult.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                true  -> { (requireActivity() as MainActivity).startLocationService(); vm.clearClockInResult() }
+                false -> { (requireActivity() as MainActivity).stopLocationService();  vm.clearClockInResult() }
+                null  -> {}
+            }
+        }
+
         binding.btnClockIn.setOnClickListener  { checkPermissionsThenClockIn() }
-        binding.btnClockOut.setOnClickListener { clockOut() }
+        binding.btnClockOut.setOnClickListener { doClockOut() }
         binding.btnViewRoute.setOnClickListener {
-            // TODO: navigate to route history
+            startActivity(android.content.Intent(requireContext(), RouteHistoryActivity::class.java))
         }
 
         vm.load(requireContext())
@@ -96,18 +121,29 @@ class DashboardFragment : Fragment() {
             != PackageManager.PERMISSION_GRANTED) {
             needed += Manifest.permission.POST_NOTIFICATIONS
         }
-
         if (needed.isEmpty()) performClockIn() else locationPermRequest.launch(needed.toTypedArray())
     }
 
+    @SuppressLint("MissingPermission")
     private fun performClockIn() {
-        vm.clockIn(requireContext())
-        (requireActivity() as MainActivity).startLocationService()
+        fusedClient.lastLocation
+            .addOnSuccessListener { loc ->
+                vm.clockIn(requireContext(), loc?.latitude ?: 0.0, loc?.longitude ?: 0.0)
+            }
+            .addOnFailureListener {
+                vm.clockIn(requireContext(), 0.0, 0.0)
+            }
     }
 
-    private fun clockOut() {
-        vm.clockOut(requireContext())
-        (requireActivity() as MainActivity).stopLocationService()
+    @SuppressLint("MissingPermission")
+    private fun doClockOut() {
+        fusedClient.lastLocation
+            .addOnSuccessListener { loc ->
+                vm.clockOut(requireContext(), loc?.latitude ?: 0.0, loc?.longitude ?: 0.0)
+            }
+            .addOnFailureListener {
+                vm.clockOut(requireContext(), 0.0, 0.0)
+            }
     }
 
     override fun onDestroyView() {
