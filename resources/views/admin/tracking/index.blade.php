@@ -277,7 +277,7 @@ function loadRoute() {
             historyLayer.clearLayers();
 
             const pings = Array.isArray(data.pings) ? data.pings : [];
-            const latlngs = pings.map(p => [p.lat, p.lng]);
+            const latlngs = pings.map(p => [p.latitude, p.longitude]);
             const visitLatlngs = (data.visits || [])
                 .filter(v => v.check_in)
                 .map(v => [v.check_in.lat, v.check_in.lng]);

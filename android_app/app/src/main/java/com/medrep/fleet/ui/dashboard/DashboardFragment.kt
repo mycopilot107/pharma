@@ -67,7 +67,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvDate.text = SimpleDateFormat("EEEE, d MMM yy", Locale.getDefault()).format(Date())
+        binding.tvDate.text = SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault()).format(Date())
 
         vm.dashboard.observe(viewLifecycleOwner) { data ->
             binding.tvTodayVisits.text     = data.todayVisits.toString()

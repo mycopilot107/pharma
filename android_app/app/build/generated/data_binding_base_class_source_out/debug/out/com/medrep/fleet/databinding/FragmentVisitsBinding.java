@@ -4,6 +4,9 @@ package com.medrep.fleet.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.medrep.fleet.R;
 import java.lang.NullPointerException;
@@ -24,7 +28,28 @@ public final class FragmentVisitsBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final LinearLayout btnClearDate;
+
+  @NonNull
+  public final ImageView btnClearSearch;
+
+  @NonNull
+  public final MaterialButton btnNext;
+
+  @NonNull
+  public final MaterialButton btnPrev;
+
+  @NonNull
+  public final LinearLayout chipDate;
+
+  @NonNull
+  public final EditText etSearch;
+
+  @NonNull
   public final FloatingActionButton fabCheckIn;
+
+  @NonNull
+  public final LinearLayout layoutPagination;
 
   @NonNull
   public final ProgressBar progressBar;
@@ -36,18 +61,41 @@ public final class FragmentVisitsBinding implements ViewBinding {
   public final SwipeRefreshLayout swipeRefresh;
 
   @NonNull
-  public final TextView tvEmpty;
+  public final TextView tvDateLabel;
+
+  @NonNull
+  public final LinearLayout tvEmpty;
+
+  @NonNull
+  public final TextView tvPageInfo;
+
+  @NonNull
+  public final TextView tvTotalBadge;
 
   private FragmentVisitsBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull FloatingActionButton fabCheckIn, @NonNull ProgressBar progressBar,
-      @NonNull RecyclerView rvVisits, @NonNull SwipeRefreshLayout swipeRefresh,
-      @NonNull TextView tvEmpty) {
+      @NonNull LinearLayout btnClearDate, @NonNull ImageView btnClearSearch,
+      @NonNull MaterialButton btnNext, @NonNull MaterialButton btnPrev,
+      @NonNull LinearLayout chipDate, @NonNull EditText etSearch,
+      @NonNull FloatingActionButton fabCheckIn, @NonNull LinearLayout layoutPagination,
+      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvVisits,
+      @NonNull SwipeRefreshLayout swipeRefresh, @NonNull TextView tvDateLabel,
+      @NonNull LinearLayout tvEmpty, @NonNull TextView tvPageInfo, @NonNull TextView tvTotalBadge) {
     this.rootView = rootView;
+    this.btnClearDate = btnClearDate;
+    this.btnClearSearch = btnClearSearch;
+    this.btnNext = btnNext;
+    this.btnPrev = btnPrev;
+    this.chipDate = chipDate;
+    this.etSearch = etSearch;
     this.fabCheckIn = fabCheckIn;
+    this.layoutPagination = layoutPagination;
     this.progressBar = progressBar;
     this.rvVisits = rvVisits;
     this.swipeRefresh = swipeRefresh;
+    this.tvDateLabel = tvDateLabel;
     this.tvEmpty = tvEmpty;
+    this.tvPageInfo = tvPageInfo;
+    this.tvTotalBadge = tvTotalBadge;
   }
 
   @Override
@@ -77,9 +125,51 @@ public final class FragmentVisitsBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnClearDate;
+      LinearLayout btnClearDate = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearDate == null) {
+        break missingId;
+      }
+
+      id = R.id.btnClearSearch;
+      ImageView btnClearSearch = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearSearch == null) {
+        break missingId;
+      }
+
+      id = R.id.btnNext;
+      MaterialButton btnNext = ViewBindings.findChildViewById(rootView, id);
+      if (btnNext == null) {
+        break missingId;
+      }
+
+      id = R.id.btnPrev;
+      MaterialButton btnPrev = ViewBindings.findChildViewById(rootView, id);
+      if (btnPrev == null) {
+        break missingId;
+      }
+
+      id = R.id.chipDate;
+      LinearLayout chipDate = ViewBindings.findChildViewById(rootView, id);
+      if (chipDate == null) {
+        break missingId;
+      }
+
+      id = R.id.etSearch;
+      EditText etSearch = ViewBindings.findChildViewById(rootView, id);
+      if (etSearch == null) {
+        break missingId;
+      }
+
       id = R.id.fabCheckIn;
       FloatingActionButton fabCheckIn = ViewBindings.findChildViewById(rootView, id);
       if (fabCheckIn == null) {
+        break missingId;
+      }
+
+      id = R.id.layoutPagination;
+      LinearLayout layoutPagination = ViewBindings.findChildViewById(rootView, id);
+      if (layoutPagination == null) {
         break missingId;
       }
 
@@ -101,14 +191,33 @@ public final class FragmentVisitsBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvDateLabel;
+      TextView tvDateLabel = ViewBindings.findChildViewById(rootView, id);
+      if (tvDateLabel == null) {
+        break missingId;
+      }
+
       id = R.id.tvEmpty;
-      TextView tvEmpty = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout tvEmpty = ViewBindings.findChildViewById(rootView, id);
       if (tvEmpty == null) {
         break missingId;
       }
 
-      return new FragmentVisitsBinding((CoordinatorLayout) rootView, fabCheckIn, progressBar,
-          rvVisits, swipeRefresh, tvEmpty);
+      id = R.id.tvPageInfo;
+      TextView tvPageInfo = ViewBindings.findChildViewById(rootView, id);
+      if (tvPageInfo == null) {
+        break missingId;
+      }
+
+      id = R.id.tvTotalBadge;
+      TextView tvTotalBadge = ViewBindings.findChildViewById(rootView, id);
+      if (tvTotalBadge == null) {
+        break missingId;
+      }
+
+      return new FragmentVisitsBinding((CoordinatorLayout) rootView, btnClearDate, btnClearSearch,
+          btnNext, btnPrev, chipDate, etSearch, fabCheckIn, layoutPagination, progressBar, rvVisits,
+          swipeRefresh, tvDateLabel, tvEmpty, tvPageInfo, tvTotalBadge);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -26,14 +26,28 @@ class VisitController extends Controller
 
     public function index(Request $request)
     {
+        $perPage = min((int) $request->input('per_page', 5), 50);
+
         $visits = Visit::where('user_id', $request->user()->id)
             ->with(['customer', 'photos'])
             ->when($request->date, fn ($q, $date) => $q->whereDate('created_at', $date))
             ->when($request->status, fn ($q, $status) => $q->where('status', $status))
+            ->when($request->search, function ($q, $search) {
+                $q->where(function ($q2) use ($search) {
+                    $q2->where('place_name', 'like', "%{$search}%")
+                       ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$search}%"));
+                });
+            })
             ->latest()
-            ->paginate(20);
+            ->paginate($perPage);
 
-        return VisitResource::collection($visits);
+        // Return flat structure matching Android's PaginatedResponse<Visit>
+        return response()->json([
+            'data'         => $visits->getCollection()->map(fn ($v) => (new VisitResource($v))->toArray($request)),
+            'current_page' => $visits->currentPage(),
+            'last_page'    => $visits->lastPage(),
+            'total'        => $visits->total(),
+        ]);
     }
 
     public function store(Request $request)

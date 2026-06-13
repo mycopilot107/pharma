@@ -132,13 +132,17 @@ class TrackingController extends Controller
             ? Carbon::parse($request->date)
             : today();
 
-        return response()->json(
-            $this->tracking->routeHistory(
+        try {
+            $result = $this->tracking->routeHistory(
                 $request->user()->company_id,
                 $request->user()->id,
                 $date,
-            )
-        );
+            );
+            return response()->json(['data' => $result['pings']]);
+        } catch (\Throwable $e) {
+            \Log::warning('routeHistory API failed: ' . $e->getMessage());
+            return response()->json(['data' => []]);
+        }
     }
 
     public function movementLog(Request $request)
@@ -229,12 +233,19 @@ class TrackingController extends Controller
         $today = now()->toDateString();
         $key   = "track:{$user->company_id}:{$user->id}:{$today}";
 
-        $raw = Redis::zrange($key, 0, -1);
+        // zRange with WITHSCORES=true returns ['lat,lng' => score_ms, ...]
+        $rawWithScores = Redis::zRange($key, 0, -1, true);
 
-        $data = collect($raw)->map(function ($item) {
-            [$lat, $lng] = explode(',', $item, 2);
-            return ['latitude' => (float) $lat, 'longitude' => (float) $lng];
-        })->values();
+        $data = collect($rawWithScores)
+            ->map(function ($scoreMs, $item) {
+                [$lat, $lng] = explode(',', (string) $item, 2);
+                return [
+                    'latitude'   => (float) $lat,
+                    'longitude'  => (float) $lng,
+                    'created_at' => Carbon::createFromTimestampMs((int) $scoreMs)->toIso8601String(),
+                ];
+            })
+            ->values();
 
         return response()->json(['data' => $data]);
     }

@@ -58,19 +58,23 @@ class DashboardController extends Controller
             ->where('work_date', $today)
             ->first();
 
-        // Distance today from location pings
+        // Distance today from location pings (MongoDB — graceful fallback if unavailable)
         $todayDistanceKm = 0.0;
-        $pings = LocationPing::where('user_id', $user->id)
-            ->whereDate('recorded_at', $today)
-            ->orderBy('recorded_at')
-            ->get(['latitude', 'longitude']);
-        if ($pings->count() > 1) {
-            for ($i = 1; $i < $pings->count(); $i++) {
-                $todayDistanceKm += $this->haversineKm(
-                    $pings[$i-1]->latitude, $pings[$i-1]->longitude,
-                    $pings[$i]->latitude,   $pings[$i]->longitude
-                );
+        try {
+            $pings = LocationPing::where('user_id', $user->id)
+                ->whereDate('recorded_at', $today)
+                ->orderBy('recorded_at')
+                ->get(['latitude', 'longitude']);
+            if ($pings->count() > 1) {
+                for ($i = 1; $i < $pings->count(); $i++) {
+                    $todayDistanceKm += $this->haversineKm(
+                        $pings[$i-1]->latitude, $pings[$i-1]->longitude,
+                        $pings[$i]->latitude,   $pings[$i]->longitude
+                    );
+                }
             }
+        } catch (\Throwable $e) {
+            \Log::warning('Dashboard: LocationPing unavailable — ' . $e->getMessage());
         }
 
         $monthVisits = Visit::where('user_id', $user->id)
@@ -92,7 +96,7 @@ class DashboardController extends Controller
             'clock_in_time'      => $attendance?->clock_in_at?->format('H:i'),
             'pending_orders'     => 0,
             'unread_notifications' => $this->reminders->unreadCount($user->id),
-            'recent_visits'      => VisitResource::collection($todayVisits->take(5)),
+            'recent_visits'      => $todayVisits->take(5)->map(fn ($v) => (new VisitResource($v))->toArray($request))->values(),
             // ── Rich fields for web dashboard ─────────────────────────────
             'today_route' => $todayRoute ? [
                 'id' => $todayRoute->id,

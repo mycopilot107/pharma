@@ -42,8 +42,9 @@ interface ApiService {
     @GET("visits")
     suspend fun getVisits(
         @Query("page") page: Int = 1,
-        @Query("per_page") perPage: Int = 20,
-        @Query("date") date: String? = null
+        @Query("per_page") perPage: Int = 5,
+        @Query("date") date: String? = null,
+        @Query("search") search: String? = null
     ): Response<PaginatedResponse<Visit>>
 
     @GET("visits/{id}")

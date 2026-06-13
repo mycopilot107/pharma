@@ -256,9 +256,9 @@ class TrackingService
 
         return [
             'pings' => $pings->map(fn ($p) => [
-                'lat' => (float) $p->latitude,
-                'lng' => (float) $p->longitude,
-                'at' => $p->recorded_at?->format('H:i:s'),
+                'latitude' => (float) $p->latitude,
+                'longitude' => (float) $p->longitude,
+                'created_at' => $p->recorded_at?->toIso8601String(),
                 'source' => $p->source,
                 'speed' => $p->speed ? (float) $p->speed : null,
                 'accuracy' => $p->accuracy ? (float) $p->accuracy : null,

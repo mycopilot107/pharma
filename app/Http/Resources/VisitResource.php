@@ -24,6 +24,11 @@ class VisitResource extends JsonResource
             'check_out_longitude' => $this->check_out_longitude,
             'duration_minutes' => $this->duration_minutes,
             'notes' => $this->notes,
+            'products_promoted' => $this->products_promoted ?? [],
+            'samples_given' => $this->samples_given,
+            'follow_up_date' => $this->follow_up_date?->toDateString(),
+            'photo_url' => $this->photos->first()?->url() ?? null,
+            'is_mock_detected' => $this->relationLoaded('validation') && $this->validation?->flags && count($this->validation->flags) > 0,
             'ai_summary' => $this->ai_summary,
             'customer' => $this->whenLoaded('customer', fn () => new CustomerResource($this->customer)),
             'photos' => $this->whenLoaded('photos', fn () => $this->photos->map(fn ($p) => [

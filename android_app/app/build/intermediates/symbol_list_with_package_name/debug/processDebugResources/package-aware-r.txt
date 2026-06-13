@@ -3088,6 +3088,7 @@ drawable bg_chip_error
 drawable bg_chip_info
 drawable bg_chip_success
 drawable bg_chip_warning
+drawable bg_date_chip
 drawable bg_header
 drawable bg_icon_blue
 drawable bg_icon_green
@@ -3097,6 +3098,7 @@ drawable bg_login
 drawable bg_status_dot_blue
 drawable bg_status_dot_gray
 drawable bg_status_dot_green
+drawable bg_status_dot_orange
 drawable bonuspack_bubble
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
@@ -3135,6 +3137,7 @@ drawable design_snackbar_background
 drawable googleg_disabled_color_18
 drawable googleg_standard_color_18
 drawable ic_arrow_back_black_24
+drawable ic_calendar
 drawable ic_call_answer
 drawable ic_call_answer_low
 drawable ic_call_answer_video
@@ -3143,6 +3146,7 @@ drawable ic_call_decline
 drawable ic_call_decline_low
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
+drawable ic_close_small
 drawable ic_customers
 drawable ic_dashboard
 drawable ic_expenses
@@ -3164,6 +3168,7 @@ drawable ic_mtrl_checked_circle
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
+drawable ic_search
 drawable ic_search_black_24
 drawable ic_stop
 drawable ic_visits
@@ -3365,12 +3370,16 @@ id bounceBoth
 id bounceEnd
 id bounceStart
 id btnApply
+id btnClearDate
+id btnClearSearch
 id btnClearSignature
 id btnClockIn
 id btnClockOut
 id btnLogin
 id btnLogout
+id btnNext
 id btnNextWeek
+id btnPrev
 id btnPrevWeek
 id btnSave
 id btnSubmit
@@ -3397,6 +3406,7 @@ id chain2
 id chains
 id checkbox
 id checked
+id chipDate
 id chronometer
 id circle_center
 id clear_text
@@ -3543,6 +3553,7 @@ id jumpToEnd
 id jumpToStart
 id labeled
 id layout
+id layoutPagination
 id leavesFragment
 id left
 id leftToRight
@@ -3830,6 +3841,7 @@ id tvClockedStatus
 id tvCustomer
 id tvCustomerName
 id tvDate
+id tvDateLabel
 id tvDates
 id tvDescription
 id tvEmpty
@@ -3843,6 +3855,7 @@ id tvMockWarning
 id tvMonthVisits
 id tvName
 id tvNoRoute
+id tvPageInfo
 id tvPendingExpenses
 id tvPhone
 id tvProducts
@@ -3855,6 +3868,7 @@ id tvTitle
 id tvTodayKm
 id tvTodayVisits
 id tvTotal
+id tvTotalBadge
 id tvType
 id tvUserEmail
 id tvUserName
