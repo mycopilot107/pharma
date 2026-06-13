@@ -36,7 +36,7 @@
         <!-- ── Top bar ────────────────────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="64dp"
             android:background="@color/primary"
             android:paddingHorizontal="20dp"
             android:gravity="center_vertical"
@@ -50,7 +50,9 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.01" />
+                android:letterSpacing="0.01"
+                android:singleLine="true"
+                android:ellipsize="end" />
 
             <!-- Hidden views kept for binding compatibility -->
             <TextView
@@ -64,7 +66,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#B3FFFFFF"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:singleLine="true" />
 
         </LinearLayout>
 

@@ -158,6 +158,9 @@
 
 @push('head')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+@endpush
+
+@push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const LIVE_URL = @json(route('admin.tracking.live'));
@@ -168,7 +171,7 @@ const INITIAL_REPS = @json($liveReps);
 let map = L.map('tracking-map').setView([20.5937, 78.9629], 5);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
 let markers = {};
-let historyMap = null;   // initialised on first loadRoute() call
+let historyMap = null;
 let historyLayer = null;
 
 function repCardHtml(rep) {
@@ -240,7 +243,8 @@ function refreshLive() {
             updateMap(data.reps);
             updateStats(data.reps);
             document.getElementById('map-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
-        });
+        })
+        .catch(() => {});
 }
 
 updateMap(INITIAL_REPS);
@@ -255,69 +259,75 @@ function loadRoute() {
     const statusEl = document.getElementById('route-status');
     statusEl.textContent = 'Loading…';
 
-    fetch(url).then(r => r.json()).then(data => {
-        if (!historyMap) {
-            historyMap = L.map('history-map').setView([20.5937, 78.9629], 5);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(historyMap);
-            historyLayer = L.layerGroup().addTo(historyMap);
-        }
-        historyLayer.clearLayers();
+    fetch(url, { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => {
+            if (!r.ok) throw new Error('Server returned ' + r.status);
+            return r.json();
+        })
+        .then(data => {
+            if (data.error) { statusEl.textContent = data.error; return; }
 
-        const latlngs = data.pings.map(p => [p.lat, p.lng]);
-        const visitLatlngs = (data.visits || [])
-            .filter(v => v.check_in)
-            .map(v => [v.check_in.lat, v.check_in.lng]);
-        const allPoints = latlngs.length ? latlngs : visitLatlngs;
-
-        let info = '';
-        if (data.analytics && latlngs.length) {
-            info = `Distance: ${data.analytics.distance_km} km · Stops: ${data.analytics.stops?.length || 0} · Moving: ${data.analytics.moving_minutes} min`;
-        }
-
-        if (latlngs.length) {
-            // Full GPS track
-            L.polyline(latlngs, { color: '#0d9488', weight: 4, opacity: 0.85 }).addTo(historyLayer);
-            L.circleMarker(latlngs[0], { radius: 7, color: '#059669', fillColor: '#6ee7b7', fillOpacity: 1 })
-                .addTo(historyLayer).bindPopup('Start');
-            L.circleMarker(latlngs[latlngs.length - 1], { radius: 7, color: '#dc2626', fillColor: '#fca5a5', fillOpacity: 1 })
-                .addTo(historyLayer).bindPopup('End' + (info ? '<br>' + info : ''));
-            statusEl.textContent = `${latlngs.length} GPS pings` + (info ? ' · ' + info : '');
-        } else if (visitLatlngs.length) {
-            // Fallback: connect visit check-in locations when no GPS pings exist
-            L.polyline(visitLatlngs, { color: '#6366f1', weight: 3, dashArray: '8 6', opacity: 0.7 }).addTo(historyLayer);
-            statusEl.textContent = `No GPS pings — showing ${visitLatlngs.length} visit locations`;
-        } else {
-            statusEl.textContent = 'No data found for this date';
-        }
-
-        // Stop markers
-        (data.analytics?.stops || []).forEach(s => {
-            L.circleMarker([s.lat, s.lng], { radius: 8, color: '#d97706', fillColor: '#fbbf24', fillOpacity: 0.85 })
-                .addTo(historyLayer).bindPopup(`Stop ${s.duration_minutes} min (${s.from}–${s.to})`);
-        });
-
-        // Visit check-in markers
-        (data.visits || []).forEach(v => {
-            if (v.check_in) {
-                const risk = (v.validation?.risk_score ?? 0) >= 50 ? ' ⚠' : '';
-                const customer = v.customer ? ` (${v.customer})` : '';
-                L.marker([v.check_in.lat, v.check_in.lng])
-                    .addTo(historyLayer)
-                    .bindPopup(`<strong>${v.place}${customer}</strong>${risk}<br>Status: ${v.status}${v.duration_minutes ? '<br>' + v.duration_minutes + ' min' : ''}`);
+            if (!historyMap) {
+                historyMap = L.map('history-map').setView([20.5937, 78.9629], 5);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(historyMap);
+                historyLayer = L.layerGroup().addTo(historyMap);
+            } else {
+                historyMap.invalidateSize();
             }
-        });
+            historyLayer.clearLayers();
 
-        if (allPoints.length) {
-            historyMap.fitBounds(allPoints, { padding: [30, 30], maxZoom: 15 });
-        }
-    }).catch(() => {
-        statusEl.textContent = 'Failed to load route data';
-    });
+            const pings = Array.isArray(data.pings) ? data.pings : [];
+            const latlngs = pings.map(p => [p.lat, p.lng]);
+            const visitLatlngs = (data.visits || [])
+                .filter(v => v.check_in)
+                .map(v => [v.check_in.lat, v.check_in.lng]);
+            const allPoints = latlngs.length ? latlngs : visitLatlngs;
+
+            let info = '';
+            if (data.analytics && latlngs.length) {
+                info = `${data.analytics.distance_km} km · ${data.analytics.stops?.length || 0} stops · ${data.analytics.moving_minutes} min moving`;
+            }
+
+            if (latlngs.length) {
+                L.polyline(latlngs, { color: '#0d9488', weight: 4, opacity: 0.85 }).addTo(historyLayer);
+                L.circleMarker(latlngs[0], { radius: 7, color: '#059669', fillColor: '#6ee7b7', fillOpacity: 1 })
+                    .addTo(historyLayer).bindPopup('Start');
+                L.circleMarker(latlngs[latlngs.length - 1], { radius: 7, color: '#dc2626', fillColor: '#fca5a5', fillOpacity: 1 })
+                    .addTo(historyLayer).bindPopup('End' + (info ? '<br>' + info : ''));
+                statusEl.textContent = `${latlngs.length} GPS pings` + (info ? ' · ' + info : '');
+            } else if (visitLatlngs.length) {
+                L.polyline(visitLatlngs, { color: '#6366f1', weight: 3, dashArray: '8 6', opacity: 0.7 }).addTo(historyLayer);
+                statusEl.textContent = `No GPS pings — showing ${visitLatlngs.length} visit locations`;
+            } else {
+                statusEl.textContent = 'No data for this date';
+            }
+
+            (data.analytics?.stops || []).forEach(s => {
+                L.circleMarker([s.lat, s.lng], { radius: 8, color: '#d97706', fillColor: '#fbbf24', fillOpacity: 0.85 })
+                    .addTo(historyLayer).bindPopup(`Stop ${s.duration_minutes} min (${s.from}–${s.to})`);
+            });
+
+            (data.visits || []).forEach(v => {
+                if (v.check_in) {
+                    const risk = (v.validation?.risk_score ?? 0) >= 50 ? ' ⚠' : '';
+                    const customer = v.customer ? ` (${v.customer})` : '';
+                    L.marker([v.check_in.lat, v.check_in.lng])
+                        .addTo(historyLayer)
+                        .bindPopup(`<strong>${v.place}${customer}</strong>${risk}<br>Status: ${v.status}${v.duration_minutes ? '<br>' + v.duration_minutes + ' min' : ''}`);
+                }
+            });
+
+            if (allPoints.length) {
+                historyMap.fitBounds(allPoints, { padding: [30, 30], maxZoom: 15 });
+            }
+        })
+        .catch(err => {
+            statusEl.textContent = 'Error: ' + err.message;
+        });
 }
 
 document.getElementById('load-route-btn')?.addEventListener('click', loadRoute);
 
-// Auto-load today's route for the first rep on page load
 if (document.getElementById('history-rep')?.value) {
     loadRoute();
 }

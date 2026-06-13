@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  App icon — blue location pin + green medical cross
+  Safe zone: ~26–82 in a 108×108 viewport
+  Pin circle centre: (54, 42), radius 22, tip at (54, 76)
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- GPS/location pin icon centered in the safe zone (72dp inner = 18dp inset on each side) -->
+    <!-- Blue location pin body -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M 54,76 C 47,76 32,61 32,42 A 22,22 0 1,1 76,42 C 76,61 61,76 54,76 Z" />
+
+    <!-- White inset circle (gives the cross a clean background) -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M54,28c-11.05,0 -20,8.95 -20,20 0,15 20,32 20,32s20,-17 20,-32c0,-11.05 -8.95,-20 -20,-20zM54,54c-3.31,0 -6,-2.69 -6,-6s2.69,-6 6,-6 6,2.69 6,6 -2.69,6 -6,6z" />
+        android:pathData="M 54,42 m-16,0 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0" />
+
+    <!-- Green medical cross (20×20 dp, arm width 8, centred at 54,42) -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M 50,32 H 58 V 38 H 64 V 46 H 58 V 52 H 50 V 46 H 44 V 38 H 50 Z" />
+
+    <!-- Pin tip shadow dot -->
+    <path
+        android:fillColor="#0D47A1"
+        android:pathData="M 54,76 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+
 </vector>

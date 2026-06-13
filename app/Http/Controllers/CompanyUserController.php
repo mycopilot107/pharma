@@ -6,7 +6,6 @@ use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class CompanyUserController extends Controller
 {
@@ -159,9 +158,9 @@ class CompanyUserController extends Controller
         ];
 
         if ($user) {
-            $rules['password'] = ['nullable', 'string', 'confirmed', Password::min(8)];
+            $rules['password'] = ['nullable', 'confirmed', 'digits:4'];
         } else {
-            $rules['password'] = ['required', 'string', 'confirmed', Password::min(8)];
+            $rules['password'] = ['required', 'confirmed', 'digits:4'];
         }
 
         return $request->validate($rules);

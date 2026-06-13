@@ -2,18 +2,26 @@ package com.medrep.fleet.ui.dashboard
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.medrep.fleet.MainActivity
 import com.medrep.fleet.R
 import com.medrep.fleet.databinding.FragmentDashboardBinding
@@ -28,6 +36,16 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
     private val vm: DashboardViewModel by viewModels()
     private lateinit var fusedClient: FusedLocationProviderClient
+
+    private val locationStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action != LocationManager.PROVIDERS_CHANGED_ACTION) return
+            val lm = requireContext().getSystemService(LocationManager::class.java)
+            if (!LocationManagerCompat.isLocationEnabled(lm)) {
+                showLocationOffAlert()
+            }
+        }
+    }
 
     private val locationPermRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -49,7 +67,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvDate.text = SimpleDateFormat("EEE, d MMM", Locale.getDefault()).format(Date())
+        binding.tvDate.text = SimpleDateFormat("EEEE, d MMM yy", Locale.getDefault()).format(Date())
 
         vm.dashboard.observe(viewLifecycleOwner) { data ->
             binding.tvTodayVisits.text     = data.todayVisits.toString()
@@ -105,6 +123,19 @@ class DashboardFragment : Fragment() {
     }
 
     private fun checkPermissionsThenClockIn() {
+        val lm = requireContext().getSystemService(LocationManager::class.java)
+        if (!LocationManagerCompat.isLocationEnabled(lm)) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Location is off")
+                .setMessage("Please enable Location on your device before clocking in.")
+                .setPositiveButton("Open Settings") { _, _ ->
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+            return
+        }
+
         val needed = mutableListOf<String>()
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
@@ -144,6 +175,33 @@ class DashboardFragment : Fragment() {
             .addOnFailureListener {
                 vm.clockOut(requireContext(), 0.0, 0.0)
             }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ContextCompat.registerReceiver(
+            requireContext(),
+            locationStateReceiver,
+            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION),
+            ContextCompat.RECEIVER_EXPORTED
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireContext().unregisterReceiver(locationStateReceiver)
+    }
+
+    private fun showLocationOffAlert() {
+        if (!isAdded || isDetached) return
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Location turned off")
+            .setMessage("GPS tracking has paused. Please turn Location back on to continue recording your route.")
+            .setPositiveButton("Open Settings") { _, _ ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }
+            .setNegativeButton("Dismiss", null)
+            .show()
     }
 
     override fun onDestroyView() {

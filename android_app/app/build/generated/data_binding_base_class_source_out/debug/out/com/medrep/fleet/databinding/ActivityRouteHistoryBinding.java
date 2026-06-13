@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.card.MaterialCardView;
 import com.medrep.fleet.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -22,6 +24,9 @@ public final class ActivityRouteHistoryBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final MaterialCardView cardLegend;
+
+  @NonNull
   public final MapView mapView;
 
   @NonNull
@@ -31,15 +36,31 @@ public final class ActivityRouteHistoryBinding implements ViewBinding {
   public final Toolbar toolbar;
 
   @NonNull
+  public final TextView tvLegendCurrent;
+
+  @NonNull
+  public final TextView tvLegendStart;
+
+  @NonNull
   public final LinearLayout tvNoRoute;
 
-  private ActivityRouteHistoryBinding(@NonNull LinearLayout rootView, @NonNull MapView mapView,
-      @NonNull ProgressBar progressBar, @NonNull Toolbar toolbar, @NonNull LinearLayout tvNoRoute) {
+  @NonNull
+  public final TextView tvRouteStats;
+
+  private ActivityRouteHistoryBinding(@NonNull LinearLayout rootView,
+      @NonNull MaterialCardView cardLegend, @NonNull MapView mapView,
+      @NonNull ProgressBar progressBar, @NonNull Toolbar toolbar, @NonNull TextView tvLegendCurrent,
+      @NonNull TextView tvLegendStart, @NonNull LinearLayout tvNoRoute,
+      @NonNull TextView tvRouteStats) {
     this.rootView = rootView;
+    this.cardLegend = cardLegend;
     this.mapView = mapView;
     this.progressBar = progressBar;
     this.toolbar = toolbar;
+    this.tvLegendCurrent = tvLegendCurrent;
+    this.tvLegendStart = tvLegendStart;
     this.tvNoRoute = tvNoRoute;
+    this.tvRouteStats = tvRouteStats;
   }
 
   @Override
@@ -69,6 +90,12 @@ public final class ActivityRouteHistoryBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.cardLegend;
+      MaterialCardView cardLegend = ViewBindings.findChildViewById(rootView, id);
+      if (cardLegend == null) {
+        break missingId;
+      }
+
       id = R.id.mapView;
       MapView mapView = ViewBindings.findChildViewById(rootView, id);
       if (mapView == null) {
@@ -87,14 +114,32 @@ public final class ActivityRouteHistoryBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tvLegendCurrent;
+      TextView tvLegendCurrent = ViewBindings.findChildViewById(rootView, id);
+      if (tvLegendCurrent == null) {
+        break missingId;
+      }
+
+      id = R.id.tvLegendStart;
+      TextView tvLegendStart = ViewBindings.findChildViewById(rootView, id);
+      if (tvLegendStart == null) {
+        break missingId;
+      }
+
       id = R.id.tvNoRoute;
       LinearLayout tvNoRoute = ViewBindings.findChildViewById(rootView, id);
       if (tvNoRoute == null) {
         break missingId;
       }
 
-      return new ActivityRouteHistoryBinding((LinearLayout) rootView, mapView, progressBar, toolbar,
-          tvNoRoute);
+      id = R.id.tvRouteStats;
+      TextView tvRouteStats = ViewBindings.findChildViewById(rootView, id);
+      if (tvRouteStats == null) {
+        break missingId;
+      }
+
+      return new ActivityRouteHistoryBinding((LinearLayout) rootView, cardLegend, mapView,
+          progressBar, toolbar, tvLegendCurrent, tvLegendStart, tvNoRoute, tvRouteStats);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -24,7 +25,7 @@
         android:indeterminateTint="@color/accent"
         android:visibility="gone" />
 
-    <!-- Map container -->
+    <!-- Map + overlays -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -70,6 +71,83 @@
                 android:layout_marginTop="4dp" />
 
         </LinearLayout>
+
+        <!-- Bottom legend card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLegend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="28dp"
+            app:cardBackgroundColor="@color/surface"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:gravity="center_vertical">
+
+                <!-- Start -->
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/bg_status_dot_green" />
+                <TextView
+                    android:id="@+id/tvLegendStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Start"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="16dp"
+                    android:layout_marginHorizontal="14dp"
+                    android:background="@color/card_stroke" />
+
+                <!-- Current -->
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/bg_status_dot_blue" />
+                <TextView
+                    android:id="@+id/tvLegendCurrent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Current"
+                    android:textColor="@color/text_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="16dp"
+                    android:layout_marginHorizontal="14dp"
+                    android:background="@color/card_stroke" />
+
+                <!-- Stats -->
+                <TextView
+                    android:id="@+id/tvRouteStats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 pts"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </FrameLayout>
 </LinearLayout>

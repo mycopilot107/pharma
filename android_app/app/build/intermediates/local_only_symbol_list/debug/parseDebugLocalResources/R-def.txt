@@ -45,13 +45,17 @@ drawable bg_icon_green
 drawable bg_icon_orange
 drawable bg_icon_teal
 drawable bg_login
+drawable bg_status_dot_blue
 drawable bg_status_dot_gray
 drawable bg_status_dot_green
 drawable ic_customers
 drawable ic_dashboard
 drawable ic_expenses
 drawable ic_gps
+drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_logo_medrep
+drawable ic_map_track
 drawable ic_more
 drawable ic_stop
 drawable ic_visits
@@ -69,6 +73,7 @@ id btnSave
 id btnSubmit
 id btnTakePhoto
 id btnViewRoute
+id cardLegend
 id customersFragment
 id dashboardFragment
 id etAmount
@@ -134,6 +139,8 @@ id tvError
 id tvFollowUp
 id tvGreeting
 id tvInitial
+id tvLegendCurrent
+id tvLegendStart
 id tvMockWarning
 id tvMonthVisits
 id tvName
@@ -142,6 +149,7 @@ id tvPendingExpenses
 id tvPhone
 id tvProducts
 id tvReason
+id tvRouteStats
 id tvSamples
 id tvStatus
 id tvTime

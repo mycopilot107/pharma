@@ -210,11 +210,17 @@ class TrackingService
 
     public function routeHistory(int $companyId, int $userId, Carbon $date): array
     {
-        $pings = LocationPing::where('company_id', $companyId)
-            ->where('user_id', $userId)
-            ->forDate($date)
-            ->orderBy('recorded_at')
-            ->get();
+        // MongoDB queries — isolated in try/catch so a DB outage doesn't crash the whole response
+        try {
+            $pings = LocationPing::where('company_id', $companyId)
+                ->where('user_id', $userId)
+                ->forDate($date)
+                ->orderBy('recorded_at')
+                ->get();
+        } catch (\Throwable $e) {
+            \Log::warning('LocationPing query failed: ' . $e->getMessage());
+            $pings = collect();
+        }
 
         $analytics = app(RouteAnalyticsService::class)->analyze($pings);
 
@@ -233,25 +239,31 @@ class TrackingService
             ->whereDate('route_date', $date)
             ->first();
 
-        $geofenceEvents = GeofenceEvent::where('company_id', $companyId)
-            ->where('user_id', $userId)
-            ->forDate($date)
-            ->orderBy('recorded_at')
-            ->get();
+        try {
+            $geofenceEvents = GeofenceEvent::where('company_id', $companyId)
+                ->where('user_id', $userId)
+                ->forDate($date)
+                ->orderBy('recorded_at')
+                ->get();
+        } catch (\Throwable $e) {
+            \Log::warning('GeofenceEvent query failed: ' . $e->getMessage());
+            $geofenceEvents = collect();
+        }
 
-        $customerNames = Customer::whereIn('id', $geofenceEvents->pluck('customer_id')->filter()->unique())
-            ->pluck('name', 'id');
+        $customerNames = $geofenceEvents->isNotEmpty()
+            ? Customer::whereIn('id', $geofenceEvents->pluck('customer_id')->filter()->unique())->pluck('name', 'id')
+            : collect();
 
         return [
             'pings' => $pings->map(fn ($p) => [
                 'lat' => (float) $p->latitude,
                 'lng' => (float) $p->longitude,
-                'at' => $p->recorded_at->format('H:i:s'),
+                'at' => $p->recorded_at?->format('H:i:s'),
                 'source' => $p->source,
                 'speed' => $p->speed ? (float) $p->speed : null,
                 'accuracy' => $p->accuracy ? (float) $p->accuracy : null,
                 'is_background' => (bool) $p->is_background,
-            ]),
+            ])->values(),
             'analytics' => $analytics,
             'visits' => $visits->map(fn ($v) => [
                 'id' => $v->id,
@@ -265,15 +277,15 @@ class TrackingService
                     'flags' => $v->validation->flags,
                     'gps_verified' => $v->validation->gps_verified,
                 ] : null,
-                'check_in' => $v->check_in_latitude ? ['lat' => (float) $v->check_in_latitude, 'lng' => (float) $v->check_in_longitude] : null,
-                'check_out' => $v->check_out_latitude ? ['lat' => (float) $v->check_out_latitude, 'lng' => (float) $v->check_out_longitude] : null,
-            ]),
+                'check_in' => $v->check_in_latitude !== null ? ['lat' => (float) $v->check_in_latitude, 'lng' => (float) $v->check_in_longitude] : null,
+                'check_out' => $v->check_out_latitude !== null ? ['lat' => (float) $v->check_out_latitude, 'lng' => (float) $v->check_out_longitude] : null,
+            ])->values(),
             'geofence_events' => $geofenceEvents->map(fn ($e) => [
                 'customer' => $customerNames[$e->customer_id] ?? null,
                 'type' => $e->event_type,
-                'at' => $e->recorded_at->format('H:i:s'),
+                'at' => $e->recorded_at?->format('H:i:s'),
                 'auto' => $e->auto_triggered,
-            ]),
+            ])->values(),
             'attendance' => $attendance ? [
                 'clock_in' => $attendance->clock_in_at?->format('H:i'),
                 'clock_out' => $attendance->clock_out_at?->format('H:i'),
@@ -281,7 +293,7 @@ class TrackingService
                     ? $attendance->clock_in_at->diffInMinutes($attendance->clock_out_at)
                     : ($attendance->isActive() ? $attendance->clock_in_at->diffInMinutes(now()) : null),
             ] : null,
-            'route' => $route,
+            'route' => $route?->only(['id', 'title', 'status', 'route_date']),
         ];
     }
 

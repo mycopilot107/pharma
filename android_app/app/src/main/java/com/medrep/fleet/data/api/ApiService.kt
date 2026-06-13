@@ -145,7 +145,7 @@ interface ApiService {
 
     // ── Route History ─────────────────────────────────────────────────────────
 
-    @GET("tracking/history")
+    @GET("tracking/route-history")
     suspend fun getRouteHistory(
         @Query("date") date: String
     ): Response<ListResponse<TrackingPoint>>

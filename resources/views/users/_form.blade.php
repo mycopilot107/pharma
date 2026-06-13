@@ -34,15 +34,24 @@
 
 <div>
     <label class="block text-sm font-medium text-slate-700" for="password">
-        {{ $isEdit ? 'New password (leave blank to keep current)' : 'Password *' }}
+        {{ $isEdit ? 'New 4-digit PIN (leave blank to keep current)' : '4-digit PIN *' }}
     </label>
-    <input type="password" name="password" id="password" {{ $isEdit ? '' : 'required' }}
-        class="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-teal-500 focus:ring-teal-500">
+    <input type="tel" name="password" id="password"
+        inputmode="numeric" pattern="[0-9]{4}" maxlength="4"
+        placeholder="e.g. 1234"
+        {{ $isEdit ? '' : 'required' }}
+        class="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2.5 tracking-widest focus:border-teal-500 focus:ring-teal-500">
+    <p class="mt-1 text-xs text-slate-400">Exactly 4 numbers — the MR uses this PIN to log in on the app.</p>
     @error('password')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
 </div>
 
 <div>
-    <label class="block text-sm font-medium text-slate-700" for="password_confirmation">Confirm password{{ $isEdit ? '' : ' *' }}</label>
-    <input type="password" name="password_confirmation" id="password_confirmation" {{ $isEdit ? '' : 'required' }}
-        class="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-teal-500 focus:ring-teal-500">
+    <label class="block text-sm font-medium text-slate-700" for="password_confirmation">
+        Confirm PIN{{ $isEdit ? '' : ' *' }}
+    </label>
+    <input type="tel" name="password_confirmation" id="password_confirmation"
+        inputmode="numeric" pattern="[0-9]{4}" maxlength="4"
+        placeholder="repeat PIN"
+        {{ $isEdit ? '' : 'required' }}
+        class="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2.5 tracking-widest focus:border-teal-500 focus:ring-teal-500">
 </div>

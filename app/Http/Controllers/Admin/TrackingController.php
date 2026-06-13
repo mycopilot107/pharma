@@ -63,17 +63,22 @@ class TrackingController extends Controller
 
     public function routeHistory(Request $request, User $user)
     {
-        if ($user->company_id !== Auth::user()->company_id || ! $user->isRepresentative()) {
-            abort(403);
+        if ((int) $user->company_id !== (int) Auth::user()->company_id || ! $user->isRepresentative()) {
+            return response()->json(['error' => 'Forbidden'], 403);
         }
 
         $date = $request->date
             ? Carbon::parse($request->date)
             : today();
 
-        return response()->json(
-            $this->tracking->routeHistory(Auth::user()->company_id, $user->id, $date)
-        );
+        try {
+            return response()->json(
+                $this->tracking->routeHistory((int) Auth::user()->company_id, $user->id, $date)
+            );
+        } catch (\Throwable $e) {
+            \Log::error('routeHistory failed: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to load route data', 'pings' => [], 'visits' => [], 'analytics' => null, 'geofence_events' => []], 500);
+        }
     }
 
     public function fraudAlerts()

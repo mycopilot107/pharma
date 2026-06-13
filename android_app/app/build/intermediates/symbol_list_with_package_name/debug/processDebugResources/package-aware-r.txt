@@ -3094,6 +3094,7 @@ drawable bg_icon_green
 drawable bg_icon_orange
 drawable bg_icon_teal
 drawable bg_login
+drawable bg_status_dot_blue
 drawable bg_status_dot_gray
 drawable bg_status_dot_green
 drawable bonuspack_bubble
@@ -3147,10 +3148,13 @@ drawable ic_dashboard
 drawable ic_expenses
 drawable ic_gps
 drawable ic_keyboard_black_24dp
+drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_logo_medrep
 drawable ic_m3_chip_check
 drawable ic_m3_chip_checked_circle
 drawable ic_m3_chip_close
+drawable ic_map_track
 drawable ic_menu_compass
 drawable ic_menu_mapmode
 drawable ic_menu_mylocation
@@ -3381,6 +3385,7 @@ id buttonPanel
 id cache_measures
 id callMeasure
 id cancel_button
+id cardLegend
 id carryVelocity
 id center
 id centerCrop
@@ -3832,6 +3837,8 @@ id tvError
 id tvFollowUp
 id tvGreeting
 id tvInitial
+id tvLegendCurrent
+id tvLegendStart
 id tvMockWarning
 id tvMonthVisits
 id tvName
@@ -3840,6 +3847,7 @@ id tvPendingExpenses
 id tvPhone
 id tvProducts
 id tvReason
+id tvRouteStats
 id tvSamples
 id tvStatus
 id tvTime
