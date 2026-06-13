@@ -71,6 +71,8 @@ interface ApiService {
     @GET("customers")
     suspend fun getCustomers(
         @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 100,
+        @Query("type") type: String? = null,
         @Query("search") search: String? = null
     ): Response<PaginatedResponse<Customer>>
 

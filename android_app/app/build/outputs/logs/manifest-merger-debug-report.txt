@@ -1,20 +1,20 @@
 -- Merging decision tree log ---
 provider#androidx.core.content.FileProvider
-INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:73:9-81:20
+INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:78:9-86:20
 	android:grantUriPermissions
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:77:13-47
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:82:13-47
 	android:authorities
 		INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:75:13-64
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:80:13-64
 	android:exported
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:76:13-37
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:81:13-37
 	android:name
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:74:13-62
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:79:13-62
 manifest
-ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-85:12
-INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-85:12
-INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-85:12
-INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-85:12
+ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-90:12
+INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-90:12
+INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-90:12
+INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2:1-90:12
 MERGED from [androidx.databinding:viewbinding:8.7.3] C:\gradle\caches\8.11.1\transforms\f18f49899ba2222a411ffc548eed765c\transformed\viewbinding-8.7.3\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-common:2.7.7] C:\gradle\caches\8.11.1\transforms\74f58ca72520b15806e8d2b59788b0cd\transformed\navigation-common-2.7.7\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-common-ktx:2.7.7] C:\gradle\caches\8.11.1\transforms\638a8726db1edc23bc037115b378a4fc\transformed\navigation-common-ktx-2.7.7\AndroidManifest.xml:2:1-7:12
@@ -152,8 +152,8 @@ ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:2
 	android:name
 		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:28:22-76
 application
-ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:32:5-83:19
-INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:32:5-83:19
+ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:32:5-88:19
+INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:32:5-88:19
 MERGED from [com.google.android.material:material:1.12.0] C:\gradle\caches\8.11.1\transforms\309f869d3f8de54b1cc70db1b592b8ea\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] C:\gradle\caches\8.11.1\transforms\309f869d3f8de54b1cc70db1b592b8ea\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\gradle\caches\8.11.1\transforms\6f6f4c933321a666f500c4f9ba83a81a\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -240,20 +240,28 @@ ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:6
 		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:64:13-37
 	android:name
 		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:63:13-58
-service#com.medrep.fleet.service.LocationTrackingService
-ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:67:9-70:56
+activity#com.medrep.fleet.ui.orders.CreateOrderActivity
+ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:66:9-69:58
+	android:windowSoftInputMode
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:69:13-55
 	android:exported
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:69:13-37
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:68:13-37
+	android:name
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:67:13-58
+service#com.medrep.fleet.service.LocationTrackingService
+ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:72:9-75:56
+	android:exported
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:74:13-37
 	android:foregroundServiceType
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:70:13-53
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:75:13-53
 	android:name
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:68:13-60
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:73:13-60
 meta-data#android.support.FILE_PROVIDER_PATHS
-ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:78:13-80:54
+ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:83:13-85:54
 	android:resource
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:80:17-51
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:85:17-51
 	android:name
-		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:79:17-67
+		ADDED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml:84:17-67
 uses-sdk
 INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\xampp\htdocs\pharma\android_app\app\src\main\AndroidManifest.xml

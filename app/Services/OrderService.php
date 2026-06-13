@@ -60,14 +60,17 @@ class OrderService
                     ? (float) $row['unit_price']
                     : (float) $product->unit_price;
 
-                $lineTotal = round($unitPrice * $qty, 2);
+                $discount  = isset($row['discount']) ? max(0, min(100, (float) $row['discount'])) : 0;
+                $lineTotal = round($unitPrice * $qty * (1 - $discount / 100), 2);
                 $total += $lineTotal;
 
                 $resolvedItems[] = [
-                    'product' => $product,
-                    'quantity' => $qty,
+                    'product'    => $product,
+                    'quantity'   => $qty,
                     'unit_price' => $unitPrice,
+                    'discount'   => $discount,
                     'line_total' => $lineTotal,
+                    'remark'     => $row['remark'] ?? null,
                 ];
             }
 
@@ -87,12 +90,14 @@ class OrderService
             foreach ($resolvedItems as $item) {
                 $product = $item['product'];
                 $order->items()->create([
-                    'product_id' => $product->id,
+                    'product_id'   => $product->id,
                     'product_name' => $product->name,
-                    'sku' => $product->sku,
-                    'quantity' => $item['quantity'],
-                    'unit_price' => $item['unit_price'],
-                    'line_total' => $item['line_total'],
+                    'sku'          => $product->sku,
+                    'quantity'     => $item['quantity'],
+                    'unit_price'   => $item['unit_price'],
+                    'discount'     => $item['discount'],
+                    'line_total'   => $item['line_total'],
+                    'remark'       => $item['remark'],
                 ]);
             }
 

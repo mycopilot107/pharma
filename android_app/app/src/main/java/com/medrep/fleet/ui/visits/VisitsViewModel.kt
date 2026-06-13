@@ -28,7 +28,7 @@ class VisitsViewModel : ViewModel() {
     val totalCount: LiveData<Int> = _totalCount
 
     private var searchQuery: String = ""
-    private var dateFilter: String? = null
+    private var dateFilter: String? = java.time.LocalDate.now().toString()  // default = today
     private var page: Int = 1
 
     companion object {

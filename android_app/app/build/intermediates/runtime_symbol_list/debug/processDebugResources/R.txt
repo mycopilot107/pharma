@@ -3167,6 +3167,7 @@ int drawable ic_mtrl_checked_circle 0x7f0800cb
 int drawable ic_mtrl_chip_checked_black 0x7f0800cc
 int drawable ic_mtrl_chip_checked_circle 0x7f0800cd
 int drawable ic_mtrl_chip_close_circle 0x7f0800ce
+int drawable ic_orders 0x7f080135
 int drawable ic_search 0x7f080134
 int drawable ic_search_black_24 0x7f0800cf
 int drawable ic_stop 0x7f0800d0
@@ -3335,6 +3336,8 @@ int id action_mode_close_button 0x7f090042
 int id action_text 0x7f090043
 int id actions 0x7f090044
 int id activity_chooser_view_content 0x7f090045
+int id actvCustomer 0x7f09027e
+int id actvProduct 0x7f09027f
 int id add 0x7f090046
 int id adjust_height 0x7f090047
 int id adjust_width 0x7f090048
@@ -3368,10 +3371,11 @@ int id bounce 0x7f090063
 int id bounceBoth 0x7f090064
 int id bounceEnd 0x7f090065
 int id bounceStart 0x7f090066
+int id btnAddProduct 0x7f090280
 int id btnApply 0x7f090067
+int id btnCheckInPhoto 0x7f090281
 int id btnClearDate 0x7f090274
 int id btnClearSearch 0x7f090275
-int id btnClearSignature 0x7f090068
 int id btnClockIn 0x7f090069
 int id btnClockOut 0x7f09006a
 int id btnLogin 0x7f09006b
@@ -3380,6 +3384,7 @@ int id btnNext 0x7f090276
 int id btnNextWeek 0x7f09006d
 int id btnPrev 0x7f090277
 int id btnPrevWeek 0x7f09006e
+int id btnRemoveRow 0x7f090282
 int id btnSave 0x7f09006f
 int id btnSubmit 0x7f090070
 int id btnTakePhoto 0x7f090071
@@ -3406,6 +3411,12 @@ int id chains 0x7f090085
 int id checkbox 0x7f090086
 int id checked 0x7f090087
 int id chipDate 0x7f090278
+int id chipGroupCustomerType 0x7f090294
+int id chipTypeChemist 0x7f090295
+int id chipTypeClinic 0x7f090296
+int id chipTypeDistributor 0x7f090297
+int id chipTypeDoctor 0x7f090298
+int id chipTypeHospital 0x7f090299
 int id chronometer 0x7f090088
 int id circle_center 0x7f090089
 int id clear_text 0x7f09008a
@@ -3477,15 +3488,21 @@ int id enterAlways 0x7f0900cb
 int id enterAlwaysCollapsed 0x7f0900cc
 int id escape 0x7f0900cd
 int id etAmount 0x7f0900ce
+int id etCheckInFollowUp 0x7f090287
+int id etCheckInNotes 0x7f090288
 int id etDate 0x7f0900cf
 int id etDescription 0x7f0900d0
+int id etDiscount 0x7f090289
 int id etEmail 0x7f0900d1
 int id etEndDate 0x7f0900d2
 int id etFollowUp 0x7f0900d3
 int id etNotes 0x7f0900d4
+int id etOrderDate 0x7f09028a
 int id etPassword 0x7f0900d5
 int id etProducts 0x7f0900d6
+int id etQty 0x7f09028b
 int id etReason 0x7f0900d7
+int id etRemark 0x7f09028c
 int id etSamples 0x7f0900d8
 int id etSearch 0x7f0900d9
 int id etStartDate 0x7f0900da
@@ -3496,6 +3513,7 @@ int id expensesFragment 0x7f0900de
 int id fabAdd 0x7f0900df
 int id fabApply 0x7f0900e0
 int id fabCheckIn 0x7f0900e1
+int id fabNewOrder 0x7f09028d
 int id fade 0x7f0900e2
 int id fill 0x7f0900e3
 int id fill_horizontal 0x7f0900e4
@@ -3563,6 +3581,7 @@ int id line3 0x7f090120
 int id linear 0x7f090121
 int id listMode 0x7f090122
 int id list_item 0x7f090123
+int id llProductRows 0x7f09028e
 int id locale 0x7f090124
 int id ltr 0x7f090125
 int id m3_side_sheet 0x7f090126
@@ -3737,7 +3756,6 @@ int id shortcut 0x7f0901ce
 int id showCustom 0x7f0901cf
 int id showHome 0x7f0901d0
 int id showTitle 0x7f0901d1
-int id signaturePad 0x7f0901d2
 int id sin 0x7f0901d3
 int id skipCollapsed 0x7f0901d4
 int id skipped 0x7f0901d5
@@ -3805,6 +3823,11 @@ int id textinput_helper_text 0x7f090212
 int id textinput_placeholder 0x7f090213
 int id textinput_prefix_text 0x7f090214
 int id textinput_suffix_text 0x7f090215
+int id tilCheckInFollowUp 0x7f09028f
+int id tilCustomer 0x7f090290
+int id tilFollowUp 0x7f09027d
+int id tilOrderDate 0x7f090291
+int id tilProduct 0x7f090292
 int id time 0x7f090216
 int id title 0x7f090217
 int id titleDividerNoCustom 0x7f090218
@@ -3860,6 +3883,7 @@ int id tvPhone 0x7f090247
 int id tvProducts 0x7f090248
 int id tvReason 0x7f090249
 int id tvRouteStats 0x7f09024a
+int id tvRowNumber 0x7f090293
 int id tvSamples 0x7f09024b
 int id tvStatus 0x7f09024c
 int id tvTime 0x7f09024d
@@ -4018,6 +4042,7 @@ int layout abc_search_dropdown_item_icons_2line 0x7f0c0018
 int layout abc_search_view 0x7f0c0019
 int layout abc_select_dialog_material 0x7f0c001a
 int layout abc_tooltip 0x7f0c001b
+int layout activity_create_order 0x7f0c0082
 int layout activity_login 0x7f0c001c
 int layout activity_main 0x7f0c001d
 int layout activity_route_history 0x7f0c001e
@@ -4057,6 +4082,7 @@ int layout item_expense 0x7f0c003f
 int layout item_leave 0x7f0c0040
 int layout item_notification 0x7f0c0041
 int layout item_order 0x7f0c0042
+int layout item_order_product_row 0x7f0c0083
 int layout item_tour_plan 0x7f0c0043
 int layout item_visit 0x7f0c0044
 int layout m3_alert_dialog 0x7f0c0045

@@ -63,6 +63,11 @@
             android:name=".ui.route.RouteHistoryActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.orders.CreateOrderActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- GPS Foreground Service -->
         <service
             android:name=".service.LocationTrackingService"

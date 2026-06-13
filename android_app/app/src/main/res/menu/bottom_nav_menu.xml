@@ -12,9 +12,9 @@
         android:title="Visits" />
 
     <item
-        android:id="@+id/customersFragment"
-        android:icon="@drawable/ic_customers"
-        android:title="Customers" />
+        android:id="@+id/ordersFragment"
+        android:icon="@drawable/ic_orders"
+        android:title="Orders" />
 
     <item
         android:id="@+id/expensesFragment"

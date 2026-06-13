@@ -28,6 +28,9 @@ class Visit extends Model
         'check_out_longitude',
         'duration_minutes',
         'notes',
+        'products_promoted',
+        'samples_given',
+        'follow_up_date',
         'ai_summary',
         'geofence_checkin',
     ];
@@ -45,6 +48,9 @@ class Visit extends Model
             'check_out_latitude' => 'decimal:7',
             'check_out_longitude' => 'decimal:7',
             'duration_minutes' => 'integer',
+            'products_promoted' => 'array',
+            'samples_given' => 'integer',
+            'follow_up_date' => 'date',
         ];
     }
 

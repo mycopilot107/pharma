@@ -8,10 +8,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.medrep.fleet.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -19,7 +21,10 @@ import java.lang.String;
 
 public final class FragmentOrdersBinding implements ViewBinding {
   @NonNull
-  private final SwipeRefreshLayout rootView;
+  private final CoordinatorLayout rootView;
+
+  @NonNull
+  public final FloatingActionButton fabNewOrder;
 
   @NonNull
   public final ProgressBar progressBar;
@@ -33,10 +38,12 @@ public final class FragmentOrdersBinding implements ViewBinding {
   @NonNull
   public final TextView tvEmpty;
 
-  private FragmentOrdersBinding(@NonNull SwipeRefreshLayout rootView,
-      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvOrders,
-      @NonNull SwipeRefreshLayout swipeRefresh, @NonNull TextView tvEmpty) {
+  private FragmentOrdersBinding(@NonNull CoordinatorLayout rootView,
+      @NonNull FloatingActionButton fabNewOrder, @NonNull ProgressBar progressBar,
+      @NonNull RecyclerView rvOrders, @NonNull SwipeRefreshLayout swipeRefresh,
+      @NonNull TextView tvEmpty) {
     this.rootView = rootView;
+    this.fabNewOrder = fabNewOrder;
     this.progressBar = progressBar;
     this.rvOrders = rvOrders;
     this.swipeRefresh = swipeRefresh;
@@ -45,7 +52,7 @@ public final class FragmentOrdersBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public SwipeRefreshLayout getRoot() {
+  public CoordinatorLayout getRoot() {
     return rootView;
   }
 
@@ -70,6 +77,12 @@ public final class FragmentOrdersBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.fabNewOrder;
+      FloatingActionButton fabNewOrder = ViewBindings.findChildViewById(rootView, id);
+      if (fabNewOrder == null) {
+        break missingId;
+      }
+
       id = R.id.progressBar;
       ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
       if (progressBar == null) {
@@ -82,7 +95,11 @@ public final class FragmentOrdersBinding implements ViewBinding {
         break missingId;
       }
 
-      SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) rootView;
+      id = R.id.swipeRefresh;
+      SwipeRefreshLayout swipeRefresh = ViewBindings.findChildViewById(rootView, id);
+      if (swipeRefresh == null) {
+        break missingId;
+      }
 
       id = R.id.tvEmpty;
       TextView tvEmpty = ViewBindings.findChildViewById(rootView, id);
@@ -90,8 +107,8 @@ public final class FragmentOrdersBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentOrdersBinding((SwipeRefreshLayout) rootView, progressBar, rvOrders,
-          swipeRefresh, tvEmpty);
+      return new FragmentOrdersBinding((CoordinatorLayout) rootView, fabNewOrder, progressBar,
+          rvOrders, swipeRefresh, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

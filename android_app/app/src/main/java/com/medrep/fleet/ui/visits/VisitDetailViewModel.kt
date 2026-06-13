@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medrep.fleet.data.api.ApiClient
+import com.medrep.fleet.data.model.Customer
 import com.medrep.fleet.data.model.Visit
 import com.medrep.fleet.data.prefs.TokenPrefs
 import kotlinx.coroutines.launch
@@ -18,6 +19,9 @@ class VisitDetailViewModel : ViewModel() {
 
     private val _visit   = MutableLiveData<Visit?>()
     val visit: LiveData<Visit?> = _visit
+
+    private val _customers = MutableLiveData<List<Customer>>(emptyList())
+    val customers: LiveData<List<Customer>> = _customers
 
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
@@ -46,13 +50,62 @@ class VisitDetailViewModel : ViewModel() {
         }
     }
 
+    fun loadCustomers(context: Context, type: String? = null, search: String? = null) {
+        val token = TokenPrefs.getToken(context) ?: return
+        viewModelScope.launch {
+            try {
+                val r = ApiClient.create(token).getCustomers(perPage = 100, type = type, search = search)
+                if (r.isSuccessful) _customers.value = r.body()?.data ?: emptyList()
+            } catch (_: Exception) {}
+        }
+    }
+
+    fun checkIn(
+        context: Context,
+        customerId: Int?,
+        visitType: String,
+        notes: String,
+        followUpDate: String?,
+        photoUri: Uri?
+    ) {
+        val token = TokenPrefs.getToken(context) ?: return
+        val api   = ApiClient.create(token)
+        viewModelScope.launch {
+            _loading.value = true
+            _error.value   = null
+            try {
+                val body = mutableMapOf<String, Any?>(
+                    "visit_type"     to visitType,
+                    "customer_id"    to customerId,
+                    "notes"          to notes.ifBlank { null },
+                    "follow_up_date" to followUpDate,
+                    "start_now"      to true,
+                )
+                val r = api.checkIn(body)
+                if (r.isSuccessful) {
+                    val newVisit = r.body()!!
+                    if (photoUri != null) uploadPhoto(context, api, newVisit.id, photoUri)
+                    _saved.value = true
+                } else {
+                    val msg = try {
+                        org.json.JSONObject(r.errorBody()?.string() ?: "{}").getString("message")
+                    } catch (_: Exception) { "Check-in failed (${r.code()})" }
+                    _error.value = msg
+                }
+            } catch (e: Exception) {
+                _error.value = "Network error: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
     fun save(
         context: Context,
         notes: String,
         products: List<String>,
         samples: Int,
         followUpDate: String?,
-        signatureBase64: String?,
         photoUri: Uri?
     ) {
         val token = TokenPrefs.getToken(context) ?: return
@@ -63,25 +116,17 @@ class VisitDetailViewModel : ViewModel() {
             _loading.value = true
             _error.value   = null
             try {
-                if (current == null) {
-                    // New visit — check in first (customer selection would be done before reaching here)
-                    // For now save what we have
-                    _saved.value = true
-                } else if (current.status == "ongoing") {
+                if (current != null && current.status == "ongoing") {
                     val body = mutableMapOf<String, Any?>(
-                        "notes"            to notes,
+                        "notes"             to notes,
                         "products_promoted" to products,
-                        "samples_given"    to samples,
-                        "follow_up_date"   to followUpDate,
-                        "signature_base64" to signatureBase64
+                        "samples_given"     to samples,
+                        "follow_up_date"    to followUpDate,
                     )
                     val r = api.checkOut(current.id, body)
                     if (r.isSuccessful) {
                         val updated = r.body()!!
-                        // Upload photo if any
-                        if (photoUri != null) {
-                            uploadPhoto(context, api, updated.id, photoUri)
-                        }
+                        if (photoUri != null) uploadPhoto(context, api, updated.id, photoUri)
                         _saved.value = true
                     } else {
                         _error.value = "Failed to check out"

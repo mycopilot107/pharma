@@ -1,5 +1,6 @@
 package com.medrep.fleet.ui.orders
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,11 +37,21 @@ class OrdersFragment : Fragment() {
         }
 
         vm.loading.observe(viewLifecycleOwner) {
-            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
+            binding.progressBar.visibility  = if (it) View.VISIBLE else View.GONE
             binding.swipeRefresh.isRefreshing = it
         }
 
         binding.swipeRefresh.setOnRefreshListener { vm.load(requireContext()) }
+
+        binding.fabNewOrder.setOnClickListener {
+            startActivity(Intent(requireContext(), CreateOrderActivity::class.java))
+        }
+
+        vm.load(requireContext())
+    }
+
+    override fun onResume() {
+        super.onResume()
         vm.load(requireContext())
     }
 

@@ -3168,6 +3168,7 @@ drawable ic_mtrl_checked_circle
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
+drawable ic_orders
 drawable ic_search
 drawable ic_search_black_24
 drawable ic_stop
@@ -3336,6 +3337,8 @@ id action_mode_close_button
 id action_text
 id actions
 id activity_chooser_view_content
+id actvCustomer
+id actvProduct
 id add
 id adjust_height
 id adjust_width
@@ -3369,10 +3372,11 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnAddProduct
 id btnApply
+id btnCheckInPhoto
 id btnClearDate
 id btnClearSearch
-id btnClearSignature
 id btnClockIn
 id btnClockOut
 id btnLogin
@@ -3381,6 +3385,7 @@ id btnNext
 id btnNextWeek
 id btnPrev
 id btnPrevWeek
+id btnRemoveRow
 id btnSave
 id btnSubmit
 id btnTakePhoto
@@ -3407,6 +3412,12 @@ id chains
 id checkbox
 id checked
 id chipDate
+id chipGroupCustomerType
+id chipTypeChemist
+id chipTypeClinic
+id chipTypeDistributor
+id chipTypeDoctor
+id chipTypeHospital
 id chronometer
 id circle_center
 id clear_text
@@ -3478,15 +3489,21 @@ id enterAlways
 id enterAlwaysCollapsed
 id escape
 id etAmount
+id etCheckInFollowUp
+id etCheckInNotes
 id etDate
 id etDescription
+id etDiscount
 id etEmail
 id etEndDate
 id etFollowUp
 id etNotes
+id etOrderDate
 id etPassword
 id etProducts
+id etQty
 id etReason
+id etRemark
 id etSamples
 id etSearch
 id etStartDate
@@ -3497,6 +3514,7 @@ id expensesFragment
 id fabAdd
 id fabApply
 id fabCheckIn
+id fabNewOrder
 id fade
 id fill
 id fill_horizontal
@@ -3564,6 +3582,7 @@ id line3
 id linear
 id listMode
 id list_item
+id llProductRows
 id locale
 id ltr
 id m3_side_sheet
@@ -3738,7 +3757,6 @@ id shortcut
 id showCustom
 id showHome
 id showTitle
-id signaturePad
 id sin
 id skipCollapsed
 id skipped
@@ -3806,6 +3824,11 @@ id textinput_helper_text
 id textinput_placeholder
 id textinput_prefix_text
 id textinput_suffix_text
+id tilCheckInFollowUp
+id tilCustomer
+id tilFollowUp
+id tilOrderDate
+id tilProduct
 id time
 id title
 id titleDividerNoCustom
@@ -3861,6 +3884,7 @@ id tvPhone
 id tvProducts
 id tvReason
 id tvRouteStats
+id tvRowNumber
 id tvSamples
 id tvStatus
 id tvTime
@@ -4019,6 +4043,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_create_order
 layout activity_login
 layout activity_main
 layout activity_route_history
@@ -4058,6 +4083,7 @@ layout item_expense
 layout item_leave
 layout item_notification
 layout item_order
+layout item_order_product_row
 layout item_tour_plan
 layout item_visit
 layout m3_alert_dialog

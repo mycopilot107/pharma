@@ -59,15 +59,19 @@ class VisitController extends Controller
         }
 
         $validated = $request->validate([
-            'visit_type' => ['required', Rule::enum(VisitType::class)],
-            'customer_id' => ['nullable', 'exists:customers,id'],
-            'place_name' => ['required_without:customer_id', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:1000'],
-            'notes' => ['nullable', 'string', 'max:5000'],
-            'daily_route_id' => ['nullable', 'exists:daily_routes,id'],
-            'start_now' => ['boolean'],
-            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
-            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'visit_type'        => ['required', Rule::enum(VisitType::class)],
+            'customer_id'       => ['nullable', 'exists:customers,id'],
+            'place_name'        => ['required_without:customer_id', 'string', 'max:255'],
+            'address'           => ['nullable', 'string', 'max:1000'],
+            'notes'             => ['nullable', 'string', 'max:5000'],
+            'products_promoted' => ['nullable', 'array'],
+            'products_promoted.*' => ['string', 'max:255'],
+            'samples_given'     => ['nullable', 'integer', 'min:0'],
+            'follow_up_date'    => ['nullable', 'date'],
+            'daily_route_id'    => ['nullable', 'exists:daily_routes,id'],
+            'start_now'         => ['boolean'],
+            'latitude'          => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude'         => ['nullable', 'numeric', 'between:-180,180'],
         ]);
 
         $customer = null;
@@ -83,19 +87,22 @@ class VisitController extends Controller
         }
 
         $visit = Visit::create([
-            'company_id' => $user->company_id,
-            'user_id' => $user->id,
-            'daily_route_id' => $validated['daily_route_id'] ?? null,
-            'customer_id' => $customer?->id,
-            'visit_type' => $validated['visit_type'],
-            'place_name' => $customer?->name ?? $validated['place_name'],
-            'address' => $customer?->address ?? ($validated['address'] ?? null),
-            'notes' => $validated['notes'] ?? null,
-            'status' => $request->boolean('start_now') ? VisitStatus::InProgress : VisitStatus::Planned,
-            'planned_at' => now(),
-            'checked_in_at' => $request->boolean('start_now') ? now() : null,
+            'company_id'        => $user->company_id,
+            'user_id'           => $user->id,
+            'daily_route_id'    => $validated['daily_route_id'] ?? null,
+            'customer_id'       => $customer?->id,
+            'visit_type'        => $validated['visit_type'],
+            'place_name'        => $customer?->name ?? ($validated['place_name'] ?? ''),
+            'address'           => $customer?->address ?? ($validated['address'] ?? null),
+            'notes'             => $validated['notes'] ?? null,
+            'products_promoted' => $validated['products_promoted'] ?? null,
+            'samples_given'     => $validated['samples_given'] ?? null,
+            'follow_up_date'    => $validated['follow_up_date'] ?? null,
+            'status'            => $request->boolean('start_now') ? VisitStatus::InProgress : VisitStatus::Planned,
+            'planned_at'        => now(),
+            'checked_in_at'     => $request->boolean('start_now') ? now() : null,
             'check_in_latitude' => $request->boolean('start_now') ? ($validated['latitude'] ?? null) : null,
-            'check_in_longitude' => $request->boolean('start_now') ? ($validated['longitude'] ?? null) : null,
+            'check_in_longitude'=> $request->boolean('start_now') ? ($validated['longitude'] ?? null) : null,
         ]);
 
         if ($visit->isInProgress() && $visit->daily_route_id) {
@@ -172,9 +179,13 @@ class VisitController extends Controller
         }
 
         $validated = $request->validate([
-            'latitude' => ['required', 'numeric', 'between:-90,90'],
-            'longitude' => ['required', 'numeric', 'between:-180,180'],
-            'notes' => ['nullable', 'string', 'max:5000'],
+            'latitude'          => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude'         => ['nullable', 'numeric', 'between:-180,180'],
+            'notes'             => ['nullable', 'string', 'max:5000'],
+            'products_promoted' => ['nullable', 'array'],
+            'products_promoted.*' => ['string', 'max:255'],
+            'samples_given'     => ['nullable', 'integer', 'min:0'],
+            'follow_up_date'    => ['nullable', 'date'],
         ]);
 
         $checkedOut = now();
@@ -183,12 +194,15 @@ class VisitController extends Controller
             : null;
 
         $visit->update([
-            'status' => VisitStatus::Completed,
-            'checked_out_at' => $checkedOut,
-            'check_out_latitude' => $validated['latitude'],
-            'check_out_longitude' => $validated['longitude'],
-            'duration_minutes' => $duration,
-            'notes' => $validated['notes'] ?? $visit->notes,
+            'status'             => VisitStatus::Completed,
+            'checked_out_at'     => $checkedOut,
+            'check_out_latitude' => $validated['latitude'] ?? null,
+            'check_out_longitude'=> $validated['longitude'] ?? null,
+            'duration_minutes'   => $duration,
+            'notes'              => $validated['notes'] ?? $visit->notes,
+            'products_promoted'  => $validated['products_promoted'] ?? $visit->products_promoted,
+            'samples_given'      => $validated['samples_given'] ?? $visit->samples_given,
+            'follow_up_date'     => $validated['follow_up_date'] ?? $visit->follow_up_date,
         ]);
 
         if ($user->tracking_active) {

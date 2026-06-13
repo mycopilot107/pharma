@@ -93,6 +93,10 @@
         <activity
             android:name="com.medrep.fleet.ui.route.RouteHistoryActivity"
             android:exported="false" />
+        <activity
+            android:name="com.medrep.fleet.ui.orders.CreateOrderActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- GPS Foreground Service -->
         <service

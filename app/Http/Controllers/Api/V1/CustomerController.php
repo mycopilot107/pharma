@@ -16,14 +16,21 @@ class CustomerController extends Controller
 
     public function index(Request $request)
     {
+        $perPage = min((int) $request->input('per_page', 20), 200);
+
         $customers = Customer::where('company_id', $request->user()->company_id)
             ->where('is_active', true)
             ->when($request->type, fn ($q, $type) => $q->where('type', $type))
             ->when($request->search, fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
             ->orderBy('name')
-            ->paginate(20);
+            ->paginate($perPage);
 
-        return CustomerResource::collection($customers);
+        return response()->json([
+            'data'         => $customers->getCollection()->map(fn ($c) => (new CustomerResource($c))->toArray($request)),
+            'current_page' => $customers->currentPage(),
+            'last_page'    => $customers->lastPage(),
+            'total'        => $customers->total(),
+        ]);
     }
 
     public function store(Request $request)

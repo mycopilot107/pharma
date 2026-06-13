@@ -24,7 +24,7 @@ class CustomersAdapter : ListAdapter<Customer, CustomersAdapter.VH>(DIFF) {
             tvType.text      = c.type?.replaceFirstChar { it.uppercase() } ?: ""
             tvCity.text      = c.city ?: ""
             tvPhone.text     = c.phone ?: ""
-            tvVisitCount.text = "${c.visitCount ?: 0} visits"
+            tvVisitCount.text = ""
         }
     }
 

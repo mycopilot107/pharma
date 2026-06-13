@@ -48,6 +48,11 @@ class VisitsFragment : Fragment() {
         binding.rvVisits.layoutManager = LinearLayoutManager(requireContext())
         binding.rvVisits.adapter = adapter
 
+        // ── Pre-select today's date in the chip ───────────────────────────
+        val todayDisplay = SimpleDateFormat("d MMM yyyy", Locale.getDefault()).format(Date())
+        binding.tvDateLabel.text        = todayDisplay
+        binding.btnClearDate.visibility = View.VISIBLE
+
         // ── Observe visits list ───────────────────────────────────────────
         vm.visits.observe(viewLifecycleOwner) { visits ->
             adapter.submitList(visits)

@@ -107,15 +107,14 @@ data class Visit(
 data class Customer(
     val id: Int,
     val name: String,
-    val type: String?,   // "doctor" | "chemist" | "hospital" | etc.
+    val type: String?,
     val specialty: String?,
     val address: String?,
     val city: String?,
     val phone: String?,
     val email: String?,
-    val lat: Double?,
-    val lng: Double?,
-    @SerializedName("visit_count") val visitCount: Int?
+    @SerializedName("latitude")  val lat: Double?,
+    @SerializedName("longitude") val lng: Double?,
 )
 
 // ── Product ───────────────────────────────────────────────────────────────────
@@ -123,8 +122,14 @@ data class Customer(
 data class Product(
     val id: Int,
     val name: String,
+    val sku: String?,
+    val brand: String?,
+    val strength: String?,
+    @SerializedName("pack_size")  val packSize: String?,
     val category: String?,
-    val description: String?
+    val mrp: Double?,
+    @SerializedName("unit_price") val unitPrice: Double = 0.0,
+    val description: String?,
 )
 
 // ── Expense ───────────────────────────────────────────────────────────────────
@@ -164,10 +169,14 @@ data class Order(
 
 data class OrderItem(
     val id: Int,
-    @SerializedName("product_id") val productId: Int,
+    @SerializedName("product_id")   val productId: Int,
+    @SerializedName("product_name") val productName: String?,
     val product: Product?,
     val quantity: Int,
-    val price: Double
+    @SerializedName("unit_price")   val unitPrice: Double,
+    @SerializedName("line_total")   val lineTotal: Double,
+    val discount: Double = 0.0,
+    val remark: String?,
 )
 
 // ── Notification ─────────────────────────────────────────────────────────────

@@ -44,7 +44,9 @@ class OrderController extends Controller
             'visit_id' => ['nullable', 'exists:visits,id'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_id' => ['required', 'integer'],
-            'items.*.quantity' => ['required', 'integer', 'min:1', 'max:99999'],
+            'items.*.quantity'   => ['required', 'integer', 'min:1', 'max:99999'],
+            'items.*.discount'   => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'items.*.remark'     => ['nullable', 'string', 'max:500'],
         ]);
 
         $customer = Customer::findOrFail($validated['customer_id']);

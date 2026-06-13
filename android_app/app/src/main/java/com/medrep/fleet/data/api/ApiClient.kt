@@ -10,20 +10,32 @@ object ApiClient {
 
     private const val BASE_URL = "https://mrvisitstrack.net/api/v1/"
 
+    /** Broadcast action fired when the server returns 401. MainActivity listens and goes to login. */
+    const val ACTION_SESSION_EXPIRED = "com.medrep.fleet.SESSION_EXPIRED"
+
+    // Holds the application context so the 401 interceptor can broadcast without a Context param.
+    var appContext: android.content.Context? = null
+
     fun create(token: String? = null): ApiService {
         val client = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor { chain ->
-                val original = chain.request()
-                val builder = original.newBuilder()
+                val request = chain.request().newBuilder()
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
-                if (token != null) {
-                    builder.header("Authorization", "Bearer $token")
+                    .apply { if (token != null) header("Authorization", "Bearer $token") }
+                    .build()
+                val response = chain.proceed(request)
+                if (response.code == 401) {
+                    appContext?.let { ctx ->
+                        com.medrep.fleet.data.prefs.TokenPrefs.clear(ctx)
+                        val intent = android.content.Intent(ACTION_SESSION_EXPIRED)
+                        ctx.sendBroadcast(intent)
+                    }
                 }
-                chain.proceed(builder.build())
+                response
             }
             .addInterceptor(
                 HttpLoggingInterceptor().apply {

@@ -4,6 +4,7 @@ package com.medrep.fleet.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,9 +14,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.medrep.fleet.R;
-import com.medrep.fleet.ui.visits.SignatureView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -25,16 +28,43 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
+  public final AutoCompleteTextView actvCustomer;
+
+  @NonNull
   public final LinearLayout bannerMockGps;
 
   @NonNull
-  public final MaterialButton btnClearSignature;
+  public final MaterialButton btnCheckInPhoto;
 
   @NonNull
   public final MaterialButton btnSave;
 
   @NonNull
   public final MaterialButton btnTakePhoto;
+
+  @NonNull
+  public final ChipGroup chipGroupCustomerType;
+
+  @NonNull
+  public final Chip chipTypeChemist;
+
+  @NonNull
+  public final Chip chipTypeClinic;
+
+  @NonNull
+  public final Chip chipTypeDistributor;
+
+  @NonNull
+  public final Chip chipTypeDoctor;
+
+  @NonNull
+  public final Chip chipTypeHospital;
+
+  @NonNull
+  public final TextInputEditText etCheckInFollowUp;
+
+  @NonNull
+  public final TextInputEditText etCheckInNotes;
 
   @NonNull
   public final TextInputEditText etFollowUp;
@@ -64,7 +94,13 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
   public final ProgressBar progressBar;
 
   @NonNull
-  public final SignatureView signaturePad;
+  public final TextInputLayout tilCheckInFollowUp;
+
+  @NonNull
+  public final TextInputLayout tilCustomer;
+
+  @NonNull
+  public final TextInputLayout tilFollowUp;
 
   @NonNull
   public final Toolbar toolbar;
@@ -88,21 +124,36 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
   public final TextView tvSamples;
 
   private ActivityVisitDetailBinding(@NonNull LinearLayout rootView,
-      @NonNull LinearLayout bannerMockGps, @NonNull MaterialButton btnClearSignature,
-      @NonNull MaterialButton btnSave, @NonNull MaterialButton btnTakePhoto,
-      @NonNull TextInputEditText etFollowUp, @NonNull TextInputEditText etNotes,
-      @NonNull TextInputEditText etProducts, @NonNull TextInputEditText etSamples,
-      @NonNull LinearLayout groupCheckIn, @NonNull LinearLayout groupCheckOut,
-      @NonNull LinearLayout groupDcr, @NonNull LinearLayout groupDcrSummary,
-      @NonNull ProgressBar progressBar, @NonNull SignatureView signaturePad,
-      @NonNull Toolbar toolbar, @NonNull TextView tvCheckInTime, @NonNull TextView tvCheckOutTime,
+      @NonNull AutoCompleteTextView actvCustomer, @NonNull LinearLayout bannerMockGps,
+      @NonNull MaterialButton btnCheckInPhoto, @NonNull MaterialButton btnSave,
+      @NonNull MaterialButton btnTakePhoto, @NonNull ChipGroup chipGroupCustomerType,
+      @NonNull Chip chipTypeChemist, @NonNull Chip chipTypeClinic,
+      @NonNull Chip chipTypeDistributor, @NonNull Chip chipTypeDoctor,
+      @NonNull Chip chipTypeHospital, @NonNull TextInputEditText etCheckInFollowUp,
+      @NonNull TextInputEditText etCheckInNotes, @NonNull TextInputEditText etFollowUp,
+      @NonNull TextInputEditText etNotes, @NonNull TextInputEditText etProducts,
+      @NonNull TextInputEditText etSamples, @NonNull LinearLayout groupCheckIn,
+      @NonNull LinearLayout groupCheckOut, @NonNull LinearLayout groupDcr,
+      @NonNull LinearLayout groupDcrSummary, @NonNull ProgressBar progressBar,
+      @NonNull TextInputLayout tilCheckInFollowUp, @NonNull TextInputLayout tilCustomer,
+      @NonNull TextInputLayout tilFollowUp, @NonNull Toolbar toolbar,
+      @NonNull TextView tvCheckInTime, @NonNull TextView tvCheckOutTime,
       @NonNull TextView tvCustomerName, @NonNull TextView tvFollowUp, @NonNull TextView tvProducts,
       @NonNull TextView tvSamples) {
     this.rootView = rootView;
+    this.actvCustomer = actvCustomer;
     this.bannerMockGps = bannerMockGps;
-    this.btnClearSignature = btnClearSignature;
+    this.btnCheckInPhoto = btnCheckInPhoto;
     this.btnSave = btnSave;
     this.btnTakePhoto = btnTakePhoto;
+    this.chipGroupCustomerType = chipGroupCustomerType;
+    this.chipTypeChemist = chipTypeChemist;
+    this.chipTypeClinic = chipTypeClinic;
+    this.chipTypeDistributor = chipTypeDistributor;
+    this.chipTypeDoctor = chipTypeDoctor;
+    this.chipTypeHospital = chipTypeHospital;
+    this.etCheckInFollowUp = etCheckInFollowUp;
+    this.etCheckInNotes = etCheckInNotes;
     this.etFollowUp = etFollowUp;
     this.etNotes = etNotes;
     this.etProducts = etProducts;
@@ -112,7 +163,9 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
     this.groupDcr = groupDcr;
     this.groupDcrSummary = groupDcrSummary;
     this.progressBar = progressBar;
-    this.signaturePad = signaturePad;
+    this.tilCheckInFollowUp = tilCheckInFollowUp;
+    this.tilCustomer = tilCustomer;
+    this.tilFollowUp = tilFollowUp;
     this.toolbar = toolbar;
     this.tvCheckInTime = tvCheckInTime;
     this.tvCheckOutTime = tvCheckOutTime;
@@ -149,15 +202,21 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.actvCustomer;
+      AutoCompleteTextView actvCustomer = ViewBindings.findChildViewById(rootView, id);
+      if (actvCustomer == null) {
+        break missingId;
+      }
+
       id = R.id.bannerMockGps;
       LinearLayout bannerMockGps = ViewBindings.findChildViewById(rootView, id);
       if (bannerMockGps == null) {
         break missingId;
       }
 
-      id = R.id.btnClearSignature;
-      MaterialButton btnClearSignature = ViewBindings.findChildViewById(rootView, id);
-      if (btnClearSignature == null) {
+      id = R.id.btnCheckInPhoto;
+      MaterialButton btnCheckInPhoto = ViewBindings.findChildViewById(rootView, id);
+      if (btnCheckInPhoto == null) {
         break missingId;
       }
 
@@ -170,6 +229,54 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
       id = R.id.btnTakePhoto;
       MaterialButton btnTakePhoto = ViewBindings.findChildViewById(rootView, id);
       if (btnTakePhoto == null) {
+        break missingId;
+      }
+
+      id = R.id.chipGroupCustomerType;
+      ChipGroup chipGroupCustomerType = ViewBindings.findChildViewById(rootView, id);
+      if (chipGroupCustomerType == null) {
+        break missingId;
+      }
+
+      id = R.id.chipTypeChemist;
+      Chip chipTypeChemist = ViewBindings.findChildViewById(rootView, id);
+      if (chipTypeChemist == null) {
+        break missingId;
+      }
+
+      id = R.id.chipTypeClinic;
+      Chip chipTypeClinic = ViewBindings.findChildViewById(rootView, id);
+      if (chipTypeClinic == null) {
+        break missingId;
+      }
+
+      id = R.id.chipTypeDistributor;
+      Chip chipTypeDistributor = ViewBindings.findChildViewById(rootView, id);
+      if (chipTypeDistributor == null) {
+        break missingId;
+      }
+
+      id = R.id.chipTypeDoctor;
+      Chip chipTypeDoctor = ViewBindings.findChildViewById(rootView, id);
+      if (chipTypeDoctor == null) {
+        break missingId;
+      }
+
+      id = R.id.chipTypeHospital;
+      Chip chipTypeHospital = ViewBindings.findChildViewById(rootView, id);
+      if (chipTypeHospital == null) {
+        break missingId;
+      }
+
+      id = R.id.etCheckInFollowUp;
+      TextInputEditText etCheckInFollowUp = ViewBindings.findChildViewById(rootView, id);
+      if (etCheckInFollowUp == null) {
+        break missingId;
+      }
+
+      id = R.id.etCheckInNotes;
+      TextInputEditText etCheckInNotes = ViewBindings.findChildViewById(rootView, id);
+      if (etCheckInNotes == null) {
         break missingId;
       }
 
@@ -227,9 +334,21 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.signaturePad;
-      SignatureView signaturePad = ViewBindings.findChildViewById(rootView, id);
-      if (signaturePad == null) {
+      id = R.id.tilCheckInFollowUp;
+      TextInputLayout tilCheckInFollowUp = ViewBindings.findChildViewById(rootView, id);
+      if (tilCheckInFollowUp == null) {
+        break missingId;
+      }
+
+      id = R.id.tilCustomer;
+      TextInputLayout tilCustomer = ViewBindings.findChildViewById(rootView, id);
+      if (tilCustomer == null) {
+        break missingId;
+      }
+
+      id = R.id.tilFollowUp;
+      TextInputLayout tilFollowUp = ViewBindings.findChildViewById(rootView, id);
+      if (tilFollowUp == null) {
         break missingId;
       }
 
@@ -275,9 +394,11 @@ public final class ActivityVisitDetailBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityVisitDetailBinding((LinearLayout) rootView, bannerMockGps,
-          btnClearSignature, btnSave, btnTakePhoto, etFollowUp, etNotes, etProducts, etSamples,
-          groupCheckIn, groupCheckOut, groupDcr, groupDcrSummary, progressBar, signaturePad,
+      return new ActivityVisitDetailBinding((LinearLayout) rootView, actvCustomer, bannerMockGps,
+          btnCheckInPhoto, btnSave, btnTakePhoto, chipGroupCustomerType, chipTypeChemist,
+          chipTypeClinic, chipTypeDistributor, chipTypeDoctor, chipTypeHospital, etCheckInFollowUp,
+          etCheckInNotes, etFollowUp, etNotes, etProducts, etSamples, groupCheckIn, groupCheckOut,
+          groupDcr, groupDcrSummary, progressBar, tilCheckInFollowUp, tilCustomer, tilFollowUp,
           toolbar, tvCheckInTime, tvCheckOutTime, tvCustomerName, tvFollowUp, tvProducts,
           tvSamples);
     }
