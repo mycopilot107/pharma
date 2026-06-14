@@ -99,7 +99,7 @@
             <div class="min-w-0 flex-1">
                 <p class="font-semibold text-slate-800 group-hover:text-violet-700">Customers (CRM)</p>
                 <p class="mt-0.5 text-xs text-slate-500">
-                    @if (($totalCustomers ?? 0) > 0){{ $totalCustomers }} active@else Doctors, hospitals, chemists@endif
+                    {{ ($totalCustomers ?? 0) > 0 ? $totalCustomers . ' active' : 'Doctors, hospitals, chemists' }}
                 </p>
             </div>
         </a>
