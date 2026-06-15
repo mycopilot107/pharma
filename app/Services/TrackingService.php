@@ -61,6 +61,10 @@ class TrackingService
                 'is_background' => $isBackground,
                 'source' => $source,
                 'recorded_at' => now(),
+                'location' => [
+                    'type' => 'Point',
+                    'coordinates' => [(float) $longitude, (float) $latitude],
+                ],
             ]);
         } catch (\Throwable $e) {
             \Log::warning('LocationPing write failed: ' . $e->getMessage(), [
@@ -325,6 +329,10 @@ class TrackingService
                 'daily_route_id' => $routeId,
                 'latitude' => $lat,
                 'longitude' => $lng,
+                'location' => [
+                    'type' => 'Point',
+                    'coordinates' => [$lng, $lat],
+                ],
                 'accuracy' => isset($data['accuracy']) ? (float) $data['accuracy'] : null,
                 'speed' => isset($data['speed']) ? (float) $data['speed'] : null,
                 'heading' => isset($data['heading']) ? (float) $data['heading'] : null,

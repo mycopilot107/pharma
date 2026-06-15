@@ -136,8 +136,8 @@ data class Product(
 
 data class Expense(
     val id: Int,
-    val date: String,
-    val category: String,
+    @SerializedName("expense_date") val date: String,
+    @SerializedName("type") val category: String,
     val amount: Double,
     val description: String?,
     @SerializedName("receipt_url") val receiptUrl: String?,

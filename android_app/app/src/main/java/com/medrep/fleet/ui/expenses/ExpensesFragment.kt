@@ -75,24 +75,26 @@ class ExpensesFragment : Fragment() {
         var selectedDate = ""
 
         val openDatePicker = {
-            val constraints = CalendarConstraints.Builder()
-                .setValidator(DateValidatorPointBackward.now())
-                .build()
-            val picker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Expense Date")
-                .setCalendarConstraints(constraints)
-                .build()
-            picker.addOnPositiveButtonClickListener { ms ->
-                val apiFmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
-                    timeZone = TimeZone.getTimeZone("UTC")
+            if (childFragmentManager.findFragmentByTag("expense_date") == null) {
+                val constraints = CalendarConstraints.Builder()
+                    .setValidator(DateValidatorPointBackward.now())
+                    .build()
+                val picker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select Expense Date")
+                    .setCalendarConstraints(constraints)
+                    .build()
+                picker.addOnPositiveButtonClickListener { ms ->
+                    val apiFmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+                        timeZone = TimeZone.getTimeZone("UTC")
+                    }
+                    val displayFmt = SimpleDateFormat("d MMM yyyy", Locale.getDefault()).apply {
+                        timeZone = TimeZone.getTimeZone("UTC")
+                    }
+                    selectedDate = apiFmt.format(Date(ms))
+                    sb.etDate.setText(displayFmt.format(Date(ms)))
                 }
-                val displayFmt = SimpleDateFormat("d MMM yyyy", Locale.getDefault()).apply {
-                    timeZone = TimeZone.getTimeZone("UTC")
-                }
-                selectedDate = apiFmt.format(Date(ms))
-                sb.etDate.setText(displayFmt.format(Date(ms)))
+                picker.show(childFragmentManager, "expense_date")
             }
-            picker.show(childFragmentManager, "expense_date")
         }
 
         sb.etDate.setOnClickListener { openDatePicker() }

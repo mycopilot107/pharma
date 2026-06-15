@@ -20,6 +20,7 @@ class LocationPing extends Model
         'daily_route_id',
         'latitude',
         'longitude',
+        'location',
         'accuracy',
         'speed',
         'heading',
