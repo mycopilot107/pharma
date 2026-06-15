@@ -25,7 +25,7 @@ public final class FragmentMoreBinding implements ViewBinding {
   public final MaterialButton btnLogout;
 
   @NonNull
-  public final MaterialCardView cardTourPlan;
+  public final MaterialCardView cardExpenses;
 
   @NonNull
   public final TextView tvAvatarInitial;
@@ -40,11 +40,11 @@ public final class FragmentMoreBinding implements ViewBinding {
   public final TextView tvUserRole;
 
   private FragmentMoreBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnLogout,
-      @NonNull MaterialCardView cardTourPlan, @NonNull TextView tvAvatarInitial,
+      @NonNull MaterialCardView cardExpenses, @NonNull TextView tvAvatarInitial,
       @NonNull TextView tvUserEmail, @NonNull TextView tvUserName, @NonNull TextView tvUserRole) {
     this.rootView = rootView;
     this.btnLogout = btnLogout;
-    this.cardTourPlan = cardTourPlan;
+    this.cardExpenses = cardExpenses;
     this.tvAvatarInitial = tvAvatarInitial;
     this.tvUserEmail = tvUserEmail;
     this.tvUserName = tvUserName;
@@ -84,9 +84,9 @@ public final class FragmentMoreBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.cardTourPlan;
-      MaterialCardView cardTourPlan = ViewBindings.findChildViewById(rootView, id);
-      if (cardTourPlan == null) {
+      id = R.id.cardExpenses;
+      MaterialCardView cardExpenses = ViewBindings.findChildViewById(rootView, id);
+      if (cardExpenses == null) {
         break missingId;
       }
 
@@ -114,7 +114,7 @@ public final class FragmentMoreBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentMoreBinding((ScrollView) rootView, btnLogout, cardTourPlan,
+      return new FragmentMoreBinding((ScrollView) rootView, btnLogout, cardExpenses,
           tvAvatarInitial, tvUserEmail, tvUserName, tvUserRole);
     }
     String missingId = rootView.getResources().getResourceName(id);

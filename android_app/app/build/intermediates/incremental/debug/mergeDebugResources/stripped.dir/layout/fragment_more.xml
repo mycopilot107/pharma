@@ -91,9 +91,9 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
 
-            <!-- Tour Plan card -->
+            <!-- Expenses card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTourPlan"
+                android:id="@+id/cardExpenses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -112,14 +112,14 @@
                     <FrameLayout
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:background="@drawable/bg_icon_green"
+                        android:background="@drawable/bg_icon_orange"
                         android:layout_marginEnd="14dp">
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_dashboard"
-                            app:tint="@color/success" />
+                            android:src="@drawable/ic_expenses"
+                            app:tint="@color/warning" />
                     </FrameLayout>
                     <LinearLayout
                         android:layout_width="0dp"
@@ -129,14 +129,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tour Plans"
+                            android:text="Expenses"
                             android:textColor="@color/text_primary"
                             android:textStyle="bold"
                             android:textSize="14sp" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Plan weekly visits, get approved"
+                            android:text="Claim fuel, food, travel &amp; more"
                             android:textColor="@color/text_hint"
                             android:textSize="12sp" />
                     </LinearLayout>

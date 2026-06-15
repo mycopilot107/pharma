@@ -34,8 +34,8 @@ class MoreFragment : Fragment() {
             .replaceFirstChar { it.uppercase() }
         binding.tvAvatarInitial.text = name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
 
-        binding.cardTourPlan.setOnClickListener {
-            findNavController().navigate(R.id.tourPlanFragment)
+        binding.cardExpenses.setOnClickListener {
+            findNavController().navigate(R.id.expensesFragment)
         }
 
         binding.btnLogout.setOnClickListener {

@@ -109,8 +109,7 @@
         android:padding="16dp"
         android:gravity="end"
         android:background="@color/white"
-        android:elevation="8dp"
-        android:gap="12dp">
+        android:elevation="8dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"

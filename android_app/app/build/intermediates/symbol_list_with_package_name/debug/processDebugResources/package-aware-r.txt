@@ -3089,6 +3089,9 @@ drawable bg_chip_info
 drawable bg_chip_success
 drawable bg_chip_warning
 drawable bg_date_chip
+drawable bg_dot_amber
+drawable bg_dot_green
+drawable bg_dot_red
 drawable bg_header
 drawable bg_icon_blue
 drawable bg_icon_green
@@ -3373,6 +3376,7 @@ id bounceBoth
 id bounceEnd
 id bounceStart
 id btnAddProduct
+id btnAddStop
 id btnApply
 id btnCheckInPhoto
 id btnClearDate
@@ -3399,6 +3403,7 @@ id buttonPanel
 id cache_measures
 id callMeasure
 id cancel_button
+id cardExpenses
 id cardLegend
 id carryVelocity
 id center
@@ -3413,6 +3418,7 @@ id checkbox
 id checked
 id chipDate
 id chipGroupCustomerType
+id chipGroupStops
 id chipTypeChemist
 id chipTypeClinic
 id chipTypeDistributor
@@ -3446,6 +3452,7 @@ id cut
 id dark
 id dashboardFragment
 id date_picker_actions
+id daysContainer
 id decelerate
 id decelerateAndComplete
 id decor_content_parent
@@ -3483,6 +3490,7 @@ id edit_query
 id edit_text_id
 id elastic
 id embed
+id emptyState
 id end
 id endToStart
 id enterAlways
@@ -3511,6 +3519,7 @@ id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
 id expensesFragment
+id fab
 id fabAdd
 id fabApply
 id fabCheckIn
@@ -3788,7 +3797,9 @@ id startToEnd
 id startVertical
 id staticLayout
 id staticPostLayout
+id statusDot
 id stop
+id stopsContainer
 id stretch
 id submenuarrow
 id submit_area
@@ -3826,9 +3837,11 @@ id textinput_prefix_text
 id textinput_suffix_text
 id tilCheckInFollowUp
 id tilCustomer
+id tilDate
 id tilFollowUp
 id tilOrderDate
 id tilProduct
+id tilSearch
 id time
 id title
 id titleDividerNoCustom
@@ -3851,7 +3864,9 @@ id transition_scene_layoutid_cache
 id transition_transform
 id triangle
 id tvAmount
+id tvArea
 id tvAvatarInitial
+id tvBadge
 id tvBody
 id tvCategory
 id tvCheckIn
@@ -3866,6 +3881,7 @@ id tvCustomerName
 id tvDate
 id tvDateLabel
 id tvDates
+id tvDayLabel
 id tvDescription
 id tvEmpty
 id tvError
@@ -3884,6 +3900,7 @@ id tvPendingExpenses
 id tvPhone
 id tvProducts
 id tvReason
+id tvRejection
 id tvRouteStats
 id tvRowNumber
 id tvSamples
@@ -3899,6 +3916,7 @@ id tvUserEmail
 id tvUserName
 id tvUserRole
 id tvVisitCount
+id tvWeekLabel
 id tvWeekRange
 id unchecked
 id uniform
@@ -4045,9 +4063,11 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_create_order
+layout activity_create_tour_plan
 layout activity_login
 layout activity_main
 layout activity_route_history
+layout activity_tour_plan_detail
 layout activity_visit_detail
 layout bonuspack_bubble
 layout bottom_sheet_add_expense
@@ -4086,7 +4106,10 @@ layout item_notification
 layout item_order
 layout item_order_product_row
 layout item_tour_plan
+layout item_tour_plan_stop
 layout item_visit
+layout layout_day_detail
+layout layout_day_stops
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title

@@ -145,7 +145,7 @@
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-slate-900">{{ $stop->customer->name ?? '—' }}</p>
                             <p class="text-xs text-slate-500">
-                                {{ ucfirst($stop->customer->type ?? 'customer') }}
+                                {{ ucfirst($stop->customer->type instanceof \BackedEnum ? $stop->customer->type->value : ($stop->customer->type ?? 'customer')) }}
                                 @if ($stop->area) · {{ $stop->area }} @endif
                             </p>
                         </div>
