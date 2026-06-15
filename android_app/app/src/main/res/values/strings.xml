@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MedRep Fleet</string>
+    <string name="app_name">MR Visits Track</string>
 
     <string-array name="expense_categories">
-        <item>Travel</item>
+        <item>Fuel</item>
         <item>Food</item>
+        <item>Travel</item>
+        <item>Hotel</item>
         <item>Accommodation</item>
         <item>Medical</item>
         <item>Communication</item>

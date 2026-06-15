@@ -32,23 +32,6 @@
             </div>
             <div class="space-y-5 p-6">
 
-                {{-- Currency --}}
-                <div>
-                    <label class="block text-sm font-medium text-slate-700" for="currency">
-                        Operating currency <span class="text-red-500">*</span>
-                    </label>
-                    <select name="currency" id="currency" required
-                        class="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500">
-                        @foreach ($currencies as $code => $meta)
-                            <option value="{{ $code }}" data-symbol="{{ $meta['symbol'] }}"
-                                @selected(old('currency', config('currencies.default', 'USD')) === $code)>
-                                {{ $meta['symbol'] }} — {{ $code }} ({{ $meta['name'] }})
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('currency')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
-                </div>
-
                 {{-- Billing cycle toggle --}}
                 <div>
                     <p class="mb-2 block text-sm font-medium text-slate-700">
@@ -244,7 +227,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const planSelect     = document.getElementById('plan_id');
-    const currencySelect = document.getElementById('currency');
     const priceDisplay   = document.getElementById('price-display');
     const priceBreakdown = document.getElementById('price-breakdown');
     const priceLabel     = document.getElementById('price-label');
@@ -261,12 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const ACTIVE   = ['bg-teal-600', 'text-white', 'shadow-sm'];
     const INACTIVE = ['text-slate-500'];
 
-    function symbol() {
-        return currencySelect.options[currencySelect.selectedIndex].dataset.symbol || '$';
-    }
-
     function formatMoney(amount) {
-        return symbol() + ' ' + Number(amount).toFixed(2);
+        return '$ ' + Number(amount).toFixed(2);
     }
 
     function isYearly() { return yearlyRadio.checked; }
@@ -322,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     planSelect.addEventListener('change', updatePrice);
-    currencySelect.addEventListener('change', updatePrice);
     monthlyRadio.addEventListener('change', () => { updateCycleButtons(); updatePrice(); });
     yearlyRadio.addEventListener('change',  () => { updateCycleButtons(); updatePrice(); });
 

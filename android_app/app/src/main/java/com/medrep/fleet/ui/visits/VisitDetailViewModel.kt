@@ -149,7 +149,7 @@ class VisitDetailViewModel : ViewModel() {
         try {
             val bytes = context.contentResolver.openInputStream(uri)?.readBytes() ?: return
             val rb    = bytes.toRequestBody("image/jpeg".toMediaTypeOrNull())
-            val part  = MultipartBody.Part.createFormData("photo", "visit_photo.jpg", rb)
+            val part  = MultipartBody.Part.createFormData("photos[]", "visit_photo.jpg", rb)
             api.uploadVisitPhoto(visitId, part)
         } catch (_: Exception) {}
     }

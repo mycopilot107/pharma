@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\TargetController;
 use App\Http\Controllers\Api\V1\TrackingController;
+use App\Http\Controllers\Api\V1\TourPlanController;
 use App\Http\Controllers\Api\V1\VisitController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,5 +74,12 @@ Route::prefix('v1')->group(function () {
         Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead']);
         Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
         Route::delete('/notifications/{notification}', [NotificationController::class, 'dismiss']);
+
+        Route::get('/tour-plans', [TourPlanController::class, 'index']);
+        Route::post('/tour-plans', [TourPlanController::class, 'store']);
+        Route::get('/tour-plans/{tourPlan}', [TourPlanController::class, 'show']);
+        Route::put('/tour-plans/{tourPlan}', [TourPlanController::class, 'update']);
+        Route::post('/tour-plans/{tourPlan}/submit', [TourPlanController::class, 'submit']);
+        Route::delete('/tour-plans/{tourPlan}', [TourPlanController::class, 'destroy']);
     });
 });

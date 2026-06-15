@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'MR Reporting Software India — DCR, Attendance & Expense Reports | MedRep Fleet')
+@section('title', 'MR Reporting Software India — DCR, Attendance & Expense Reports | MR Visits Track')
 @section('meta_description', 'Automate MR daily call reports (DCR), attendance, expense claims and WhatsApp summaries for pharma companies across India. No Excel. No manual filling. Reports ready in seconds.')
 @section('canonical', route('seo.mr-reporting'))
-@section('og_title', 'MR Reporting Software India | MedRep Fleet')
+@section('og_title', 'MR Reporting Software India | MR Visits Track')
 
 @push('schema')
 @verbatim
@@ -22,10 +22,10 @@
     },
     {
       "@type": "Question",
-      "name": "Does MedRep Fleet work for Indian pharma companies?",
+      "name": "Does MR Visits Track work for Indian pharma companies?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. MedRep Fleet is built specifically for the Indian pharma market. It supports INR, works on affordable Android phones, sends WhatsApp reports in Hindi-friendly formats, and is priced for Indian company budgets."
+        "text": "Yes. MR Visits Track is built specifically for the Indian pharma market. It supports INR, works on affordable Android phones, sends WhatsApp reports in Hindi-friendly formats, and is priced for Indian company budgets."
       }
     },
     {
@@ -58,7 +58,7 @@
         MR Reporting Software for India
     </h1>
     <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-        Stop chasing MRs for reports. MedRep Fleet auto-generates DCR, attendance, expenses and WhatsApp summaries — without the MR typing a single word at end of day.
+        Stop chasing MRs for reports. MR Visits Track auto-generates DCR, attendance, expenses and WhatsApp summaries — without the MR typing a single word at end of day.
     </p>
     <div class="mt-8 flex flex-wrap justify-center gap-4">
         <a href="{{ route('companies.register') }}"
@@ -93,7 +93,7 @@
 {{-- Problem / solution --}}
 <section class="mt-20 grid gap-8 lg:grid-cols-2 items-center">
     <div class="rounded-2xl bg-slate-100 p-8">
-        <p class="text-xs font-bold uppercase tracking-widest text-rose-600 mb-3">❌ Before MedRep Fleet</p>
+        <p class="text-xs font-bold uppercase tracking-widest text-rose-600 mb-3">❌ Before MR Visits Track</p>
         <ul class="space-y-3 text-sm text-slate-700">
             @foreach(['MR fills DCR on paper or WhatsApp at night — from memory','Manager calls MRs at 5 PM asking for location update','Expense claims on WhatsApp — receipts lost in chat','Leave applications on calls — no record maintained','Monthly review: manager collates Excel sheets from 10 MRs','No way to verify if visits actually happened'] as $item)
             <li class="flex items-start gap-2"><span class="mt-0.5 text-rose-500">✗</span> {{ $item }}</li>
@@ -101,7 +101,7 @@
         </ul>
     </div>
     <div class="rounded-2xl bg-teal-50 border border-teal-200 p-8">
-        <p class="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">✅ After MedRep Fleet</p>
+        <p class="text-xs font-bold uppercase tracking-widest text-teal-600 mb-3">✅ After MR Visits Track</p>
         <ul class="space-y-3 text-sm text-slate-700">
             @foreach(['DCR auto-filled from visit — zero effort by MR','Live GPS dashboard — see location without calling','Receipt photo in app — expense approved in one click','Leave applied and approved in app — history maintained','Monthly report auto-generated — download Excel in 10 seconds','GPS + photo proof for every single visit'] as $item)
             <li class="flex items-start gap-2"><span class="mt-0.5 text-teal-600">✓</span> {{ $item }}</li>

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Doctor Visit Tracking App — GPS Proof, Photo & Signature | MedRep Fleet')
+@section('title', 'Doctor Visit Tracking App — GPS Proof, Photo & Signature | MR Visits Track')
 @section('meta_description', 'Track every doctor visit your MRs make. GPS check-in with geo-fence, clinic photo proof, auto timestamp and doctor digital signature. Fake visits blocked automatically. Free trial for pharma companies.')
 @section('canonical', route('seo.doctor-visit'))
-@section('og_title', 'Doctor Visit Tracking App | MedRep Fleet')
+@section('og_title', 'Doctor Visit Tracking App | MR Visits Track')
 
 @push('schema')
 @verbatim
@@ -58,7 +58,7 @@
         Doctor Visit Tracking App
     </h1>
     <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-        GPS alone is not enough. MedRep Fleet collects hard proof for every doctor visit — location, photo, timestamp, and signature. Every visit is verified. Every fake visit is blocked.
+        GPS alone is not enough. MR Visits Track collects hard proof for every doctor visit — location, photo, timestamp, and signature. Every visit is verified. Every fake visit is blocked.
     </p>
     <div class="mt-8 flex flex-wrap justify-center gap-4">
         <a href="{{ route('companies.register') }}"

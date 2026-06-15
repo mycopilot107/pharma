@@ -55,7 +55,7 @@
                 <span class="ml-4 shrink-0 text-slate-400 group-open:rotate-180 transition-transform">&#9660;</span>
             </summary>
             <div class="border-t border-slate-100 px-5 py-4 text-sm text-slate-600 leading-relaxed">
-                Yes. The MedRep Fleet mobile app is available for Android (APK download) and iOS. It supports GPS tracking, visit check-in/out, customer management, expense submission, order booking, and notifications — all from the phone.
+                Yes. The MR Visits Track mobile app is available for Android (APK download) and iOS. It supports GPS tracking, visit check-in/out, customer management, expense submission, order booking, and notifications — all from the phone.
             </div>
         </details>
 

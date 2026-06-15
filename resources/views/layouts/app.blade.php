@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('pharma.app_name'))</title>
-    <meta name="description" content="@yield('meta_description', 'MedRep Fleet — Medical Representative tracking app with GPS, visit proof, daily call reports and fake GPS detection for pharma companies in India.')">
+    <meta name="description" content="@yield('meta_description', 'MR Visits Track — Medical Representative tracking app with GPS, visit proof, daily call reports and fake GPS detection for pharma companies in India.')">
     <meta name="robots" content="@yield('robots', 'index, follow')">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     {{-- Open Graph --}}

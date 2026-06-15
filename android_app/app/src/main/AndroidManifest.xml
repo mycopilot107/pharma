@@ -68,6 +68,15 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".ui.tourplan.CreateTourPlanActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.tourplan.TourPlanDetailActivity"
+            android:exported="false" />
+
         <!-- GPS Foreground Service -->
         <service
             android:name=".service.LocationTrackingService"

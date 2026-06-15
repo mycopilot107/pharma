@@ -5,13 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.medrep.fleet.R
 import com.medrep.fleet.databinding.BottomSheetAddExpenseBinding
 import com.medrep.fleet.databinding.FragmentExpensesBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class ExpensesFragment : Fragment() {
 
@@ -44,6 +52,10 @@ class ExpensesFragment : Fragment() {
             binding.swipeRefresh.isRefreshing = loading
         }
 
+        vm.error.observe(viewLifecycleOwner) { msg ->
+            if (msg != null) Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+        }
+
         binding.swipeRefresh.setOnRefreshListener { vm.load(requireContext()) }
         binding.fabAdd.setOnClickListener { showAddExpenseSheet() }
 
@@ -60,12 +72,47 @@ class ExpensesFragment : Fragment() {
             requireContext(), android.R.layout.simple_spinner_dropdown_item, categories
         )
 
+        var selectedDate = ""
+
+        val openDatePicker = {
+            val constraints = CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointBackward.now())
+                .build()
+            val picker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Expense Date")
+                .setCalendarConstraints(constraints)
+                .build()
+            picker.addOnPositiveButtonClickListener { ms ->
+                val apiFmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+                    timeZone = TimeZone.getTimeZone("UTC")
+                }
+                val displayFmt = SimpleDateFormat("d MMM yyyy", Locale.getDefault()).apply {
+                    timeZone = TimeZone.getTimeZone("UTC")
+                }
+                selectedDate = apiFmt.format(Date(ms))
+                sb.etDate.setText(displayFmt.format(Date(ms)))
+            }
+            picker.show(childFragmentManager, "expense_date")
+        }
+
+        sb.etDate.setOnClickListener { openDatePicker() }
+        sb.tilDate.setEndIconOnClickListener { openDatePicker() }
+
         sb.btnSubmit.setOnClickListener {
             val category = sb.spinnerCategory.selectedItem.toString()
-            val amount   = sb.etAmount.text.toString().toDoubleOrNull() ?: return@setOnClickListener
+            val amount   = sb.etAmount.text.toString().toDoubleOrNull()
             val desc     = sb.etDescription.text.toString().trim()
-            val date     = sb.etDate.text.toString().trim()
-            vm.addExpense(requireContext(), category, amount, desc, date)
+
+            if (amount == null || amount <= 0) {
+                Toast.makeText(requireContext(), "Enter a valid amount", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (selectedDate.isEmpty()) {
+                Toast.makeText(requireContext(), "Please select a date", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            vm.addExpense(requireContext(), category, amount, desc, selectedDate)
             sheet.dismiss()
         }
 

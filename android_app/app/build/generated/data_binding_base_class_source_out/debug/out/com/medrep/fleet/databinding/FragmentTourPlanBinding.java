@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.medrep.fleet.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -20,13 +20,13 @@ import java.lang.String;
 
 public final class FragmentTourPlanBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final CoordinatorLayout rootView;
 
   @NonNull
-  public final MaterialButton btnNextWeek;
+  public final LinearLayout emptyState;
 
   @NonNull
-  public final MaterialButton btnPrevWeek;
+  public final FloatingActionButton fab;
 
   @NonNull
   public final ProgressBar progressBar;
@@ -34,24 +34,19 @@ public final class FragmentTourPlanBinding implements ViewBinding {
   @NonNull
   public final RecyclerView rvPlan;
 
-  @NonNull
-  public final TextView tvWeekRange;
-
-  private FragmentTourPlanBinding(@NonNull LinearLayout rootView,
-      @NonNull MaterialButton btnNextWeek, @NonNull MaterialButton btnPrevWeek,
-      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvPlan,
-      @NonNull TextView tvWeekRange) {
+  private FragmentTourPlanBinding(@NonNull CoordinatorLayout rootView,
+      @NonNull LinearLayout emptyState, @NonNull FloatingActionButton fab,
+      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvPlan) {
     this.rootView = rootView;
-    this.btnNextWeek = btnNextWeek;
-    this.btnPrevWeek = btnPrevWeek;
+    this.emptyState = emptyState;
+    this.fab = fab;
     this.progressBar = progressBar;
     this.rvPlan = rvPlan;
-    this.tvWeekRange = tvWeekRange;
   }
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public CoordinatorLayout getRoot() {
     return rootView;
   }
 
@@ -76,15 +71,15 @@ public final class FragmentTourPlanBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.btnNextWeek;
-      MaterialButton btnNextWeek = ViewBindings.findChildViewById(rootView, id);
-      if (btnNextWeek == null) {
+      id = R.id.emptyState;
+      LinearLayout emptyState = ViewBindings.findChildViewById(rootView, id);
+      if (emptyState == null) {
         break missingId;
       }
 
-      id = R.id.btnPrevWeek;
-      MaterialButton btnPrevWeek = ViewBindings.findChildViewById(rootView, id);
-      if (btnPrevWeek == null) {
+      id = R.id.fab;
+      FloatingActionButton fab = ViewBindings.findChildViewById(rootView, id);
+      if (fab == null) {
         break missingId;
       }
 
@@ -100,14 +95,8 @@ public final class FragmentTourPlanBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.tvWeekRange;
-      TextView tvWeekRange = ViewBindings.findChildViewById(rootView, id);
-      if (tvWeekRange == null) {
-        break missingId;
-      }
-
-      return new FragmentTourPlanBinding((LinearLayout) rootView, btnNextWeek, btnPrevWeek,
-          progressBar, rvPlan, tvWeekRange);
+      return new FragmentTourPlanBinding((CoordinatorLayout) rootView, emptyState, fab, progressBar,
+          rvPlan);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

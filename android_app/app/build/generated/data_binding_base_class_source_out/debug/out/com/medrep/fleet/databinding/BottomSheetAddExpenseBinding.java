@@ -12,6 +12,7 @@ import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.medrep.fleet.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -36,16 +37,20 @@ public final class BottomSheetAddExpenseBinding implements ViewBinding {
   @NonNull
   public final Spinner spinnerCategory;
 
+  @NonNull
+  public final TextInputLayout tilDate;
+
   private BottomSheetAddExpenseBinding(@NonNull LinearLayout rootView,
       @NonNull MaterialButton btnSubmit, @NonNull TextInputEditText etAmount,
       @NonNull TextInputEditText etDate, @NonNull TextInputEditText etDescription,
-      @NonNull Spinner spinnerCategory) {
+      @NonNull Spinner spinnerCategory, @NonNull TextInputLayout tilDate) {
     this.rootView = rootView;
     this.btnSubmit = btnSubmit;
     this.etAmount = etAmount;
     this.etDate = etDate;
     this.etDescription = etDescription;
     this.spinnerCategory = spinnerCategory;
+    this.tilDate = tilDate;
   }
 
   @Override
@@ -105,8 +110,14 @@ public final class BottomSheetAddExpenseBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tilDate;
+      TextInputLayout tilDate = ViewBindings.findChildViewById(rootView, id);
+      if (tilDate == null) {
+        break missingId;
+      }
+
       return new BottomSheetAddExpenseBinding((LinearLayout) rootView, btnSubmit, etAmount, etDate,
-          etDescription, spinnerCategory);
+          etDescription, spinnerCategory, tilDate);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

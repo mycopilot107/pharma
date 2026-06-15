@@ -21,9 +21,8 @@ class CompanyRegistrationController extends Controller
     public function create()
     {
         $plans = Plan::where('is_active', true)->orderBy('user_limit')->get();
-        $currencies = Currency::supported();
 
-        return view('companies.register', compact('plans', 'currencies'));
+        return view('companies.register', compact('plans'));
     }
 
     public function store(Request $request)
@@ -47,7 +46,6 @@ class CompanyRegistrationController extends Controller
             'address' => ['nullable', 'string', 'max:1000'],
             'plan_id' => ['required', Rule::exists('plans', 'id')->where('is_active', true)],
             'billing_cycle' => ['nullable', 'string', 'in:monthly,yearly'],
-            'currency' => ['required', 'string', 'size:3', Currency::validationRule()],
             'admin_name' => ['required', 'string', 'min:2', 'max:255'],
             'admin_email' => [
                 'required',
@@ -75,7 +73,7 @@ class CompanyRegistrationController extends Controller
         ]);
 
         $plan = Plan::findOrFail($validated['plan_id']);
-        $currency = strtoupper($validated['currency']);
+        $currency = 'USD';
         $billingCycle = $validated['billing_cycle'] ?? 'monthly';
 
         if ($plan->isFree()) {

@@ -8,7 +8,7 @@
     {{-- Hero --}}
     <div class="text-center">
         <span class="inline-block rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-teal-700">Mobile App</span>
-        <h1 class="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">MedRep Fleet — Field Rep App</h1>
+        <h1 class="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">MR Visits Track — Field Rep App</h1>
         <p class="mt-3 text-slate-600 max-w-xl mx-auto">
             The mobile app for medical representatives. GPS tracking, visit management, expenses, orders, and AI reports — all from your phone.
         </p>
@@ -57,7 +57,7 @@
             </li>
             <li class="flex gap-3">
                 <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-600 text-xs font-bold text-white">4</span>
-                <span>Open the MedRep Fleet app, enter your <strong>email and password</strong> provided by your Company Admin, and start tracking.</span>
+                <span>Open the MR Visits Track app, enter your <strong>email and password</strong> provided by your Company Admin, and start tracking.</span>
             </li>
         </ol>
         <p class="mt-4 text-xs text-teal-700">

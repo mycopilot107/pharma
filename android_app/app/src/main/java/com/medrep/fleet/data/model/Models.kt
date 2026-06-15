@@ -192,12 +192,45 @@ data class AppNotification(
 
 // ── Tour Plan ─────────────────────────────────────────────────────────────────
 
-data class TourPlanEntry(
+data class TourPlan(
     val id: Int,
+    @SerializedName("week_start")       val weekStart: String,
+    @SerializedName("week_label")       val weekLabel: String,
+    val status: String,                 // draft | submitted | approved | rejected
+    @SerializedName("status_label")     val statusLabel: String,
+    val notes: String?,
+    @SerializedName("rejection_reason") val rejectionReason: String?,
+    @SerializedName("submitted_at")     val submittedAt: String?,
+    @SerializedName("approved_at")      val approvedAt: String?,
+    @SerializedName("stops_count")      val stopsCount: Int = 0,
+    val stops: List<TourPlanStop> = emptyList()
+)
+
+data class TourPlanStop(
+    val id: Int,
+    @SerializedName("day_of_week")  val dayOfWeek: Int,
+    @SerializedName("day_name")     val dayName: String,
     val date: String,
-    @SerializedName("customer_id") val customerId: Int,
-    val customer: Customer?,
-    val status: String   // "planned" | "done" | "missed"
+    @SerializedName("customer_id")  val customerId: Int,
+    val customer: TourPlanCustomer?,
+    val area: String?,
+    @SerializedName("sort_order")   val sortOrder: Int,
+    @SerializedName("actual_visit") val actualVisit: TourPlanVisitSummary? = null,
+    @SerializedName("is_visited")   val isVisited: Boolean = false
+)
+
+data class TourPlanCustomer(
+    val id: Int,
+    val name: String,
+    val type: String?,
+    val area: String?
+)
+
+data class TourPlanVisitSummary(
+    val id: Int,
+    val status: String,
+    @SerializedName("checked_in_at")  val checkInTime: String?,
+    @SerializedName("checked_out_at") val checkOutTime: String?
 )
 
 // ── Route/Tracking ────────────────────────────────────────────────────────────

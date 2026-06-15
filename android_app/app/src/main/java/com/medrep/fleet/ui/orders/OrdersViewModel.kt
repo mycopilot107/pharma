@@ -18,12 +18,15 @@ class OrdersViewModel : ViewModel() {
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
-    fun load(context: Context) {
+    private var currentSearch: String? = null
+
+    fun load(context: Context, search: String? = currentSearch) {
+        currentSearch = search
         val token = TokenPrefs.getToken(context) ?: return
         viewModelScope.launch {
             _loading.value = true
             try {
-                val r = ApiClient.create(token).getOrders()
+                val r = ApiClient.create(token).getOrders(search = search)
                 if (r.isSuccessful) _orders.value = r.body()?.data ?: emptyList()
             } catch (_: Exception) {
             } finally {

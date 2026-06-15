@@ -18,6 +18,12 @@ class ExpensesViewModel : ViewModel() {
     private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
+    private val _error = MutableLiveData<String?>(null)
+    val error: LiveData<String?> = _error
+
+    private val _saved = MutableLiveData(false)
+    val saved: LiveData<Boolean> = _saved
+
     fun load(context: Context) {
         val token = TokenPrefs.getToken(context) ?: return
         viewModelScope.launch {
@@ -35,12 +41,31 @@ class ExpensesViewModel : ViewModel() {
     fun addExpense(context: Context, category: String, amount: Double, description: String, date: String) {
         val token = TokenPrefs.getToken(context) ?: return
         viewModelScope.launch {
+            _loading.value = true
+            _error.value = null
             try {
-                ApiClient.create(token).createExpense(
-                    mapOf("category" to category, "amount" to amount, "description" to description, "date" to date)
+                val r = ApiClient.create(token).createExpense(
+                    mapOf(
+                        "type"         to category.lowercase(),
+                        "amount"       to amount,
+                        "description"  to description,
+                        "expense_date" to date
+                    )
                 )
-                load(context)
-            } catch (_: Exception) {}
+                if (r.isSuccessful) {
+                    _saved.value = true
+                    load(context)
+                } else {
+                    val msg = try {
+                        org.json.JSONObject(r.errorBody()?.string() ?: "{}").getString("message")
+                    } catch (_: Exception) { "Failed to save expense (${r.code()})" }
+                    _error.value = msg
+                }
+            } catch (e: Exception) {
+                _error.value = "Network error: ${e.message}"
+            } finally {
+                _loading.value = false
+            }
         }
     }
 }

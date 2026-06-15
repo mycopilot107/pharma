@@ -1,60 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/background">
 
-    <!-- Week navigation header -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPrevWeek"
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="12dp"
+            android:elevation="2dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tour Plans"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="&lt;"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:minWidth="0dp"
-            android:paddingHorizontal="12dp" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvWeekRange"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <!-- Empty state -->
+        <LinearLayout
+            android:id="@+id/emptyState"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
+            android:orientation="vertical"
             android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="15sp" />
+            android:visibility="gone"
+            android:padding="32dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNextWeek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&gt;"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:minWidth="0dp"
-            android:paddingHorizontal="12dp" />
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_dashboard"
+                app:tint="@color/text_hint"
+                android:alpha="0.4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No tour plans yet"
+                android:textColor="@color/text_secondary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap + to create your weekly plan"
+                android:textColor="@color/text_hint"
+                android:textSize="13sp"
+                android:layout_marginTop="6dp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPlan"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="12dp"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp" />
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <!-- FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:contentDescription="Create tour plan"
+        android:src="@drawable/ic_visits"
+        app:backgroundTint="@color/primary"
+        app:tint="@color/white" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPlan"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        android:clipToPadding="false" />
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -21,6 +21,10 @@ class OrderController extends Controller
         $orders = Order::where('user_id', $user->id)
             ->with('customer:id,name,type')
             ->when($request->status, fn ($q, $status) => $q->where('status', $status))
+            ->when($request->search, fn ($q, $search) => $q->where(function ($q2) use ($search) {
+                $q2->whereHas('customer', fn ($c) => $c->where('name', 'like', "%{$search}%"))
+                   ->orWhere('notes', 'like', "%{$search}%");
+            }))
             ->latest('order_date')
             ->paginate(15);
 

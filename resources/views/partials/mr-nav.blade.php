@@ -11,6 +11,7 @@
             'items' => [
                 ['route' => 'mr.visits.create', 'label' => 'New visit', 'match' => 'mr.visits.create'],
                 ['route' => 'mr.visits.index', 'label' => 'My visits', 'match' => 'mr.visits.index|mr.visits.show'],
+                ['route' => 'mr.tour-plans.index', 'label' => 'Tour Plans', 'match' => 'mr.tour-plans.*'],
                 ['route' => 'mr.routes.index', 'label' => 'Routes', 'match' => 'mr.routes.*'],
                 ['route' => 'mr.customers.index', 'label' => 'Customers', 'match' => 'mr.customers.*'],
             ],

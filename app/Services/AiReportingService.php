@@ -116,7 +116,7 @@ class AiReportingService
     protected function systemPrompt(): string
     {
         return <<<'PROMPT'
-You are an AI analytics assistant for a pharmaceutical medical representative (MR) management platform called MedRep Fleet.
+You are an AI analytics assistant for a pharmaceutical medical representative (MR) management platform called MR Visits Track.
 
 Analyze the JSON data provided and produce clear, actionable reports for sales managers and MRs.
 

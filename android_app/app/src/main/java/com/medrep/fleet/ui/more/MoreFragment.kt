@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.medrep.fleet.LoginActivity
+import com.medrep.fleet.R
 import com.medrep.fleet.data.prefs.TokenPrefs
 import com.medrep.fleet.databinding.FragmentMoreBinding
 
@@ -31,6 +33,10 @@ class MoreFragment : Fragment() {
         binding.tvUserRole.text  = TokenPrefs.getUserRole(requireContext())
             .replaceFirstChar { it.uppercase() }
         binding.tvAvatarInitial.text = name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+
+        binding.cardTourPlan.setOnClickListener {
+            findNavController().navigate(R.id.tourPlanFragment)
+        }
 
         binding.btnLogout.setOnClickListener {
             TokenPrefs.clear(requireContext())

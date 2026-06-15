@@ -203,7 +203,7 @@
                 <div>
                     <h3 class="font-semibold text-slate-800">Android & iOS (Flutter)</h3>
                     <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-                        The MedRep Fleet mobile app is built with Flutter for native performance on both Android and iOS. Download the Android APK directly or install from the app store.
+                        The MR Visits Track mobile app is built with Flutter for native performance on both Android and iOS. Download the Android APK directly or install from the app store.
                     </p>
                     <a href="{{ route('app.download') }}" class="mt-4 inline-block rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition-colors">
                         Download App &rarr;

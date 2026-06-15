@@ -97,6 +97,13 @@
             android:name="com.medrep.fleet.ui.orders.CreateOrderActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.medrep.fleet.ui.tourplan.CreateTourPlanActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.medrep.fleet.ui.tourplan.TourPlanDetailActivity"
+            android:exported="false" />
 
         <!-- GPS Foreground Service -->
         <service

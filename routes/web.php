@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AiReportController as AdminAiReportController;
+use App\Http\Controllers\Admin\CompanySettingsController;
+use App\Http\Controllers\Admin\TourPlanController as AdminTourPlanController;
 use App\Http\Controllers\Admin\TrackingController as AdminTrackingController;
 use App\Http\Controllers\Admin\ExpenseController as AdminExpenseController;
 use App\Http\Controllers\Admin\LeaveController as AdminLeaveController;
@@ -24,6 +26,7 @@ use App\Http\Controllers\Mr\AiReportController as MrAiReportController;
 use App\Http\Controllers\Mr\CustomerController as MrCustomerController;
 use App\Http\Controllers\Mr\CustomerCrmController as MrCustomerCrmController;
 use App\Http\Controllers\Mr\DailyRouteController;
+use App\Http\Controllers\Mr\TourPlanController as MrTourPlanController;
 use App\Http\Controllers\Mr\ExpenseController as MrExpenseController;
 use App\Http\Controllers\Mr\LeaveController as MrLeaveController;
 use App\Http\Controllers\Mr\OrderController as MrOrderController;
@@ -148,6 +151,14 @@ Route::middleware(['auth', 'company.admin'])->group(function () {
     Route::post('/admin/leaves/{leave}/approve', [AdminLeaveController::class, 'approve'])->name('admin.leaves.approve');
     Route::post('/admin/leaves/{leave}/reject', [AdminLeaveController::class, 'reject'])->name('admin.leaves.reject');
 
+    Route::get('/admin/tour-plans', [AdminTourPlanController::class, 'index'])->name('admin.tour-plans.index');
+    Route::get('/admin/tour-plans/{tourPlan}', [AdminTourPlanController::class, 'show'])->name('admin.tour-plans.show');
+    Route::post('/admin/tour-plans/{tourPlan}/approve', [AdminTourPlanController::class, 'approve'])->name('admin.tour-plans.approve');
+    Route::post('/admin/tour-plans/{tourPlan}/reject', [AdminTourPlanController::class, 'reject'])->name('admin.tour-plans.reject');
+
+    Route::get('/admin/settings', [CompanySettingsController::class, 'edit'])->name('admin.settings.edit');
+    Route::put('/admin/settings', [CompanySettingsController::class, 'update'])->name('admin.settings.update');
+
     Route::get('/admin/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
     Route::get('/admin/notifications/count', [AdminNotificationController::class, 'unreadCount'])->name('admin.notifications.count');
     Route::patch('/admin/notifications/{notification}/read', [AdminNotificationController::class, 'markRead'])->name('admin.notifications.read');
@@ -174,6 +185,15 @@ Route::middleware(['auth', 'representative'])->prefix('mr')->name('mr.')->group(
 
     Route::get('/routes', [DailyRouteController::class, 'index'])->name('routes.index');
     Route::post('/routes', [DailyRouteController::class, 'store'])->name('routes.store');
+
+    Route::get('/tour-plans', [MrTourPlanController::class, 'index'])->name('tour-plans.index');
+    Route::get('/tour-plans/create', [MrTourPlanController::class, 'create'])->name('tour-plans.create');
+    Route::post('/tour-plans', [MrTourPlanController::class, 'store'])->name('tour-plans.store');
+    Route::get('/tour-plans/{tourPlan}', [MrTourPlanController::class, 'show'])->name('tour-plans.show');
+    Route::get('/tour-plans/{tourPlan}/edit', [MrTourPlanController::class, 'edit'])->name('tour-plans.edit');
+    Route::put('/tour-plans/{tourPlan}', [MrTourPlanController::class, 'update'])->name('tour-plans.update');
+    Route::post('/tour-plans/{tourPlan}/submit', [MrTourPlanController::class, 'submit'])->name('tour-plans.submit');
+    Route::delete('/tour-plans/{tourPlan}', [MrTourPlanController::class, 'destroy'])->name('tour-plans.destroy');
 
     Route::get('/customers', [MrCustomerController::class, 'index'])->name('customers.index');
     Route::post('/customers', [MrCustomerController::class, 'store'])->name('customers.store');

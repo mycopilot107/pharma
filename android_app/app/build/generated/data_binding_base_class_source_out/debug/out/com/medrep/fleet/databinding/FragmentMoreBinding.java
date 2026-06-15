@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.medrep.fleet.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -22,6 +23,9 @@ public final class FragmentMoreBinding implements ViewBinding {
 
   @NonNull
   public final MaterialButton btnLogout;
+
+  @NonNull
+  public final MaterialCardView cardTourPlan;
 
   @NonNull
   public final TextView tvAvatarInitial;
@@ -36,10 +40,11 @@ public final class FragmentMoreBinding implements ViewBinding {
   public final TextView tvUserRole;
 
   private FragmentMoreBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnLogout,
-      @NonNull TextView tvAvatarInitial, @NonNull TextView tvUserEmail,
-      @NonNull TextView tvUserName, @NonNull TextView tvUserRole) {
+      @NonNull MaterialCardView cardTourPlan, @NonNull TextView tvAvatarInitial,
+      @NonNull TextView tvUserEmail, @NonNull TextView tvUserName, @NonNull TextView tvUserRole) {
     this.rootView = rootView;
     this.btnLogout = btnLogout;
+    this.cardTourPlan = cardTourPlan;
     this.tvAvatarInitial = tvAvatarInitial;
     this.tvUserEmail = tvUserEmail;
     this.tvUserName = tvUserName;
@@ -79,6 +84,12 @@ public final class FragmentMoreBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.cardTourPlan;
+      MaterialCardView cardTourPlan = ViewBindings.findChildViewById(rootView, id);
+      if (cardTourPlan == null) {
+        break missingId;
+      }
+
       id = R.id.tvAvatarInitial;
       TextView tvAvatarInitial = ViewBindings.findChildViewById(rootView, id);
       if (tvAvatarInitial == null) {
@@ -103,8 +114,8 @@ public final class FragmentMoreBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentMoreBinding((ScrollView) rootView, btnLogout, tvAvatarInitial, tvUserEmail,
-          tvUserName, tvUserRole);
+      return new FragmentMoreBinding((ScrollView) rootView, btnLogout, cardTourPlan,
+          tvAvatarInitial, tvUserEmail, tvUserName, tvUserRole);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

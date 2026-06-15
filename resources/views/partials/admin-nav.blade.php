@@ -18,6 +18,7 @@
             'items' => [
                 ['route' => 'admin.customers.index', 'label' => 'Customers', 'match' => 'admin.customers.*'],
                 ['route' => 'admin.visits.index', 'label' => 'Visits', 'match' => 'admin.visits.*'],
+                ['route' => 'admin.tour-plans.index', 'label' => 'Tour Plans', 'match' => 'admin.tour-plans.*'],
                 ['route' => 'admin.tracking.index', 'label' => 'Live Tracking', 'match' => 'admin.tracking.*', 'highlight' => true],
                 ['route' => 'admin.targets.index', 'label' => 'Targets', 'match' => 'admin.targets.*'],
             ],
@@ -110,9 +111,14 @@
             @endforeach
 
             <a href="{{ route('admin.notifications.index') }}"
-                class="ml-auto flex-shrink-0 rounded-lg px-3 py-2 font-medium whitespace-nowrap
+                class="flex-shrink-0 rounded-lg px-3 py-2 font-medium whitespace-nowrap
                     {{ request()->routeIs('admin.notifications.*') ? 'bg-amber-100 text-amber-900' : 'text-slate-700 hover:bg-white hover:shadow-sm' }}">
                 Alerts
+            </a>
+            <a href="{{ route('admin.settings.edit') }}"
+                class="ml-auto flex-shrink-0 rounded-lg px-3 py-2 font-medium whitespace-nowrap
+                    {{ request()->routeIs('admin.settings.*') ? 'bg-teal-600 text-white' : 'text-slate-700 hover:bg-white hover:shadow-sm' }}">
+                Settings
             </a>
         </div>
     </div>

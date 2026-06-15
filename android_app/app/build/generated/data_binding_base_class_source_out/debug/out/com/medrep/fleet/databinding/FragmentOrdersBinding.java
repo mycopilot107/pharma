@@ -14,6 +14,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.medrep.fleet.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -22,6 +24,9 @@ import java.lang.String;
 public final class FragmentOrdersBinding implements ViewBinding {
   @NonNull
   private final CoordinatorLayout rootView;
+
+  @NonNull
+  public final TextInputEditText etSearch;
 
   @NonNull
   public final FloatingActionButton fabNewOrder;
@@ -36,17 +41,23 @@ public final class FragmentOrdersBinding implements ViewBinding {
   public final SwipeRefreshLayout swipeRefresh;
 
   @NonNull
+  public final TextInputLayout tilSearch;
+
+  @NonNull
   public final TextView tvEmpty;
 
   private FragmentOrdersBinding(@NonNull CoordinatorLayout rootView,
-      @NonNull FloatingActionButton fabNewOrder, @NonNull ProgressBar progressBar,
-      @NonNull RecyclerView rvOrders, @NonNull SwipeRefreshLayout swipeRefresh,
+      @NonNull TextInputEditText etSearch, @NonNull FloatingActionButton fabNewOrder,
+      @NonNull ProgressBar progressBar, @NonNull RecyclerView rvOrders,
+      @NonNull SwipeRefreshLayout swipeRefresh, @NonNull TextInputLayout tilSearch,
       @NonNull TextView tvEmpty) {
     this.rootView = rootView;
+    this.etSearch = etSearch;
     this.fabNewOrder = fabNewOrder;
     this.progressBar = progressBar;
     this.rvOrders = rvOrders;
     this.swipeRefresh = swipeRefresh;
+    this.tilSearch = tilSearch;
     this.tvEmpty = tvEmpty;
   }
 
@@ -77,6 +88,12 @@ public final class FragmentOrdersBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.etSearch;
+      TextInputEditText etSearch = ViewBindings.findChildViewById(rootView, id);
+      if (etSearch == null) {
+        break missingId;
+      }
+
       id = R.id.fabNewOrder;
       FloatingActionButton fabNewOrder = ViewBindings.findChildViewById(rootView, id);
       if (fabNewOrder == null) {
@@ -101,14 +118,20 @@ public final class FragmentOrdersBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.tilSearch;
+      TextInputLayout tilSearch = ViewBindings.findChildViewById(rootView, id);
+      if (tilSearch == null) {
+        break missingId;
+      }
+
       id = R.id.tvEmpty;
       TextView tvEmpty = ViewBindings.findChildViewById(rootView, id);
       if (tvEmpty == null) {
         break missingId;
       }
 
-      return new FragmentOrdersBinding((CoordinatorLayout) rootView, fabNewOrder, progressBar,
-          rvOrders, swipeRefresh, tvEmpty);
+      return new FragmentOrdersBinding((CoordinatorLayout) rootView, etSearch, fabNewOrder,
+          progressBar, rvOrders, swipeRefresh, tilSearch, tvEmpty);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

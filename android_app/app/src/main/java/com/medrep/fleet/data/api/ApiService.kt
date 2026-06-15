@@ -53,14 +53,14 @@ interface ApiService {
     @POST("visits")
     suspend fun checkIn(@Body body: Map<String, @JvmSuppressWildcards Any?>): Response<Visit>
 
-    @PUT("visits/{id}/checkout")
+    @POST("visits/{id}/check-out")
     suspend fun checkOut(
         @Path("id") id: Int,
         @Body body: Map<String, @JvmSuppressWildcards Any?>
     ): Response<Visit>
 
     @Multipart
-    @POST("visits/{id}/photo")
+    @POST("visits/{id}/photos")
     suspend fun uploadVisitPhoto(
         @Path("id") id: Int,
         @Part photo: MultipartBody.Part
@@ -117,7 +117,8 @@ interface ApiService {
 
     @GET("orders")
     suspend fun getOrders(
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("search") search: String? = null
     ): Response<PaginatedResponse<Order>>
 
     @POST("orders")
@@ -136,15 +137,27 @@ interface ApiService {
     // ── Tour Plan ─────────────────────────────────────────────────────────────
 
     @GET("tour-plans")
-    suspend fun getTourPlan(
-        @Query("week_start") weekStart: String
-    ): Response<ListResponse<TourPlanEntry>>
+    suspend fun getTourPlans(
+        @Query("week_start") weekStart: String? = null
+    ): Response<ListResponse<TourPlan>>
 
     @POST("tour-plans")
-    suspend fun saveTourPlanEntry(@Body body: Map<String, @JvmSuppressWildcards Any?>): Response<TourPlanEntry>
+    suspend fun createTourPlan(@Body body: Map<String, @JvmSuppressWildcards Any?>): Response<TourPlan>
+
+    @GET("tour-plans/{id}")
+    suspend fun getTourPlan(@Path("id") id: Int): Response<TourPlan>
+
+    @PUT("tour-plans/{id}")
+    suspend fun updateTourPlan(
+        @Path("id") id: Int,
+        @Body body: Map<String, @JvmSuppressWildcards Any?>
+    ): Response<TourPlan>
+
+    @POST("tour-plans/{id}/submit")
+    suspend fun submitTourPlan(@Path("id") id: Int): Response<MessageResponse>
 
     @DELETE("tour-plans/{id}")
-    suspend fun deleteTourPlanEntry(@Path("id") id: Int): Response<MessageResponse>
+    suspend fun deleteTourPlan(@Path("id") id: Int): Response<MessageResponse>
 
     // ── Route History ─────────────────────────────────────────────────────────
 

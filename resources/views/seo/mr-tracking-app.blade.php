@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Medical Representative Tracking App — Live GPS, Visit Proof & Attendance | MedRep Fleet')
+@section('title', 'Medical Representative Tracking App — Live GPS, Visit Proof & Attendance | MR Visits Track')
 @section('meta_description', 'Track every medical representative in real-time with GPS. Get visit proof, daily call reports, attendance, fake GPS detection and WhatsApp summaries. Best MR tracking app for pharma companies in India.')
 @section('canonical', route('seo.mr-tracking'))
-@section('og_title', 'Medical Representative Tracking App | MedRep Fleet')
+@section('og_title', 'Medical Representative Tracking App | MR Visits Track')
 
 @push('schema')
 @verbatim
@@ -11,7 +11,7 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "MedRep Fleet",
+  "name": "MR Visits Track",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Android, iOS, Web",
   "description": "Medical Representative Tracking App with GPS, visit proof, daily call reports, and fake GPS detection for pharma companies in India.",
@@ -46,7 +46,7 @@
       "name": "How does GPS tracking work for MRs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The MedRep Fleet app runs a background GPS service on the MR's Android or iOS phone. It records location every 10 seconds, draws the full route map, and sends live updates to the admin dashboard. Check-in is only allowed within 200 metres of the registered doctor address."
+        "text": "The MR Visits Track app runs a background GPS service on the MR's Android or iOS phone. It records location every 10 seconds, draws the full route map, and sends live updates to the admin dashboard. Check-in is only allowed within 200 metres of the registered doctor address."
       }
     },
     {
@@ -54,15 +54,15 @@
       "name": "Can MRs fake their GPS location?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. MedRep Fleet detects mock location apps, impossible speed movements, and same-location cloning. When a fake GPS app is detected, check-in is blocked immediately and the admin is notified."
+        "text": "No. MR Visits Track detects mock location apps, impossible speed movements, and same-location cloning. When a fake GPS app is detected, check-in is blocked immediately and the admin is notified."
       }
     },
     {
       "@type": "Question",
-      "name": "Is MedRep Fleet available for Indian pharma companies?",
+      "name": "Is MR Visits Track available for Indian pharma companies?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. MedRep Fleet is built for pharma companies in India. It supports INR pricing, works on Indian Android devices including Xiaomi, OPPO and Vivo, and provides WhatsApp-based reports in the format Indian managers prefer."
+        "text": "Yes. MR Visits Track is built for pharma companies in India. It supports INR pricing, works on Indian Android devices including Xiaomi, OPPO and Vivo, and provides WhatsApp-based reports in the format Indian managers prefer."
       }
     },
     {
@@ -70,7 +70,7 @@
       "name": "How much does the MR tracking app cost?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "MedRep Fleet offers a 7-day free demo with no credit card required. After that, plans start based on team size. Visit the pricing page for current rates."
+        "text": "MR Visits Track offers a 7-day free demo with no credit card required. After that, plans start based on team size. Visit the pricing page for current rates."
       }
     }
   ]
@@ -161,9 +161,9 @@
     <div class="mx-auto max-w-3xl divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white shadow-sm">
         @foreach([
             ['q'=>'What is a Medical Representative Tracking App?','a'=>'It is software that tracks MRs in real-time using GPS, records doctor visits with photo proof and timestamps, generates daily call reports, and detects fake GPS or fraudulent attendance — all from a single dashboard.'],
-            ['q'=>'Does the GPS tracking drain the MR\'s phone battery?','a'=>'MedRep Fleet uses an optimized foreground GPS service that updates every 10 seconds. Battery impact is similar to Google Maps navigation. Most MRs see 15–20% additional battery use over an 8-hour day.'],
+            ['q'=>'Does the GPS tracking drain the MR\'s phone battery?','a'=>'MR Visits Track uses an optimized foreground GPS service that updates every 10 seconds. Battery impact is similar to Google Maps navigation. Most MRs see 15–20% additional battery use over an 8-hour day.'],
             ['q'=>'Can MRs fake their location?','a'=>'No. The app detects mock GPS apps, impossible speed jumps, and identical coordinate fraud. When detected, check-in is blocked and admin is alerted — the visit cannot be submitted.'],
-            ['q'=>'Does it work on Xiaomi, OPPO and Vivo phones?','a'=>'Yes. These devices have aggressive battery optimizers. MedRep Fleet uses an Android foreground service with a persistent notification, which prevents the OS from killing GPS tracking even on MIUI and ColorOS.'],
+            ['q'=>'Does it work on Xiaomi, OPPO and Vivo phones?','a'=>'Yes. These devices have aggressive battery optimizers. MR Visits Track uses an Android foreground service with a persistent notification, which prevents the OS from killing GPS tracking even on MIUI and ColorOS.'],
             ['q'=>'How long does setup take?','a'=>'Company admin registers, adds MR phone numbers, imports doctor list (Excel upload), and the system is live. Typical setup time: under 30 minutes.'],
         ] as $faq)
         <details class="group px-6 py-5">

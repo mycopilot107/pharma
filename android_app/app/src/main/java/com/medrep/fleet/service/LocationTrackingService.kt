@@ -61,7 +61,7 @@ class LocationTrackingService : Service() {
             if (intent?.action != LocationManager.PROVIDERS_CHANGED_ACTION) return
             val lm = getSystemService(LocationManager::class.java)
             if (LocationManagerCompat.isLocationEnabled(lm)) {
-                updateNotification("Live GPS tracking active", "MedRep Fleet is recording your route")
+                updateNotification("Live GPS tracking active", "MR Visits Track is recording your route")
             } else {
                 updateNotification("Location is OFF", "Turn on Location to resume GPS tracking")
             }
@@ -235,7 +235,7 @@ class LocationTrackingService : Service() {
             "Live GPS Tracking",
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "MedRep Fleet is recording your route"
+            description = "MR Visits Track is recording your route"
             setShowBadge(false)
         }
         getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
@@ -243,7 +243,7 @@ class LocationTrackingService : Service() {
 
     private fun buildNotification(
         title: String = "Live GPS tracking active",
-        text: String = "MedRep Fleet is recording your route",
+        text: String = "MR Visits Track is recording your route",
     ): Notification {
         val tapIntent = PendingIntent.getActivity(
             this, 0,

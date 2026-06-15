@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Pharma CRM for Medical Representatives — Doctor Management & Visit History | MedRep Fleet')
+@section('title', 'Pharma CRM for Medical Representatives — Doctor Management & Visit History | MR Visits Track')
 @section('meta_description', 'Complete Pharma CRM for medical representatives. Manage doctors, chemists and hospitals. Track visit history, product promotion, follow-up dates and relationship notes. Built for Indian pharma companies.')
 @section('canonical', route('seo.pharma-crm'))
-@section('og_title', 'Pharma CRM for Medical Representatives | MedRep Fleet')
+@section('og_title', 'Pharma CRM for Medical Representatives | MR Visits Track')
 
 @push('schema')
 @verbatim
@@ -30,7 +30,7 @@
     },
     {
       "@type": "Question",
-      "name": "Can MedRep Fleet manage doctors, chemists and hospitals separately?",
+      "name": "Can MR Visits Track manage doctors, chemists and hospitals separately?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes. The CRM module has separate customer types: Doctor, Chemist (retail pharmacy), and Hospital/Institution. Each type has relevant fields, visit frequency targets, and area mapping."

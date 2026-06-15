@@ -1,32 +1,67 @@
 @extends('layouts.app')
 
-@section('title', 'Medical Representative Tracking App — GPS, Visit Proof & DCR | MedRep Fleet')
+@section('title', 'Medical Representative Tracking App — GPS, Visit Proof & DCR | MR Visits Track')
 @section('meta_description', 'Track every medical representative visit in real-time. GPS tracking, doctor visit proof, daily call reports, WhatsApp summaries and fake GPS detection. Best MR tracking app for pharma companies in India.')
 @section('canonical', url('/'))
-@section('og_title', 'Medical Representative Tracking App | MedRep Fleet')
+@section('og_title', 'Medical Representative Tracking App | MR Visits Track')
 
 @section('content')
-<div class="text-center">
-    <h1 class="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl">
-        Track Every Medical Representative Visit in Real-Time
-        <span class="mt-2 block text-teal-600">GPS, Doctor Visit Proof, Daily Reporting &amp; Attendance in One App</span>
-    </h1>
-    <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-        Built for pharma companies — know exactly where your MRs are, which doctors they visited, and how their day went. No calls needed.
-    </p>
-    <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <a href="{{ route('companies.register') }}"
-            class="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-7 py-3.5 text-base font-bold text-white shadow-lg hover:bg-teal-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            Start 7-Day Free Demo
-        </a>
-        <a href="{{ route('login') }}" class="rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 hover:bg-slate-50">
-            Login (Admin / MR)
-        </a>
+{{-- ═══════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════ --}}
+<div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 px-8 py-20 text-center sm:py-28">
+    {{-- Decorative orbs --}}
+    <div class="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full bg-teal-500/10"></div>
+    <div class="pointer-events-none absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-teal-500/10"></div>
+    <div class="pointer-events-none absolute right-1/3 top-8 h-48 w-48 rounded-full bg-white/5"></div>
+
+    <div class="relative">
+        <div class="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-teal-300">
+            <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-400"></span>
+            Pharma Field Force Management Platform
+        </div>
+        <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Complete Visibility Over<br class="hidden sm:block">
+            <span class="text-teal-400">Your Medical Field Force</span>
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
+            Real-time GPS tracking, verified doctor visit proof, automated Daily Call Reports, and AI-powered fraud detection — the enterprise platform purpose-built for pharma field force management.
+        </p>
+        <div class="mt-10 flex flex-wrap justify-center gap-4">
+            <a href="{{ route('companies.register') }}"
+                class="inline-flex items-center gap-2 rounded-xl bg-teal-500 px-8 py-4 text-base font-bold text-white shadow-lg shadow-teal-500/25 transition-colors hover:bg-teal-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Start 7-Day Free Demo
+            </a>
+            <a href="{{ route('login') }}"
+                class="rounded-xl border border-white/20 bg-white/10 px-7 py-4 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20">
+                Admin / MR Login
+            </a>
+        </div>
+        <p class="mt-5 text-sm text-slate-400">No credit card required &nbsp;·&nbsp; Full system access &nbsp;·&nbsp; Setup in 2 minutes</p>
     </div>
-    <p class="mt-3 text-sm text-slate-400">No credit card required &nbsp;·&nbsp; Full system access &nbsp;·&nbsp; Setup in 2 minutes</p>
+</div>
+
+{{-- ── Stats strip ─────────────────────────────────────────── --}}
+<div class="mb-4 mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 shadow-sm sm:grid-cols-4">
+    <div class="bg-white px-6 py-5 text-center">
+        <p class="text-2xl font-bold text-slate-900">50+</p>
+        <p class="mt-0.5 text-sm text-slate-500">Pharma companies</p>
+    </div>
+    <div class="bg-white px-6 py-5 text-center">
+        <p class="text-2xl font-bold text-teal-600">10,000+</p>
+        <p class="mt-0.5 text-sm text-slate-500">Visits tracked daily</p>
+    </div>
+    <div class="bg-white px-6 py-5 text-center">
+        <p class="text-2xl font-bold text-slate-900">500+</p>
+        <p class="mt-0.5 text-sm text-slate-500">Medical representatives</p>
+    </div>
+    <div class="bg-white px-6 py-5 text-center">
+        <p class="text-2xl font-bold text-rose-600">Zero</p>
+        <p class="mt-0.5 text-sm text-slate-500">Fake visits undetected</p>
+    </div>
 </div>
 
 {{-- ═══════════════════════════════════════════════════════════
@@ -49,7 +84,7 @@
                 <span class="h-3 w-3 rounded-full bg-red-500"></span>
                 <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
                 <span class="h-3 w-3 rounded-full bg-emerald-500"></span>
-                <span class="ml-4 text-sm font-semibold text-white">MedRep Fleet — Live Dashboard</span>
+                <span class="ml-4 text-sm font-semibold text-white">MR Visits Track — Live Dashboard</span>
             </div>
             <div class="flex items-center gap-2">
                 <span class="inline-block h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span>
@@ -231,7 +266,7 @@
     <div class="mb-12 text-center">
         <span class="inline-block rounded-full bg-violet-100 px-4 py-1 text-sm font-semibold text-violet-700">Proof of Visit</span>
         <h2 class="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">GPS alone is not enough.</h2>
-        <p class="mx-auto mt-3 max-w-xl text-slate-500">MedRep Fleet collects hard evidence for every visit — photo, location, time, and signature. No disputes.</p>
+        <p class="mx-auto mt-3 max-w-xl text-slate-500">MR Visits Track collects hard evidence for every visit — photo, location, time, and signature. No disputes.</p>
     </div>
 
     <div class="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2">
@@ -414,7 +449,7 @@
     <div class="mb-12 text-center">
         <span class="inline-block rounded-full bg-blue-100 px-4 py-1 text-sm font-semibold text-blue-700">Daily Call Report</span>
         <h2 class="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">DCR — automatically filled. Zero extra effort.</h2>
-        <p class="mx-auto mt-3 max-w-xl text-slate-500">Every pharma company needs a DCR. MedRep Fleet generates it automatically from each visit — no manual typing by the MR at end of day.</p>
+        <p class="mx-auto mt-3 max-w-xl text-slate-500">Every pharma company needs a DCR. MR Visits Track generates it automatically from each visit — no manual typing by the MR at end of day.</p>
     </div>
 
     <div class="mx-auto grid max-w-5xl items-start gap-12 lg:grid-cols-2">
@@ -755,8 +790,8 @@
 
     <div class="mb-12 text-center">
         <span class="inline-block rounded-full bg-green-100 px-4 py-1 text-sm font-semibold text-green-700">WhatsApp Reporting</span>
-        <h2 class="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">Manager ko roz milti hai automatic summary.</h2>
-        <p class="mx-auto mt-3 max-w-xl text-slate-500">No login needed. No dashboard. Every evening WhatsApp pe aa jaati hai poori team ki performance — seedha manager ke phone pe.</p>
+        <h2 class="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">Automated daily performance reports — delivered to management.</h2>
+        <p class="mx-auto mt-3 max-w-xl text-slate-500">No login required. Every evening, your managers receive a complete team performance summary on WhatsApp — without opening any app or dashboard.</p>
     </div>
 
     <div class="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2">
@@ -777,7 +812,7 @@
                         <div class="flex items-center gap-3 bg-[#128c7e] px-4 py-3">
                             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white">MF</div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-sm font-semibold text-white">MedRep Fleet Bot</p>
+                                <p class="text-sm font-semibold text-white">MR Visits Track Bot</p>
                                 <p class="text-xs text-green-100">Daily Summary · Automated</p>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -946,7 +981,7 @@
     <div class="mb-12 text-center">
         <span class="inline-block rounded-full bg-rose-100 px-4 py-1 text-sm font-semibold text-rose-700">Fake GPS Detection</span>
         <h2 class="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">Your MR is "at the clinic." <span class="text-rose-600">But is he really?</span></h2>
-        <p class="mx-auto mt-3 max-w-xl text-slate-500">Fake GPS apps, mock locations, and VPNs — MedRep Fleet detects all of them automatically. Every fraud attempt is logged and reported to admin instantly.</p>
+        <p class="mx-auto mt-3 max-w-xl text-slate-500">Fake GPS apps, mock locations, and VPNs — MR Visits Track detects all of them automatically. Every fraud attempt is logged and reported to admin instantly.</p>
     </div>
 
     <div class="mx-auto grid max-w-5xl items-start gap-12 lg:grid-cols-2">
@@ -1115,23 +1150,43 @@
 
 </section>
 
+{{-- visit type strip --}}
 <section class="mt-16">
-    <h2 class="mb-6 text-center text-2xl font-semibold text-slate-800">MR visit tracking</h2>
-    <div class="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div class="rounded-2xl border bg-white p-5 shadow-sm">
-            <p class="text-2xl">👨‍⚕️</p>
-            <h3 class="mt-2 font-semibold">Doctor visits</h3>
-            <p class="mt-1 text-sm text-slate-600">GPS check-in/out, visit time, notes &amp; photos</p>
-        </div>
-        <div class="rounded-2xl border bg-white p-5 shadow-sm">
-            <p class="text-2xl">💊</p>
-            <h3 class="mt-2 font-semibold">Chemist visits</h3>
-            <p class="mt-1 text-sm text-slate-600">Track retail pharmacy calls on daily routes</p>
-        </div>
-        <div class="rounded-2xl border bg-white p-5 shadow-sm">
-            <p class="text-2xl">🏥</p>
-            <h3 class="mt-2 font-semibold">Hospital visits</h3>
-            <p class="mt-1 text-sm text-slate-600">Institution-level visit logging &amp; compliance</p>
+    <div class="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid divide-y divide-slate-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            <div class="flex items-start gap-4 p-6">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-slate-900">Doctor Visits</h3>
+                    <p class="mt-1 text-sm text-slate-500">GPS check-in/out, visit time, notes &amp; photo proof</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4 p-6">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-slate-900">Chemist Visits</h3>
+                    <p class="mt-1 text-sm text-slate-500">Track retail pharmacy calls across daily routes</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4 p-6">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-slate-900">Hospital Visits</h3>
+                    <p class="mt-1 text-sm text-slate-500">Institution-level visit logging &amp; compliance records</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -1145,12 +1200,12 @@
         <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/5"></div>
         <div class="pointer-events-none absolute -bottom-12 -left-12 h-48 w-48 rounded-full bg-white/5"></div>
 
-        <span class="inline-block rounded-full bg-white/20 px-4 py-1 text-sm font-semibold text-white">Limited Time Offer</span>
+        <p class="text-xs font-bold uppercase tracking-widest text-teal-300">Get started today</p>
         <h2 class="mt-4 text-3xl font-extrabold text-white sm:text-4xl">
-            7 Days Full Demo — No Card Required
+            Full Platform Access — 7 Days, No Commitment
         </h2>
         <p class="mx-auto mt-4 max-w-2xl text-lg text-teal-100">
-            Get complete access to every feature — Live GPS tracking, Proof of Visit, DCR, Tour Plan, WhatsApp Reports, Fake GPS detection. Everything. For free. For 7 days.
+            Evaluate the complete platform with your own team — Live GPS tracking, Proof of Visit, DCR, Tour Plan, WhatsApp Reports, and Fraud Detection. Every feature. No restrictions.
         </p>
 
         {{-- What's included --}}
@@ -1195,69 +1250,56 @@
 </section>
 
 {{-- ═══════════════════════════════════════════════════════════
-     PRICING PLANS
+     FINAL CTA
 ═══════════════════════════════════════════════════════════ --}}
-<section class="mt-20">
-    <div class="mb-8 text-center">
-        <h2 class="text-2xl font-bold text-slate-900">Simple pricing. No hidden charges.</h2>
-        <p class="mt-2 text-slate-500">After your 7-day demo, choose the plan that fits your team size.</p>
-    </div>
-
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        @foreach ($plans as $plan)
-            <div class="relative rounded-2xl border bg-white p-6 shadow-sm transition hover:border-teal-300 hover:shadow-md
-                {{ $plan->isFree() ? 'border-teal-400 ring-2 ring-teal-500' : 'border-slate-200' }}">
-
-                @if ($plan->isFree())
-                    {{-- Free / demo badge --}}
-                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                        <span class="whitespace-nowrap rounded-full bg-teal-600 px-4 py-1 text-xs font-bold text-white shadow">
-                            🎉 7-Day Free Demo
-                        </span>
-                    </div>
-                @endif
-
-                <div class="{{ $plan->isFree() ? 'mt-3' : '' }}">
-                    <p class="text-sm font-semibold uppercase tracking-wide text-teal-600">{{ $plan->user_limit }} {{ $plan->user_limit === 1 ? 'MR' : 'MRs' }}</p>
-                    <p class="mt-2 text-3xl font-bold text-slate-900">{{ $plan->formattedPrice() }}</p>
-
-                    @if ($plan->isFree())
-                        <p class="mt-1 text-sm font-medium text-teal-600">7 days free · then stay or cancel</p>
-                    @else
-                        <p class="mt-1 text-sm text-slate-500">per month · {{ format_money(config('pharma.price_per_user_usd', 3)) }}/MR</p>
-                    @endif
-
-                    <p class="mt-4 text-sm text-slate-600">{{ $plan->description }}</p>
-
-                    @if ($plan->isFree())
-                        <ul class="mt-4 space-y-1.5 text-sm text-slate-600">
-                            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>All features unlocked</li>
-                            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>No credit card needed</li>
-                            <li class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Setup in 2 minutes</li>
-                        </ul>
-                    @endif
-
-                    <a href="{{ route('companies.register', ['plan' => $plan->id]) }}"
-                        class="mt-6 inline-block w-full rounded-xl py-2.5 text-center text-sm font-bold
-                            {{ $plan->isFree() ? 'bg-teal-600 text-white hover:bg-teal-700 shadow-md' : 'bg-teal-50 text-teal-700 hover:bg-teal-100' }}">
-                        {{ $plan->isFree() ? '→ Start Free Demo' : 'Select this plan' }}
-                    </a>
-                </div>
+<section class="mb-4 mt-16">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid items-center gap-8 px-8 py-10 lg:grid-cols-2 lg:gap-0">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-teal-600">Ready to get started?</p>
+                <h2 class="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">Transform your pharma field force management.</h2>
+                <p class="mt-3 text-slate-500">Get full platform access for 7 days at no cost. Evaluate every feature with your own team before committing to a plan.</p>
+                <ul class="mt-5 space-y-2 text-sm text-slate-600">
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        No credit card — no commitment required
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        All features unlocked during the trial
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        Dedicated onboarding support included
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        Setup complete in under 2 minutes
+                    </li>
+                </ul>
             </div>
-        @endforeach
+            <div class="flex flex-col items-center gap-4 text-center lg:border-l lg:border-slate-100 lg:pl-8">
+                <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 text-teal-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-3xl font-extrabold text-slate-900">7 Days Free</p>
+                    <p class="mt-1 text-slate-500">Full access · No card needed</p>
+                </div>
+                <a href="{{ route('companies.register') }}"
+                    class="mt-2 inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-teal-600 px-8 py-4 text-base font-bold text-white shadow-md transition-colors hover:bg-teal-700">
+                    Start Free Demo
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="{{ route('login') }}" class="text-sm font-medium text-slate-500 hover:text-teal-600">
+                    Already registered? Login →
+                </a>
+            </div>
+        </div>
     </div>
-</section>
-
-{{-- Final bottom CTA --}}
-<section class="mt-16 mb-4 text-center">
-    <p class="text-lg font-semibold text-slate-800">Still thinking?</p>
-    <p class="mt-1 text-slate-500">Try it free for 7 days. If it doesn't save you 2 hours a day, cancel with one click.</p>
-    <a href="{{ route('companies.register') }}"
-        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-teal-600 px-8 py-3.5 font-bold text-white shadow hover:bg-teal-700">
-        Start Free — No Card Required
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-        </svg>
-    </a>
 </section>
 @endsection

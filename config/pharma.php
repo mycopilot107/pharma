@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'app_name' => env('PHARMA_APP_NAME', 'MedRep Fleet'),
+    'app_name' => env('PHARMA_APP_NAME', 'MR Visits Track'),
     'currency' => env('PHARMA_CURRENCY', 'USD'),
     'price_per_user_usd' => (float) env('PHARMA_PRICE_PER_USER', 3),
     'subscription_days' => (int) env('PHARMA_SUBSCRIPTION_DAYS', 30),

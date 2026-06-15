@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
                     mapOf(
                         "email"       to email,
                         "password"    to password,
-                        "device_name" to "MedRep Fleet Mobile"
+                        "device_name" to "MR Visits Track Mobile"
                     )
                 )
                 if (response.isSuccessful) {
